@@ -22,10 +22,10 @@ params_lhs = {}
 P3D_set_k_gt_k_nl_to_zero = False
 
 P3D_type = 'nl' # lin, nl
-compute_P_grid = 'yes' # yes, no
+compute_P_grid = 'no' # yes, no
 compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'yes' # yes, no
+compute_iB_grid = 'no' # yes, no
 compute_iB_spectra_and_correlations = 'yes' # yes, no
 compute_chi_D_values = 'no'
 compute_H_values = 'no'
@@ -61,8 +61,7 @@ theta_T_arcmins = 90
 # for global 2PCF
 min_sep_tc_xi = 5
 max_sep_tc_xi = 250
-nbins_tc_xi = 15
-#nbins_tc_xi = 10
+nbins_tc_xi = 10
 
 # for local (within filter) 2PCF
 min_sep_tc = 5
@@ -118,14 +117,12 @@ if (B3D_type == 'nl'):
 f_sq = 7
 
 ### paths to save/load grids, spectra and correlations
-if (compute_P_grid == 'yes'):
-    P_l_z_grid_path = "../output/grids/P_"+P3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
+P_l_z_grid_path = "../output/grids/P_"+P3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
 
-if (compute_iB_grid == 'yes'):
-    if (B3D_type == 'lin'):
-        iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
-    elif (B3D_type == 'nl'):
-        iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_J0_GM_J2J4_GMRF_fsq7_"+grid_type+"/"
+if (B3D_type == 'lin'):
+    iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
+elif (B3D_type == 'nl'):
+    iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_J0_GM_J2J4_GMRF_fsq7_"+grid_type+"/"
 
 if (compute_P_spectra_and_correlations == 'yes'):
     P_spectra_path = "../output/spectra/P_"+P3D_type+"_spectra_l"+str(l_array.size)+"_"+spectra_and_correlation_type+"/"
