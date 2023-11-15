@@ -1,0 +1,9 @@
+# Ignore everything in this directory
+*
+# Except this file
+!.gitignore
+!grids/
+!spectra/
+!correlations/
+!chi_D_values/
+!H_values/
