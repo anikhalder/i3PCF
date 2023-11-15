@@ -139,5 +139,3 @@ if (compute_iB_spectra_and_correlations == 'yes'):
     elif (B3D_type == 'nl'):
         iB_spectra_path = "../output/spectra/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_spectra_l"+str(l_array.size)+"_J0_GM_J2J4_GMRF_fsq7_"+spectra_and_correlation_type+"/"
         iZ_correlations_path = "../output/correlations/iZ_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_correlations_alpha_"+str(min_sep_tc)+"_"+str(max_sep_tc)+"_"+str(nbins_tc)+"_J0_GM_J2J4_GMRF_fsq7_"+spectra_and_correlation_type+"/"
-
-filename_extension_array = [ ".dat"]

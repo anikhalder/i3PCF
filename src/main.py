@@ -169,11 +169,9 @@ def eta_0_val(c_min):
 # Multiprocess the nested loop over l and z such that more worker processors can be used simultaneously to evaluate multiple points on the (l,z) grid
 pool = mp.Pool(processes=mp.cpu_count()-2)
 
-filename_extension_array = input.filename_extension_array
+for param_idx in range(start_idx, stop_idx):
 
-for filename_idx in range(start_idx, stop_idx):
-
-    param_idx = filename_idx
+    filename_extension = "_param_idx_" + str(param_idx) + ".dat"
 
     #################################################################################################################################
     #################################################################################################################################
