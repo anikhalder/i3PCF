@@ -827,8 +827,11 @@ for param_idx in range(start_idx, stop_idx):
                     elif (SOURCE_BIN_NAME == 'BIN34'):
                         n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/source_planes_Takahashi_DESY3_source_BINS_weights.dat', usecols=[6])
                 else:
-                    n_s_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab', usecols=[0])
-                    n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab', usecols=[1])
+                    n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
+                    max_z_nofz = np.where(n_s_z_BIN_z_tab >= 2.0)[0][0]
+                    n_s_z_BIN_z_tab = n_s_z_BIN_z_tab[:max_z_nofz]
+                    n_s_z_BIN_vals_tab = n_s_z_BIN_vals_tab[:max_z_nofz]
+                    n_s_z_BIN_vals_tab /= np.trapz(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
                     n_s_z_BIN = interpolate.interp1d(n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
             
             for j in range(z_array_los.size):
