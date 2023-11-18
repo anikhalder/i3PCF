@@ -109,7 +109,7 @@ def xim_theta(theta, ell, C_ell):
 
     return np.sum( (2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m / (l*l*(l+1.)*(l+1.)) * C_l )
 
-def xi_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
+def xi_theta_bin_averaged_Legendre(theta_min, theta_max, ell):
     '''
     theta_min and theta_max are in radians
     assume ell starts from 0 and the values of C_ell at the first two multipoles (i.e. ell=0,1) are zero
@@ -118,7 +118,7 @@ def xi_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
     '''
 
     l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
-    C_l = C_ell[2:]
+    #C_l = C_ell[2:]
 
     x_min = np.cos(theta_min)
     x_max = np.cos(theta_max)
@@ -136,7 +136,7 @@ def xi_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
     return P_l_bin_averaged
     #return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l )
 
-def xit_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
+def xit_theta_bin_averaged_Legendre(theta_min, theta_max, ell):
     '''
     theta_min and theta_max is in radians
     assume ell starts from 0 and the values of C_ell at the first two multipoles (i.e. ell=0,1) are zero
@@ -145,7 +145,7 @@ def xit_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
     '''
 
     l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
-    C_l = C_ell[2:]
+    #C_l = C_ell[2:]
 
     x_min = np.cos(theta_min)
     x_max = np.cos(theta_max)
@@ -169,7 +169,7 @@ def xit_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
     return P_l_2_bin_averaged
     #return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * C_l )
 
-def xip_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
+def xip_theta_bin_averaged_Legendre(theta_min, theta_max, ell):
     '''
     theta_min and theta_max is in radians    
     assume ell starts from 0 and the values of C_ell at the first two multipoles (i.e. ell=0,1) are zero
@@ -179,7 +179,7 @@ def xip_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
     '''
 
     l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
-    C_l = C_ell[2:]
+    #C_l = C_ell[2:]
 
     x_min = np.cos(theta_min)
     x_max = np.cos(theta_max)
@@ -211,7 +211,7 @@ def xip_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
     return G_l_2_x_p_bin_averaged
     #return np.sum( (2.*l+1) / (4*np.pi) * 2. * G_l_2_x_p_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l )
 
-def xim_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
+def xim_theta_bin_averaged_Legendre(theta_min, theta_max, ell):
     '''
     theta_min and theta_max is in radians    
     assume ell starts from 0 and the values of C_ell at the first two multipoles (i.e. ell=0,1) are zero
@@ -221,7 +221,7 @@ def xim_theta_bin_averaged_Legendre(theta_min, theta_max, ell, C_ell):
     '''
 
     l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
-    C_l = C_ell[2:]
+    #C_l = C_ell[2:]
 
     x_min = np.cos(theta_min)
     x_max = np.cos(theta_max)
