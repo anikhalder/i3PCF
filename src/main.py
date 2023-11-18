@@ -161,37 +161,51 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     zetat_theta_bin_averaged_values = np.load('../data/angular_bins/zetat_W'+str(theta_T_arcmins)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
     zeta_theta_bin_averaged_values = np.load('../data/angular_bins/zeta_W'+str(theta_T_arcmins)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
 
-    def xip_theta_bin_averaged(l, C_l):
+    def xip_theta_bin_averaged(ell, C_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        C_l = C_ell[2:]
         G_l_2_x_p_bin_averaged = xip_theta_bin_averaged_values
-        print(l.shape)
-        print(C_l.shape)
         return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_p_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
 
-    def xim_theta_bin_averaged(l, C_l):
+    def xim_theta_bin_averaged(ell, C_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        C_l = C_ell[2:]
         G_l_2_x_m_bin_averaged = xim_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
 
-    def xit_theta_bin_averaged(l, C_l):
+    def xit_theta_bin_averaged(ell, C_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        C_l = C_ell[2:]
         P_l_2_bin_averaged = xit_theta_bin_averaged_values
         return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * C_l )
 
-    def xi_theta_bin_averaged(l, C_l):
+    def xi_theta_bin_averaged(ell, C_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        C_l = C_ell[2:]
         P_l_bin_averaged = xi_theta_bin_averaged_values
         return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l )
 
-    def zetap_theta_bin_averaged(l, iB_l):
+    def zetap_theta_bin_averaged(ell, iB_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        iB_l = iB_ell[2:]
         G_l_2_x_p_bin_averaged = zetap_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_p_bin_averaged / (l*l*(l+1.)*(l+1.)) * iB_l), axis=1 )
 
-    def zetam_theta_bin_averaged(l, iB_l):
+    def zetam_theta_bin_averaged(ell, iB_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        iB_l = iB_ell[2:]
         G_l_2_x_m_bin_averaged = zetam_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * iB_l), axis=1 )
 
-    def zetat_theta_bin_averaged(l, iB_l):
+    def zetat_theta_bin_averaged(ell, iB_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        iB_l = iB_ell[2:]
         P_l_2_bin_averaged = zetat_theta_bin_averaged_values
         return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * iB_l )
 
-    def zeta_theta_bin_averaged(l, iB_l):
+    def zeta_theta_bin_averaged(ell, iB_ell):
+        l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
+        iB_l = iB_ell[2:]
         P_l_bin_averaged = zeta_theta_bin_averaged_values
         return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * iB_l )
 
