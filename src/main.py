@@ -163,6 +163,8 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
 
     def xip_theta_bin_averaged(l, C_l):
         G_l_2_x_p_bin_averaged = xip_theta_bin_averaged_values
+        print(l.shape)
+        print(C_l.shape)
         return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_p_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
 
     def xim_theta_bin_averaged(l, C_l):
