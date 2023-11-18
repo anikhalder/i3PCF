@@ -108,6 +108,89 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         print('Number of 2pt shear x shear correlations (for plus or minus or kappa) =', num_2pt_sss_correlations)
         print('Number of i3pt shear x shear correlations (for plus or minus or kappa) =', num_i3pt_sss_correlations)
 
+    ## pre-compute or load the bin-averaged values
+
+    if (os.path.exists('../data/angular_bins/xip_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy') == False or
+        os.path.exists('../data/angular_bins/zetap_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False)):
+
+        ell = np.arange(0, 15000-1)
+
+        xip_bin_averaged_values = np.zeros([alpha_arcmins_xi.size, ell.size-2])
+        xim_bin_averaged_values = np.zeros([alpha_arcmins_xi.size, ell.size-2])
+        xit_bin_averaged_values = np.zeros([alpha_arcmins_xi.size, ell.size-2])
+        xi_bin_averaged_values = np.zeros([alpha_arcmins_xi.size, ell.size-2])
+
+        for i in range(alpha_arcmins_xi.size):
+            xip_bin_averaged_values[i,:] = xip_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
+            xim_bin_averaged_values[i,:] = xim_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
+            xit_bin_averaged_values[i,:] = xit_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
+            xi_bin_averaged_values[i,:] = xi_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
+
+        np.save('../data/angular_bins/xip_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xip_bin_averaged_values)
+        np.save('../data/angular_bins/xim_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xim_bin_averaged_values)
+        np.save('../data/angular_bins/xit_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xit_bin_averaged_values)
+        np.save('../data/angular_bins/xi_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xi_bin_averaged_values)
+
+        zetap_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+        zetam_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+        zetat_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+        zeta_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+
+        for i in range(alpha_arcmins.size):
+            zetap_bin_averaged_values[i,:] = xip_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+            zetam_bin_averaged_values[i,:] = xim_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+            zetat_bin_averaged_values[i,:] = xit_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+            zeta_bin_averaged_values[i,:] = xi_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+
+        np.save('../data/angular_bins/zetap_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values', zetap_bin_averaged_values)
+        np.save('../data/angular_bins/zetam_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values', zetam_bin_averaged_values)
+        np.save('../data/angular_bins/zetat_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values', zetat_bin_averaged_values)
+        np.save('../data/angular_bins/zeta_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values', zeta_bin_averaged_values)
+
+    else:
+
+        xip_theta_bin_averaged_values = np.load('../data/angular_bins/xip_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values')
+        xim_theta_bin_averaged_values = np.load('../data/angular_bins/xim_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values')
+        xit_theta_bin_averaged_values = np.load('../data/angular_bins/xit_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values')
+        xi_theta_bin_averaged_values = np.load('../data/angular_bins/xi_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values')
+
+        zetap_theta_bin_averaged_values = np.load('../data/angular_bins/zetap_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values')
+        zetam_theta_bin_averaged_values = np.load('../data/angular_bins/zetam_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values')
+        zetat_theta_bin_averaged_values = np.load('../data/angular_bins/zetat_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values')
+        zeta_theta_bin_averaged_values = np.load('../data/angular_bins/zeta_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values')
+
+    def xip_theta_bin_averaged(l, C_l):
+        G_l_2_x_p_bin_averaged = xip_theta_bin_averaged_values
+        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_p_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
+
+    def xim_theta_bin_averaged(l, C_l):
+        G_l_2_x_m_bin_averaged = xim_theta_bin_averaged_values
+        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
+
+    def xit_theta_bin_averaged(l, C_l):
+        P_l_2_bin_averaged = xit_theta_bin_averaged_values
+        return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * C_l )
+
+    def xi_theta_bin_averaged(l, C_l):
+        P_l_bin_averaged = xi_theta_bin_averaged_values
+        return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l )
+
+    def zetap_theta_bin_averaged(l, C_l):
+        G_l_2_x_m_bin_averaged = zetap_theta_bin_averaged_values
+        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
+
+    def zetam_theta_bin_averaged(l, C_l):
+        G_l_2_x_m_bin_averaged = zetam_theta_bin_averaged_values
+        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
+
+    def zetat_theta_bin_averaged(l, C_l):
+        P_l_2_bin_averaged = zetat_theta_bin_averaged_values
+        return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * C_l )
+
+    def zeta_theta_bin_averaged(l, C_l):
+        P_l_bin_averaged = zeta_theta_bin_averaged_values
+        return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l )
+
 P_l_z_grid_path = input.P_l_z_grid_path
 iB_l_z_grid_path = input.iB_l_z_grid_path
 
@@ -964,13 +1047,13 @@ for param_idx in range(start_idx, stop_idx):
 
                         for i in range(alpha_min_arcmins_xi.size):
                             if (xi_correlation_name == 'pp'):
-                                xi_array_bin_averaged[i] = xip_theta_bin_averaged(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell, P_ell)
+                                xi_array_bin_averaged[i] = xip_theta_bin_averaged(ell, P_ell)
                             elif (xi_correlation_name == 'mm'):
-                                xi_array_bin_averaged[i] = xim_theta_bin_averaged(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell, P_ell)
+                                xi_array_bin_averaged[i] = xim_theta_bin_averaged(ell, P_ell)
                             elif (xi_correlation_name == 'tt'):
-                                xi_array_bin_averaged[i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell, P_ell)
+                                xi_array_bin_averaged[i] = xit_theta_bin_averaged(ell, P_ell)
                             elif (xi_correlation_name == 'gg' or xi_correlation_name == 'kk' or xi_correlation_name == 'gk'):
-                                xi_array_bin_averaged[i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell, P_ell)          
+                                xi_array_bin_averaged[i] = xi_theta_bin_averaged(ell, P_ell)          
 
                         np.savetxt(xi_correlations_path+"xi_"+xi_correlation_name+"_"+q1_bin_name+"_"+q2_bin_name+filename_extension, xi_array_bin_averaged.T) 
 
@@ -1240,45 +1323,45 @@ for param_idx in range(start_idx, stop_idx):
 
                             for i in range(alpha_min_arcmins.size):
                                 if (iZ_correlation_name == 'app'):
-                                    iZ_array_bin_averaged[0,i] = xip_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
+                                    iZ_array_bin_averaged[0,i] = xip_theta_bin_averaged(ell, iB_1_ell)
                                     iZ_array_bin_averaged[5,i] = iZ_array_bin_averaged[0,i] ##
                                 elif (iZ_correlation_name == 'amm'):
-                                    iZ_array_bin_averaged[0,i] = xim_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
+                                    iZ_array_bin_averaged[0,i] = xim_theta_bin_averaged(ell, iB_1_ell)
                                     iZ_array_bin_averaged[5,i] = iZ_array_bin_averaged[0,i] ##
                                 elif (iZ_correlation_name == 'att'):
-                                    iZ_array_bin_averaged[0,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_3_ell)
-                                    iZ_array_bin_averaged[5,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0,i] = xit_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = xit_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = xit_theta_bin_averaged(ell, iB_3_ell)
+                                    iZ_array_bin_averaged[5,i] = xit_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'agg'):
-                                    iZ_array_bin_averaged[0,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[5,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##
+                                    iZ_array_bin_averaged[0,i] = xi_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = xi_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = xi_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3,i] = xi_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[5,i] = xi_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##
                                 elif (iZ_correlation_name == 'gpp'):
-                                    iZ_array_bin_averaged[0,i] = xip_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xip_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xip_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_3_ell) 
-                                    iZ_array_bin_averaged[5,i] = xip_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0,i] = xip_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = xip_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = xip_theta_bin_averaged(ell, iB_3_ell) 
+                                    iZ_array_bin_averaged[5,i] = xip_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'gmm'):
-                                    iZ_array_bin_averaged[0,i] = xim_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xim_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xim_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_3_ell) 
-                                    iZ_array_bin_averaged[5,i] = xim_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0,i] = xim_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = xim_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = xim_theta_bin_averaged(ell, iB_3_ell) 
+                                    iZ_array_bin_averaged[5,i] = xim_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'gtt'):
-                                    iZ_array_bin_averaged[0,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[5,i] = xit_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##    
+                                    iZ_array_bin_averaged[0,i] = xit_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = xit_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = xit_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3,i] = xit_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[5,i] = xit_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##    
                                 elif (iZ_correlation_name == 'ggg' or iZ_correlation_name == 'akk' or iZ_correlation_name == 'agk' or iZ_correlation_name == 'gkk' or iZ_correlation_name == 'ggk'):
-                                    iZ_array_bin_averaged[0,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[4,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_5_ell) 
-                                    iZ_array_bin_averaged[5,i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell+iB_5_ell) ##    
+                                    iZ_array_bin_averaged[0,i] = xi_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = xi_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = xi_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3,i] = xi_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[4,i] = xi_theta_bin_averaged(ell, iB_5_ell) 
+                                    iZ_array_bin_averaged[5,i] = xi_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell+iB_5_ell) ##    
 
                             np.savetxt(iZ_correlations_path+"iZ_"+iZ_correlation_name+"_"+q1_bin_name+"_"+q2_bin_name+"_"+q3_bin_name+filename_extension, iZ_array_bin_averaged.T)  
 
