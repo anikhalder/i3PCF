@@ -177,21 +177,21 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         P_l_bin_averaged = xi_theta_bin_averaged_values
         return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l )
 
-    def zetap_theta_bin_averaged(l, C_l):
-        G_l_2_x_m_bin_averaged = zetap_theta_bin_averaged_values
-        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
+    def zetap_theta_bin_averaged(l, iB_l):
+        G_l_2_x_p_bin_averaged = zetap_theta_bin_averaged_values
+        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_p_bin_averaged / (l*l*(l+1.)*(l+1.)) * iB_l), axis=1 )
 
-    def zetam_theta_bin_averaged(l, C_l):
+    def zetam_theta_bin_averaged(l, iB_l):
         G_l_2_x_m_bin_averaged = zetam_theta_bin_averaged_values
-        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * C_l), axis=1 )
+        return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * iB_l), axis=1 )
 
-    def zetat_theta_bin_averaged(l, C_l):
+    def zetat_theta_bin_averaged(l, iB_l):
         P_l_2_bin_averaged = zetat_theta_bin_averaged_values
-        return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * C_l )
+        return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * iB_l )
 
-    def zeta_theta_bin_averaged(l, C_l):
+    def zeta_theta_bin_averaged(l, iB_l):
         P_l_bin_averaged = zeta_theta_bin_averaged_values
-        return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l )
+        return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * iB_l )
 
 P_l_z_grid_path = input.P_l_z_grid_path
 iB_l_z_grid_path = input.iB_l_z_grid_path
@@ -1325,45 +1325,45 @@ for param_idx in range(start_idx, stop_idx):
 
                             for i in range(alpha_min_arcmins.size):
                                 if (iZ_correlation_name == 'app'):
-                                    iZ_array_bin_averaged[0,i] = xip_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[0,i] = zetap_theta_bin_averaged(ell, iB_1_ell)
                                     iZ_array_bin_averaged[5,i] = iZ_array_bin_averaged[0,i] ##
                                 elif (iZ_correlation_name == 'amm'):
-                                    iZ_array_bin_averaged[0,i] = xim_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[0,i] = zetam_theta_bin_averaged(ell, iB_1_ell)
                                     iZ_array_bin_averaged[5,i] = iZ_array_bin_averaged[0,i] ##
                                 elif (iZ_correlation_name == 'att'):
-                                    iZ_array_bin_averaged[0,i] = xit_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xit_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xit_theta_bin_averaged(ell, iB_3_ell)
-                                    iZ_array_bin_averaged[5,i] = xit_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0,i] = zetat_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = zetat_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = zetat_theta_bin_averaged(ell, iB_3_ell)
+                                    iZ_array_bin_averaged[5,i] = zetat_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'agg'):
-                                    iZ_array_bin_averaged[0,i] = xi_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xi_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xi_theta_bin_averaged(ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3,i] = xi_theta_bin_averaged(ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[5,i] = xi_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##
+                                    iZ_array_bin_averaged[0,i] = zeta_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = zeta_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = zeta_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3,i] = zeta_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[5,i] = zeta_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##
                                 elif (iZ_correlation_name == 'gpp'):
-                                    iZ_array_bin_averaged[0,i] = xip_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xip_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xip_theta_bin_averaged(ell, iB_3_ell) 
-                                    iZ_array_bin_averaged[5,i] = xip_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0,i] = zetap_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = zetap_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = zetap_theta_bin_averaged(ell, iB_3_ell) 
+                                    iZ_array_bin_averaged[5,i] = zetap_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'gmm'):
-                                    iZ_array_bin_averaged[0,i] = xim_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xim_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xim_theta_bin_averaged(ell, iB_3_ell) 
-                                    iZ_array_bin_averaged[5,i] = xim_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0,i] = zetam_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = zetam_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = zetam_theta_bin_averaged(ell, iB_3_ell) 
+                                    iZ_array_bin_averaged[5,i] = zetam_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'gtt'):
-                                    iZ_array_bin_averaged[0,i] = xit_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xit_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xit_theta_bin_averaged(ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3,i] = xit_theta_bin_averaged(ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[5,i] = xit_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##    
+                                    iZ_array_bin_averaged[0,i] = zetat_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = zetat_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = zetat_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3,i] = zetat_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[5,i] = zetat_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##    
                                 elif (iZ_correlation_name == 'ggg' or iZ_correlation_name == 'akk' or iZ_correlation_name == 'agk' or iZ_correlation_name == 'gkk' or iZ_correlation_name == 'ggk'):
-                                    iZ_array_bin_averaged[0,i] = xi_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1,i] = xi_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2,i] = xi_theta_bin_averaged(ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3,i] = xi_theta_bin_averaged(ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[4,i] = xi_theta_bin_averaged(ell, iB_5_ell) 
-                                    iZ_array_bin_averaged[5,i] = xi_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell+iB_5_ell) ##    
+                                    iZ_array_bin_averaged[0,i] = zeta_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1,i] = zeta_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2,i] = zeta_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3,i] = zeta_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[4,i] = zeta_theta_bin_averaged(ell, iB_5_ell) 
+                                    iZ_array_bin_averaged[5,i] = zeta_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell+iB_5_ell) ##    
 
                             np.savetxt(iZ_correlations_path+"iZ_"+iZ_correlation_name+"_"+q1_bin_name+"_"+q2_bin_name+"_"+q3_bin_name+filename_extension, iZ_array_bin_averaged.T)  
 
