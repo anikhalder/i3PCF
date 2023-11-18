@@ -1060,7 +1060,6 @@ for param_idx in range(start_idx, stop_idx):
                         np.savetxt(P_spectra_path+"P_"+xi_correlation_name+"_l_"+q1_bin_name+"_"+q2_bin_name+filename_extension, P_l.T)
 
                         ell, P_ell = C_ell_spherical_sky(l_array, P_l)
-                        print(ell.size, P_ell.size)
 
                         xi_array_bin_averaged = np.zeros(alpha_min_arcmins_xi.size)
 
@@ -1341,10 +1340,10 @@ for param_idx in range(start_idx, stop_idx):
 
                             if (iZ_correlation_name == 'app'):
                                 iZ_array_bin_averaged[0] = zetap_theta_bin_averaged(ell, iB_1_ell)
-                                iZ_array_bin_averaged[5] = iZ_array_bin_averaged[0,i] ##
+                                iZ_array_bin_averaged[5] = iZ_array_bin_averaged[0] ##
                             elif (iZ_correlation_name == 'amm'):
                                 iZ_array_bin_averaged[0] = zetam_theta_bin_averaged(ell, iB_1_ell)
-                                iZ_array_bin_averaged[5] = iZ_array_bin_averaged[0,i] ##
+                                iZ_array_bin_averaged[5] = iZ_array_bin_averaged[0] ##
                             elif (iZ_correlation_name == 'att'):
                                 iZ_array_bin_averaged[0] = zetat_theta_bin_averaged(ell, iB_1_ell)
                                 iZ_array_bin_averaged[1] = zetat_theta_bin_averaged(ell, iB_2_ell)
