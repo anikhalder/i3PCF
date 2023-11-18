@@ -111,7 +111,7 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     ## pre-compute or load the bin-averaged values
 
     if (os.path.exists('../data/angular_bins/xip_'+str(min_sep_tc_xi)+'_'+str(max_sep_tc_xi)+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy') == False or
-        os.path.exists('../data/angular_bins/zetap_W'+str(W)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False):
+        os.path.exists('../data/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(min_sep_tc)+'_'+str(max_sep_tc)+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False):
 
         ell = np.arange(0, 15000-1)
 
