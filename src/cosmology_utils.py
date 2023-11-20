@@ -127,9 +127,9 @@ class CosmoClass:
             #pool = mp.Pool(processes=mp.cpu_count()-2)
             pool = mp.Pool(processes=constants._num_of_prcoesses_)
             result_k_z = pool.map(populate_k_z_grid_quantities, k_and_z_list)
-            result_k_z = np.reshape(np.array(result_k_z), (self.k_grid_points_ascending.size, self.z_grid_points_ascending.size, 6))
+            result_k_z = np.reshape(np.array(result_k_z, dtype=np.float64), (self.k_grid_points_ascending.size, self.z_grid_points_ascending.size, 6))
             result_R_z = pool.map(populate_R_z_grid_quantities, R_and_z_list)
-            result_R_z = np.reshape(np.array(result_R_z), (self.R_grid_points_ascending.size, self.z_grid_points_ascending.size, 3))
+            result_R_z = np.reshape(np.array(result_R_z, dtype=np.float64), (self.R_grid_points_ascending.size, self.z_grid_points_ascending.size, 3))
             pool.close()
             pool.join()
 
