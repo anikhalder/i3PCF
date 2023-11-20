@@ -1,5 +1,3 @@
-### test pull request
-
 ### example call to execute script
 # python main.py 0 1
 
