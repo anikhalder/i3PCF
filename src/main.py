@@ -1038,6 +1038,8 @@ for param_idx in range(start_idx, stop_idx):
 
         if (compute_P_spectra_and_correlations == 'yes'):
 
+            print("Computing P(l) spectra and xi(alpha) correlations")
+
             corr_idx = 0
             for a in range(len(SOURCE_BIN_NAME_LIST)):
                 for b in range(a, len(SOURCE_BIN_NAME_LIST)):
@@ -1092,8 +1094,6 @@ for param_idx in range(start_idx, stop_idx):
 
                         xi_array_bin_averaged = np.zeros(alpha_min_arcmins_xi.size)
 
-                        print('Reached here')
-
                         if (xi_correlation_name == 'pp'):
                             xi_array_bin_averaged = xip_theta_bin_averaged(ell, P_ell)
                         elif (xi_correlation_name == 'mm'):
@@ -1135,6 +1135,8 @@ for param_idx in range(start_idx, stop_idx):
                     corr_idx += 1
 
         if (compute_iB_spectra_and_correlations == 'yes'):     
+
+            print("Computing iB(l) spectra and iZ(alpha) correlations")
 
             corr_idx = 0
             for a in range(len(SOURCE_BIN_NAME_LIST)):
