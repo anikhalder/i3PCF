@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.special import j1
+import vegas
 
 ######################################################################################
 
@@ -65,69 +66,37 @@ def W3D_prime_TH_FS(k_arr, R):
 
 ######################################################################################
 
-'''
-
 ## area pre-factors
 
+@vegas.batchintegrand
+class d_iZ_A2pt_batch(vegas.BatchIntegrand):
+    def __init__(self, theta_T):
+        self.theta_T = theta_T
+        
+    def __call__(self, p):
+        # evaluate integrand at multiple points simultaneously
+
+        alpha = p[:,0]
+        theta = p[:,1]
+        phi_theta = p[:,2]
+
+        theta_plus_alpha = np.sqrt(theta*theta + alpha*alpha + 2*theta*alpha*np.cos(phi_theta))
+        window_factor = W2D_TH_RS(theta, self.theta_T)* W2D_TH_RS(theta_plus_alpha, self.theta_T)
+
+        return window_factor
+
 def iZ_A2pt(params):
-    # Function to compute the iB(l,z) at a given (l,z) grid point with vegas integration
-    # Wse polar coordinates here where p[2] and p[3] are polar angles (radian) of 2D wavevctors l1 and l2.
-    # Without loss of generality can always assume that vector l coincides with the positive x-axis i.e. phi_l = 0.
+    # Function to compute the A2opt area pre-factor for iZ between alpha_min and alpha_max
+    # Use polar coordinates here
+    # Without loss of generality can always assume that vector alpha coincides with the positive x-axis i.e. phi_alpha = 0.
     alpha_min = params[0]
     alpha_max = params[1]
     theta_T = params[2]
 
-    integ = vegas.Integrator([[alpha_min, alpha_max], [0, theta_T], [0, 2*np.pi]]) # l1, l2, phi_1, phi_2
+    integ = vegas.Integrator([[alpha_min, alpha_max], [0, theta_T], [0, 2*np.pi]]) # alpha, theta, phi_theta
 
-    if (B3D_type == 'lin'):
-        diB_app_l_z = diB_l_z_batch(l, z, "iB_UWWp", theta_U, theta_T, CosmoClassObject, "B_tree")
-    elif (B3D_type == 'nl'):
-        if (input.iB_app_type == 'GM'):
-            diB_app_l_z = diB_l_z_batch(l, z, "iB_UWWp", theta_U, theta_T, CosmoClassObject, "B_GM")
-        else:
-            diB_app_l_z = diB_l_z_batch(l, z, "iB_UWWp", theta_U, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_app_l_z, nitn=5, neval=2e4) # warm-up the MC grid importance sampling for initial adapting of the grid
-    iB_app_l_z = integ(diB_app_l_z, nitn=5, neval=6e5).mean
+    d_iZ_A2pt = d_iZ_A2pt_batch(theta_T)
+    integ(d_iZ_A2pt, nitn=5, neval=1e3) # warm-up the MC grid importance sampling for initial adapting of the grid
+    iZ_A2pt = integ(d_iZ_A2pt, nitn=5, neval=1e5).mean
 
-    return iB_app_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
-
-
-def A2pt_phi_qag_integrand(double phi, void *params)
-{
-    params_A2pt_phi_integrand *p = static_cast<params_A2pt_phi_integrand *>(params);
-
-    double length = l_ApB(p->theta, phi, p->alpha, p->phi_alpha);
-
-    return W2D_TH_RS_unnormalised(length, p->theta_T);
-}
-
-double A2pt_theta_qag_integrand(double theta, void *params)
-{
-    params_A2pt_theta_phi_integrand *p = static_cast<params_A2pt_theta_phi_integrand *>(params);
-
-    //parameters in integrand
-    params_A2pt_phi_integrand args = {theta, p->phi_alpha, p->alpha, p->theta_T};
-
-    double result = 0;              // the result from the integration
-    double error = 0;               // the estimated error from the integration
-
-    qag_1D_integration(&A2pt_phi_qag_integrand, static_cast<void *>(&args), 0, 2*M_PI, calls_1e5, result, error);
-
-    return theta*W2D_TH_RS_unnormalised(theta, p->theta_T)*result;
-}
-
-double A2pt_qag(double alpha, double theta_T)
-{
-    double phi_alpha = 0;           // assuming angular-independency we can just fix the phi_alpha to any angle we want
-    double result = 0;              // the result from the integration
-    double error = 0;               // the estimated error from the integration
-
-    //parameters in integrand
-    params_A2pt_theta_phi_integrand args = {phi_alpha, alpha, theta_T};
-
-    qag_1D_integration(&A2pt_theta_qag_integrand, static_cast<void *>(&args), 0, 4.0*theta_T, calls_1e5, result, error);
-
-    return result;
-}
-
-'''
+    return iZ_A2pt

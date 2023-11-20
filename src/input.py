@@ -23,10 +23,12 @@ P3D_set_k_gt_k_nl_to_zero = False
 
 P3D_type = 'nl' # lin, nl
 compute_P_grid = 'no' # yes, no
-compute_P_spectra_and_correlations = 'yes' # yes, no
+compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'no' # yes, no
-compute_iB_spectra_and_correlations = 'yes' # yes, no
+compute_iB_spectra_and_correlations = 'no' # yes, no
+compute_area_prefactor = 'yes' # yes, no
+
 compute_chi_D_values = 'no'
 compute_H_values = 'no'
 use_Dirac_comb = False
@@ -136,3 +138,6 @@ if (compute_iB_spectra_and_correlations == 'yes'):
     elif (B3D_type == 'nl'):
         iB_spectra_path = "../output/spectra/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_spectra_l"+str(l_array.size)+"_J0_GM_J2J4_GMRF_fsq7_"+spectra_and_correlation_type+"/"
         iZ_correlations_path = "../output/correlations/iZ_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_correlations_alpha_"+str(min_sep_tc)+"_"+str(max_sep_tc)+"_"+str(nbins_tc)+"_J0_GM_J2J4_GMRF_fsq7_"+spectra_and_correlation_type+"/"
+
+if (compute_area_prefactor == 'yes'):
+    area_prefactor_path = "../output/area_prefactor/"

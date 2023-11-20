@@ -20,6 +20,7 @@ import constants
 from misc_utils import num_correlations
 import input
 import sys
+from window_utils import iZ_A2pt
 
 #################################################################################################################################
 #################################################################################################################################
@@ -37,6 +38,8 @@ compute_P_spectra_and_correlations = input.compute_P_spectra_and_correlations
 B3D_type = input.B3D_type
 compute_iB_grid = input.compute_iB_grid
 compute_iB_spectra_and_correlations = input.compute_iB_spectra_and_correlations
+compute_area_prefactor = input.compute_area_prefactor
+
 compute_chi_D_values = input.compute_chi_D_values
 compute_H_values = input.compute_H_values
 
@@ -248,6 +251,12 @@ if (compute_iB_spectra_and_correlations == 'yes'):
     if (os.path.isdir(iZ_correlations_path) == False):
         os.mkdir(iZ_correlations_path)
 
+if (compute_area_prefactor == 'yes'):
+
+    area_prefactor_path = input.area_prefactor_path
+    if (os.path.isdir(area_prefactor_path) == False):
+        os.mkdir(area_prefactor_path)
+
 if (compute_chi_D_values == 'yes'):
 
     chi_D_path = input.chi_D_path
@@ -425,6 +434,26 @@ for param_idx in range(start_idx, stop_idx):
     if (compute_H_values == 'yes'):
         H_val = np.array([CosmoClassObject.H_z(z_val)])
         np.savetxt(H_path+"H"+filename_extension, H_val.T)
+
+    if (compute_area_prefactor == 'yes'):
+        ## set the angular bins in which to compute the local 2PCFs
+        min_sep_tc = input.min_sep_tc
+        max_sep_tc = input.max_sep_tc
+        nbins_tc = input.nbins_tc
+
+        kk = treecorr.KKCorrelation(min_sep=min_sep_tc, max_sep=max_sep_tc, nbins=nbins_tc, sep_units='arcmin')
+        alpha_arcmins = kk.rnom
+        alpha_min_arcmins = kk.left_edges
+        alpha_max_arcmins = kk.right_edges
+
+        iZ_A2pt_array = np.zeros([alpha_arcmins.size])
+
+        for i in range(iZ_A2pt_array.size):
+            iZ_A2pt_array[i] = iZ_A2pt([np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), theta_T])
+
+        dat = np.array([alpha_arcmins, alpha_min_arcmins, alpha_max_arcmins, iZ_A2pt_array])
+
+        np.savetxt(area_prefactor_path+"iZ_A2pt_W+"+str(theta_T_arcmins)+"_alpha_"+str(min_sep_tc)+"_"+str(max_sep_tc)+"_"+str(nbins_tc)+".dat", dat.T)
 
     if (compute_P_grid == 'yes'):
 
