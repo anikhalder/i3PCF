@@ -58,8 +58,14 @@ def q_k_zs_distribution(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func):
     '''
 
     chi_z = chi_z_func(z)
-    W_k_zs_distribution_z = quad(W_k_zs_distribution_integrand, z, zs_max, args=(z, chi_z_func, n_s_z_func))[0]
+    #W_k_zs_distribution_z = quad(W_k_zs_distribution_integrand, z, zs_max, args=(z, chi_z_func, n_s_z_func))[0]
 
+    #zs_array = np.linspace(z, zs_max, 100)
+    zs_array = np.arange(z, zs_max, 0.01)
+    chi_zs_array = chi_z_func(zs_array)
+    W_k_zs_distribution_z_array = n_s_z_func(zs_array) * (chi_zs_array - chi_z) / chi_zs_array
+    W_k_zs_distribution_z = np.trapz(W_k_zs_distribution_z_array, x=zs_array)
+   
     return 3./2. * H_0 * H_0 * Omega0_m * (1.+z) * chi_z * W_k_zs_distribution_z
 
 def q_k_zs_distribution_systematics(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func, H_z_func, D_plus_z_func, A_IA_0_NLA, alpha_IA_0_NLA, delta_photoz):
@@ -75,8 +81,13 @@ def q_k_zs_distribution_systematics(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_
     '''
 
     chi_z = chi_z_func(z)
-    W_k_zs_distribution_z = quad(W_k_zs_distribution_integrand, z, zs_max, args=(z, chi_z_func, n_s_z_func, delta_photoz))[0]
+    #W_k_zs_distribution_z = quad(W_k_zs_distribution_integrand, z, zs_max, args=(z, chi_z_func, n_s_z_func, delta_photoz))[0]
 
+    zs_array = np.linspace(z, zs_max, 100)
+    chi_zs_array = chi_z_func(zs_array)
+    W_k_zs_distribution_z_array = n_s_z_func(zs_array + delta_photoz) * (chi_zs_array - chi_z) / chi_zs_array
+    W_k_zs_distribution_z = np.trapz(W_k_zs_distribution_z_array, x=zs_array)
+   
     q_k_z = 3./2. * H_0 * H_0 * Omega0_m * (1.+z) * chi_z * W_k_zs_distribution_z
 
     if (A_IA_0_NLA == 0.0):
