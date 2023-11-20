@@ -1092,6 +1092,8 @@ for param_idx in range(start_idx, stop_idx):
 
                         xi_array_bin_averaged = np.zeros(alpha_min_arcmins_xi.size)
 
+                        print('Reached here')
+
                         if (xi_correlation_name == 'pp'):
                             xi_array_bin_averaged = xip_theta_bin_averaged(ell, P_ell)
                         elif (xi_correlation_name == 'mm'):
