@@ -84,8 +84,11 @@ elif (theta_T_arcmins == 130):
 #SOURCE_BIN_NAME_LIST = ['zs1', 'zs2']
 #SOURCE_BIN_VALUES = [0.5739, 1.0334]
 
-SOURCE_BIN_NAME_LIST = ['SBIN1', 'SBIN2', 'SBIN3', 'SBIN4']
-SOURCE_BIN_VALUES = ['', '', '', '']
+SOURCE_BIN_NAME_LIST = ['SBIN4']
+SOURCE_BIN_VALUES = ['']
+
+#SOURCE_BIN_NAME_LIST = ['SBIN1', 'SBIN2', 'SBIN3', 'SBIN4']
+#SOURCE_BIN_VALUES = ['', '', '', '']
 
 ### LENS bin name and type (only used when computing correlations with halos x lensing)
 halo_type_user = '' # 'all_halos'
