@@ -22,7 +22,7 @@ params_lhs = {}
 P3D_set_k_gt_k_nl_to_zero = False
 
 P3D_type = 'nl' # lin, nl
-compute_P_grid = 'yes' # yes, no
+compute_P_grid = 'no' # yes, no
 compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'no' # yes, no
@@ -35,7 +35,7 @@ use_Dirac_comb = False
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
 grid_type = 'shear_x_shear_COSMOGRIDV1'
-spectra_and_correlation_type = 'shear_x_shear_DESY3_combined_COSMOGRIDV1'
+spectra_and_correlation_type = 'shear_x_shear_DESY3_COSMOGRIDV1'
 
 ### correlation name list
 # Naming convention aperture : a : shear aperture mass ; g : galaxy mean number density in tophat filter
