@@ -90,6 +90,11 @@ SOURCE_BIN_VALUES = ['']
 #SOURCE_BIN_NAME_LIST = ['SBIN1', 'SBIN2', 'SBIN3', 'SBIN4']
 #SOURCE_BIN_VALUES = ['', '', '', '']
 
+SOURCE_BIN_delta_photoz_values = [0.0]
+SOURCE_BIN_m_values = [1]
+A_IA_0_NLA = 0.0
+alpha_IA_0_NLA = 0.0
+
 ### LENS bin name and type (only used when computing correlations with halos x lensing)
 halo_type_user = '' # 'all_halos'
 

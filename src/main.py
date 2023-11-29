@@ -105,6 +105,12 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
 
         SOURCE_BIN_NAME_LIST = input.SOURCE_BIN_NAME_LIST
         SOURCE_BIN_VALUES = input.SOURCE_BIN_VALUES
+        
+        SOURCE_BIN_delta_photoz_values = input.SOURCE_BIN_delta_photoz_values
+        SOURCE_BIN_m_values = input.SOURCE_BIN_m_values
+        A_IA_0_NLA = input.A_IA_0_NLA
+        alpha_IA_0_NLA = input.alpha_IA_0_NLA
+
         num_2pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 2)
         num_i3pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 3)
 
@@ -308,14 +314,14 @@ for param_idx in range(start_idx, stop_idx):
         h = cosmo_pars_fid['h']
 
     if ('A_s' in params_lhs.keys()):
-        A_s = params_lhs['As'][param_idx]
+        A_s = params_lhs['A_s'][param_idx]
         sigma8_or_As = 'As'
     else:
         if ('sigma8' in cosmo_pars_fid.keys()):
             sigma8 = cosmo_pars_fid['sigma8']
             sigma8_or_As = 'sigma8'
         elif ('A_s' in cosmo_pars_fid.keys()):
-            A_s = cosmo_pars_fid['As']
+            A_s = cosmo_pars_fid['A_s']
             sigma8_or_As = 'As'
 
     if ('n_s' in params_lhs.keys()):
@@ -979,7 +985,7 @@ for param_idx in range(start_idx, stop_idx):
 
                     else:
                         qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN)
-                        #qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution_systematics(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN, CosmoClassObject.H_z, CosmoClassObject.D_plus_z, A_IA_0_NLA, alpha_IA_0_NLA, delta_photoz)
+                        #qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution_systematics(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN, CosmoClassObject.H_z, CosmoClassObject.D_plus_z, A_IA_0_NLA, alpha_IA_0_NLA, SOURCE_BIN_delta_photoz_values[SOURCE_BIN_idx], SOURCE_BIN_m_values[SOURCE_BIN_idx])
 
         if ('shear_x_shear' not in spectra_and_correlation_type):
             # Right now this is only for a single lens bin
