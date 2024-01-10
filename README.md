@@ -24,16 +24,22 @@ Recompile class after editing the python/class.pyx file by adding the following 
 
 ## Running the code
 
-- Give your desired input settings in the file /src/input.py (e.g. number of tomographic bins, kind of correlations shear x galaxy, which bispectrum recipe to use, etc.)
-- Execute the code from inside the /src/ with:
+- Give your desired input settings in the file **/src/input.py** (e.g. number of tomographic bins, kind of correlations shear x galaxy, which bispectrum recipe to use, etc.)
+- Execute the code from inside the **/src/** folder with:
 
-python main.py 0 1
+**python main.py 0 1**
 
 where the 0 and 1 are needed to tell the code which cosmologies to execute e.g. if you have an array with multiple cosmologies (from Latin-hypercube sampling), then 0 and 1 says start at the 0th index of the array and stop until you reach the 1st index.
  
 ## Schematic workflow
 
-Here is a layout of how the code works (not all files that are used are shown and only the main pathway of the code is depicted to show how the computation flow is performed):
+The main equations that need to be numerically computed to obtain the integrated 3PCF are the following two:
+
+<img width="1213" alt="image" src="https://github.com/anikhalder/i3PCF/assets/20087664/c672411a-216c-414e-b99d-6014227df73b">
+
+where $` \mathcal{B}_{\pm}(\ell) `$ is the integrated bispectrum in 2D and $` \zeta_{\pm}(\alpha) `$ is the corresponding integrated 3PCF obtained on converting the $\mathcal{B}_{\pm}(\ell)$ to a real-space correlation function.
+
+Here is a layout of how the code works to compute the equations above (not all files that are used are shown and only the main pathway of the code is depicted to show how the computation flows):
 
 <img width="1294" alt="image" src="https://github.com/anikhalder/i3PCF/assets/20087664/8beeadea-85b9-4834-aee6-1f6fbc2a9412">
 
