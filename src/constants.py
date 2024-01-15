@@ -12,7 +12,8 @@ _k_min_ = 5.e-4 # [1/Mpc]
 _k_max_ = 0.75*_k_max_pk_ # [1/Mpc]
 
 _z_min_ = 0.0
-_z_max_ = 2.5
+#_z_max_ = 2.5
+_z_max_ = 3.6
 
 _k_grid_npts_ = 500
 _z_grid_zstep_ = 0.05
@@ -28,7 +29,8 @@ _R_max_ = 50.0 # [Mpc]
 _f_sq_ = input.f_sq
 
 ### number of redshift bins used in LOS projection (linear spacing)
-_N_los_ = 200 
+#_N_los_ = 200 
+_N_los_ = 360
 
 ### for halo quantities
 _M_SUN_ = 1.98847e30 # Solar mass in kg

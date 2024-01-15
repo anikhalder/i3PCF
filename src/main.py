@@ -940,7 +940,8 @@ for param_idx in range(start_idx, stop_idx):
         H_0 = CosmoClassObject.H_z(0)
         Omega0_m = CosmoClassObject.Omega0_m
 
-        z_array_los = np.linspace(0.01, 2.0, constants._N_los_)
+        #z_array_los = np.linspace(0.01, 2.0, constants._N_los_)
+        z_array_los = np.linspace(0.01, 3.5, constants._N_los_)
         chi_inv_z_array_los = 1./CosmoClassObject.chi_z(z_array_los)
         H_inv_z_array_los = 1./CosmoClassObject.H_z(z_array_los)
 
@@ -957,11 +958,8 @@ for param_idx in range(start_idx, stop_idx):
             elif ('BIN' in SOURCE_BIN_NAME):
                 if (input.use_Dirac_comb == True):
                     # for Dirac comb
-                    n_s_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/source_planes_Takahashi_DESY3_source_BINS_weights.dat', usecols=[0])
-                    if (SOURCE_BIN_NAME == 'BIN12'):
-                        n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/source_planes_Takahashi_DESY3_source_BINS_weights.dat', usecols=[5])
-                    elif (SOURCE_BIN_NAME == 'BIN34'):
-                        n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/source_planes_Takahashi_DESY3_source_BINS_weights.dat', usecols=[6])
+                    n_s_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[0])
+                    n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[1])
                 else:
                     n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
                     max_z_nofz = np.where(n_s_z_BIN_z_tab >= 2.0)[0][0]

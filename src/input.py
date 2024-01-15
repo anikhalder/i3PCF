@@ -2,7 +2,8 @@ import numpy as np
 
 ### (l,z) grid settings
 l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 113).astype(int)) # 100 integer l values
-z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(2.0), 27)) # 30 z values
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(2.0), 27)) # 30 z values
+z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(3.6), 30)) # 30 z values
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
@@ -22,7 +23,7 @@ params_lhs = {}
 P3D_set_k_gt_k_nl_to_zero = False
 
 P3D_type = 'nl' # lin, nl
-compute_P_grid = 'no' # yes, no
+compute_P_grid = 'yes' # yes, no
 compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'no' # yes, no
@@ -31,11 +32,11 @@ compute_area_prefactor = 'no' # yes, no
 
 compute_chi_D_values = 'no'
 compute_H_values = 'no'
-use_Dirac_comb = False
+use_Dirac_comb = True
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
 grid_type = 'shear_x_shear_COSMOGRIDV1'
-spectra_and_correlation_type = 'shear_x_shear_DESY3_COSMOGRIDV1'
+spectra_and_correlation_type = 'shear_x_shear_DESY3_COSMOGRIDV1_Dirac_center'
 
 ### correlation name list
 # Naming convention aperture : a : shear aperture mass ; g : galaxy mean number density in tophat filter
@@ -84,11 +85,11 @@ elif (theta_T_arcmins == 130):
 #SOURCE_BIN_NAME_LIST = ['zs1', 'zs2']
 #SOURCE_BIN_VALUES = [0.5739, 1.0334]
 
-SOURCE_BIN_NAME_LIST = ['SBIN4']
-SOURCE_BIN_VALUES = ['']
+#SOURCE_BIN_NAME_LIST = ['SBIN4']
+#SOURCE_BIN_VALUES = ['']
 
-#SOURCE_BIN_NAME_LIST = ['SBIN1', 'SBIN2', 'SBIN3', 'SBIN4']
-#SOURCE_BIN_VALUES = ['', '', '', '']
+SOURCE_BIN_NAME_LIST = ['SBIN1', 'SBIN2', 'SBIN3', 'SBIN4']
+SOURCE_BIN_VALUES = ['', '', '', '']
 
 SOURCE_BIN_delta_photoz_values = [0.0]
 SOURCE_BIN_m_values = [1]
