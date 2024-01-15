@@ -980,6 +980,7 @@ for param_idx in range(start_idx, stop_idx):
                             qs_z_array_los[SOURCE_BIN_idx,j] += n_s_z_BIN_vals_tab[zs_plane_idx]*q_k_zs_fixed(z_array_los[j], n_s_z_BIN_z_tab[zs_plane_idx], CosmoClassObject.chi_z, H_0, Omega0_m)
 
                         qs_z_array_los[SOURCE_BIN_idx,j] /= weights_sum
+                        print(str(SOURCE_BIN_NAME)+' '+str(weights_sum))
 
                     else:
                         qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN)
