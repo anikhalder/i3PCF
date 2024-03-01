@@ -1,9 +1,29 @@
 import numpy as np
 
 ### (l,z) grid settings
-l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 113).astype(int)) # 100 integer l values
-z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(2.0), 27)) # 30 z values
+#l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 113).astype(int)) # 100 integer l values
+#l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 247).astype(int)) # 200 integer l values
+l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 719).astype(int)) # 500 integer l values
+
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(2.0), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(3.5), 35)) # 30 z values # for Dirac COSMOGRIDV1
+
+#The following z_array are the mean redshifts of the COSMOGRIDV1 fiducial particle shells.
+z_array = np.array([0.006387739907950163,
+                    0.0192780252546072,0.03240172937512398,0.04576645791530609,0.05938002094626427,0.0732506513595581,
+                    0.08738701045513153,0.10179822146892548,0.11649389564990997,0.13148410618305206,0.14677950739860535,
+                    0.16239139437675476,0.1783316433429718,0.1946128010749817,0.21124814450740814,0.22825175523757935,
+                    0.24563850462436676,0.26342421770095825,0.2816255986690521,0.3002605438232422,0.31934794783592224,
+                    0.33890801668167114,0.35896217823028564,0.37953343987464905,0.40064623951911926,0.42232686281204224,
+                    0.44460320472717285,0.4675053358078003,0.4910655915737152,0.5153185129165649,0.5403013229370117,
+                    0.5660544037818909,0.5926209688186646,0.6200478076934814,0.6483858823776245,0.6776900291442871,
+                    0.7080200910568237,0.7394411563873291,0.7720241546630859,0.8058466911315918,0.8409937024116516,
+                    0.8775583505630493,0.9156432151794434,0.955361545085907,0.9968384504318237,1.0402125120162964,
+                    1.0856380462646484,1.1332874298095703,1.1833534240722656,1.2360525131225586,1.2916284799575806,
+                    1.350358486175537,1.4125570058822632,1.478582501411438,1.5488479137420654,1.6238294839859009,
+                    1.704079508781433,1.7902441024780273,1.8830831050872803,1.983497142791748,2.0925631523132324,
+                    2.2115797996520996,2.342129945755005,2.48616361618042,2.646116018295288,2.825070858001709,
+                    3.026996612548828,3.2570996284484863,3.4399685859680176])
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
@@ -28,7 +48,7 @@ compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'yes' # yes, no
 compute_iB_spectra_and_correlations = 'yes' # yes, no
-compute_area_prefactor = 'no' # yes, no
+compute_area_prefactor = 'yes' # yes, no
 
 compute_chi_D_values = 'no'
 compute_H_values = 'no'
