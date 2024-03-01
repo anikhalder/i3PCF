@@ -26,13 +26,15 @@ P3D_type = 'nl' # lin, nl
 compute_P_grid = 'yes' # yes, no
 compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'no' # yes, no
-compute_iB_spectra_and_correlations = 'no' # yes, no
+compute_iB_grid = 'yes' # yes, no
+compute_iB_spectra_and_correlations = 'yes' # yes, no
 compute_area_prefactor = 'no' # yes, no
 
 compute_chi_D_values = 'no'
 compute_H_values = 'no'
-use_Dirac_comb = True
+use_Dirac_comb = False
+
+nside = 512 # Set to None to ignore
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
 grid_type = 'shear_x_shear_COSMOGRIDV1'
@@ -62,21 +64,21 @@ theta_T_arcmins = 90
 ### Minimum, maximum separations for the correlation computations and the number of log bins
 
 # for global 2PCF
-min_sep_tc_xi = 5
+min_sep_tc_xi = 10
 max_sep_tc_xi = 250
-nbins_tc_xi = 10
+nbins_tc_xi = 15
 
+# TODO: generalize
 # for local (within filter) 2PCF
-min_sep_tc = 5
-max_sep_tc = 2*theta_T_arcmins - 10
-if (theta_T_arcmins == 30):
-    nbins_tc = 5
-elif (theta_T_arcmins == 50):
-    nbins_tc = 7
-elif (theta_T_arcmins == 90):
-    nbins_tc = 10
-elif (theta_T_arcmins == 130):
-    nbins_tc = 15
+min_sep_tc = 10
+max_sep_tc = 250
+nbins_max = 15
+
+binedges = np.geomspace(theta_T_arcmins, max_sep_tc, nbins_max+1)
+binedges = binedges[np.where(binedges <= 2 * theta_T_arcmins - 5)]
+nbins_tc = len(binedges)-1
+max_sep_tc = binedges[-1]
+
 
 ### SOURCE bin name and values
 #SOURCE_BIN_NAME_LIST = ['BIN12', 'BIN34']

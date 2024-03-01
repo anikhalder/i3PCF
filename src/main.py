@@ -21,6 +21,7 @@ from misc_utils import num_correlations
 import input
 import sys
 from window_utils import iZ_A2pt
+import healpy as hp
 
 #################################################################################################################################
 #################################################################################################################################
@@ -32,6 +33,9 @@ start_idx = int(sys.argv[1])
 stop_idx = int(sys.argv[2])
 
 ### arguments for the script call
+
+nside = input.nside # If not None, pixel window function will be considered for C_ells
+
 P3D_type = input.P3D_type
 compute_P_grid = input.compute_P_grid
 compute_P_spectra_and_correlations = input.compute_P_spectra_and_correlations
@@ -77,6 +81,14 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     alpha_arcmins_xi = kk_xi.rnom
     alpha_min_arcmins_xi = kk_xi.left_edges
     alpha_max_arcmins_xi = kk_xi.right_edges
+    
+    #binedges = np.geomspace(10,250,16)
+    #binedges = binedges[np.where(binedges<=175)]
+    #rnom = np.sqrt(binedges[1:]*binedges[:-1])
+    #alpha_arcmins_xi = rnom
+    #alpha_min_arcmins_xi = binedges[:-1]
+    #alpha_max_arcmins_xi = binedges[1:]
+
 
     np.savetxt("../data/angular_bins/alpha_angles_arcmins_xi_"+str(min_sep_tc_xi)+"_"+str(max_sep_tc_xi)+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_arcmins_xi.T)
     np.savetxt("../data/angular_bins/alpha_min_angles_arcmins_xi_"+str(min_sep_tc_xi)+"_"+str(max_sep_tc_xi)+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_min_arcmins_xi.T)
@@ -1370,6 +1382,22 @@ for param_idx in range(start_idx, stop_idx):
                             ell, iB_3_ell = C_ell_spherical_sky(l_array, iB_l[2])
                             ell, iB_4_ell = C_ell_spherical_sky(l_array, iB_l[3])
                             ell, iB_5_ell = C_ell_spherical_sky(l_array, iB_l[4])
+
+                            #if nside is given, consider the pixel window function's effect on the C_ells
+                            if nside is not None:
+                                
+                                pixwin = hp.pixwin(nside, lmax=np.max(ell))
+                                pixwin_ell = np.arange(len(pixwin))                                         # pixwin creates window function for ell=0 to 3*nside-1
+                                pixwin = pixwin[np.intersect1d(ell, pixwin_ell, return_indices=True)[2]]    # match pixwin functiopn to correct ells
+                                pixwin = np.append(pixwin, np.zeros(len(ell) - len(pixwin)))                # Add zeros to match length
+                                
+                                # Add correction to C_ell
+                                iB_1_ell = iB_1_ell * pixwin**2             
+                                iB_2_ell = iB_2_ell * pixwin**2
+                                iB_3_ell = iB_3_ell * pixwin**2
+                                iB_4_ell = iB_4_ell * pixwin**2
+                                iB_5_ell = iB_5_ell * pixwin**2
+                                
 
                             iB_4_ell = iB_4_ell - np.mean(iB_4_ell[ell > 1000]) # for the shot noise terms
                             iB_5_ell = iB_5_ell - np.mean(iB_5_ell[ell > 1000]) # for the shot noise terms
