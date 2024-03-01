@@ -1109,7 +1109,19 @@ for param_idx in range(start_idx, stop_idx):
                         np.savetxt(P_spectra_path+"P_"+xi_correlation_name+"_l_"+q1_bin_name+"_"+q2_bin_name+filename_extension, P_l.T)
 
                         ell, P_ell = C_ell_spherical_sky(l_array, P_l)
-
+                        
+                        # If nside is given, calculate the pixel window function and correct the C_ell
+                        if nside is not None:
+                              
+                            pixwin = hp.pixwin(nside, lmax=np.max(ell))
+                            pixwin_ell = np.arange(len(pixwin))                                         # pixwin creates window function for ell=0 to 3*nside-1
+                            pixwin = pixwin[np.intersect1d(ell, pixwin_ell, return_indices=True)[2]]    # match pixwin function to correct ells
+                            pixwin = np.append(pixwin, np.zeros(len(ell) - len(pixwin)))                # Add zeros to match length
+                            
+                            # Add correction to C_ell
+                            P_ell = P_ell * pixwin**2
+                            
+                        
                         xi_array_bin_averaged = np.zeros(alpha_min_arcmins_xi.size)
 
                         if (xi_correlation_name == 'pp'):
@@ -1388,7 +1400,7 @@ for param_idx in range(start_idx, stop_idx):
                                 
                                 pixwin = hp.pixwin(nside, lmax=np.max(ell))
                                 pixwin_ell = np.arange(len(pixwin))                                         # pixwin creates window function for ell=0 to 3*nside-1
-                                pixwin = pixwin[np.intersect1d(ell, pixwin_ell, return_indices=True)[2]]    # match pixwin functiopn to correct ells
+                                pixwin = pixwin[np.intersect1d(ell, pixwin_ell, return_indices=True)[2]]    # match pixwin function to correct ells
                                 pixwin = np.append(pixwin, np.zeros(len(ell) - len(pixwin)))                # Add zeros to match length
                                 
                                 # Add correction to C_ell
