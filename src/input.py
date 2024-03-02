@@ -88,13 +88,12 @@ min_sep_tc_xi = 10
 max_sep_tc_xi = 250
 nbins_tc_xi = 15
 
-# TODO: generalize
 # for local (within filter) 2PCF
 min_sep_tc = 10
 max_sep_tc = 250
 nbins_max = 15
 
-binedges = np.geomspace(theta_T_arcmins, max_sep_tc, nbins_max+1)
+binedges = np.geomspace(min_sep_tc, max_sep_tc, nbins_max+1)
 binedges = binedges[np.where(binedges <= 2 * theta_T_arcmins - 5)]
 nbins_tc = len(binedges)-1
 max_sep_tc = binedges[-1]
