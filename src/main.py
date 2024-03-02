@@ -21,8 +21,14 @@ from misc_utils import num_correlations
 import input
 import sys
 from window_utils import iZ_A2pt
-import healpy as hp
 
+try:
+    import healpy as hp
+    healpy_installed = True
+except ModuleNotFoundError:
+    print("Healpy not installed. Cannot use healpy for pixel window function calculations.")
+    healpy_installed = False
+    
 #################################################################################################################################
 #################################################################################################################################
 # STEP 0: Overall settings for performing computations, saving calculations etc.
@@ -1111,7 +1117,7 @@ for param_idx in range(start_idx, stop_idx):
                         ell, P_ell = C_ell_spherical_sky(l_array, P_l)
                         
                         # If nside is given, calculate the pixel window function and correct the C_ell
-                        if nside is not None:
+                        if nside is not None and healpy_installed:
                               
                             pixwin = hp.pixwin(nside, lmax=np.max(ell))
                             pixwin_ell = np.arange(len(pixwin))                                         # pixwin creates window function for ell=0 to 3*nside-1
@@ -1396,7 +1402,7 @@ for param_idx in range(start_idx, stop_idx):
                             ell, iB_5_ell = C_ell_spherical_sky(l_array, iB_l[4])
 
                             #if nside is given, consider the pixel window function's effect on the C_ells
-                            if nside is not None:
+                            if nside is not None and healpy_installed:
                                 
                                 pixwin = hp.pixwin(nside, lmax=np.max(ell))
                                 pixwin_ell = np.arange(len(pixwin))                                         # pixwin creates window function for ell=0 to 3*nside-1
