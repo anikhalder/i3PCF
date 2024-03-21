@@ -1,13 +1,14 @@
 import numpy as np
 
 ### (l,z) grid settings
-#l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 113).astype(int)) # 100 integer l values
+l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 113).astype(int)) # 100 integer l values
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 247).astype(int)) # 200 integer l values
-l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 719).astype(int)) # 500 integer l values
+#l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 719).astype(int)) # 500 integer l values
 
-#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(2.0), 27)) # 30 z values
+z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(2.0), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(3.5), 35)) # 30 z values # for Dirac COSMOGRIDV1
 
+'''
 #The following z_array are the mean redshifts of the COSMOGRIDV1 fiducial particle shells.
 z_array = np.array([0.006387739907950163,
                     0.0192780252546072,0.03240172937512398,0.04576645791530609,0.05938002094626427,0.0732506513595581,
@@ -24,6 +25,7 @@ z_array = np.array([0.006387739907950163,
                     1.704079508781433,1.7902441024780273,1.8830831050872803,1.983497142791748,2.0925631523132324,
                     2.2115797996520996,2.342129945755005,2.48616361618042,2.646116018295288,2.825070858001709,
                     3.026996612548828,3.2570996284484863,3.4399685859680176])
+'''
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
@@ -32,7 +34,10 @@ z_array = np.array([0.006387739907950163,
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0} 
 
 ### COSMOGRIDV1 fiducial cosmology
-cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0}
+
+### DESC SkySim5000/HACC fiducial cosmology
+cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0}
 
 #params_lhs = np.load('../data/cosmo_parameters/test_iB_LHS_5parameter_file_5e2points.npz')
 params_lhs = {}
@@ -46,9 +51,9 @@ P3D_type = 'nl' # lin, nl
 compute_P_grid = 'yes' # yes, no
 compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'yes' # yes, no
-compute_iB_spectra_and_correlations = 'yes' # yes, no
-compute_area_prefactor = 'yes' # yes, no
+compute_iB_grid = 'no' # yes, no
+compute_iB_spectra_and_correlations = 'no' # yes, no
+compute_area_prefactor = 'no' # yes, no
 
 compute_chi_D_values = 'no'
 compute_H_values = 'no'
