@@ -204,13 +204,13 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         C_l = C_ell[2:]
         P_l_2_bin_averaged = xit_theta_bin_averaged_values
-        return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * C_l )
+        return np.sum( ((2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * C_l), axis=1 )
 
     def xi_theta_bin_averaged(ell, C_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         C_l = C_ell[2:]
         P_l_bin_averaged = xi_theta_bin_averaged_values
-        return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l )
+        return np.sum( ((2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l), axis=1 )
 
     def zetap_theta_bin_averaged(ell, iB_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
@@ -228,13 +228,13 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         iB_l = iB_ell[2:]
         P_l_2_bin_averaged = zetat_theta_bin_averaged_values
-        return np.sum( (2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * iB_l )
+        return np.sum( ((2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * iB_l), axis=1 )
 
     def zeta_theta_bin_averaged(ell, iB_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         iB_l = iB_ell[2:]
         P_l_bin_averaged = zeta_theta_bin_averaged_values
-        return np.sum( (2.*l+1) / (4*np.pi) * P_l_bin_averaged * iB_l )
+        return np.sum( ((2.*l+1) / (4*np.pi) * P_l_bin_averaged * iB_l), axis=1 )
 
 P_l_z_grid_path = input.P_l_z_grid_path
 iB_l_z_grid_path = input.iB_l_z_grid_path
@@ -1115,7 +1115,7 @@ for param_idx in range(start_idx, stop_idx):
                         np.savetxt(P_spectra_path+"P_"+xi_correlation_name+"_l_"+q1_bin_name+"_"+q2_bin_name+filename_extension, P_l.T)
 
                         ell, P_ell = C_ell_spherical_sky(l_array, P_l)
-                        
+                                                
                         # If nside is given, calculate the pixel window function and correct the C_ell
                         if nside is not None and healpy_installed:
                               
@@ -1126,10 +1126,9 @@ for param_idx in range(start_idx, stop_idx):
                             
                             # Add correction to C_ell
                             P_ell = P_ell * pixwin**2
-                            
-                        
+                                                    
                         xi_array_bin_averaged = np.zeros(alpha_min_arcmins_xi.size)
-
+                        
                         if (xi_correlation_name == 'pp'):
                             xi_array_bin_averaged = xip_theta_bin_averaged(ell, P_ell)
                         elif (xi_correlation_name == 'mm'):
@@ -1137,8 +1136,8 @@ for param_idx in range(start_idx, stop_idx):
                         elif (xi_correlation_name == 'tt'):
                             xi_array_bin_averaged = xit_theta_bin_averaged(ell, P_ell)
                         elif (xi_correlation_name == 'gg' or xi_correlation_name == 'kk' or xi_correlation_name == 'gk'):
-                            xi_array_bin_averaged = xi_theta_bin_averaged(ell, P_ell)          
-
+                            xi_array_bin_averaged = xi_theta_bin_averaged(ell, P_ell)   
+                            
                         np.savetxt(xi_correlations_path+"xi_"+xi_correlation_name+"_"+q1_bin_name+"_"+q2_bin_name+filename_extension, xi_array_bin_averaged.T) 
 
                         '''
