@@ -30,14 +30,14 @@ z_array = np.array([0.006387739907950163,
 ### This is a config file where we give what the input parameters for the main.py file are
 
 ### T17 fiducial cosmology
-#cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0} 
-#cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0} 
+#cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0} 
+#cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0} 
 
 ### COSMOGRIDV1 fiducial cosmology
-#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0}
 
 ### DESC SkySim5000/HACC fiducial cosmology
-cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0}
+cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0}
 
 #params_lhs = np.load('../data/cosmo_parameters/test_iB_LHS_5parameter_file_5e2points.npz')
 params_lhs = {}
