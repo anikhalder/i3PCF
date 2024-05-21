@@ -316,58 +316,89 @@ for param_idx in range(start_idx, stop_idx):
     cosmo_pars_fid = input.cosmo_pars_fid
     params_lhs = input.params_lhs
 
+    print('\nSetting up parameters:\n', flush=True)
+
     if ('Omega_b' in params_lhs.keys()):
         Omega_b = params_lhs['Omega_b'][param_idx]
+        print('Omega_b SET to', Omega_b)
     else:
         Omega_b = cosmo_pars_fid['Omega_b']
+        print('Omega_b FIXED to fiducial value of', Omega_b)
 
     if ('Omega_m' in params_lhs.keys()):
         Omega_cdm = params_lhs['Omega_m'][param_idx] - Omega_b
+        print('Omega_cdm SET to', Omega_cdm)
     else:
         Omega_cdm = cosmo_pars_fid['Omega_m'] - Omega_b
+        print('Omega_cdm FIXED to fiducial value of', Omega_b)
 
     if ('h' in params_lhs.keys()):
         h = params_lhs['h'][param_idx]
+        print('h SET to', h)
     else:
         h = cosmo_pars_fid['h']
+        print('h FIXED to fiducial value of', h)
 
-    if ('A_s' in params_lhs.keys()):
+    if ('A_s' in params_lhs.keys()): # since latin-hypercube-sampling (LHS) is always in terms of A_s
         A_s = params_lhs['A_s'][param_idx]
         sigma8_or_As = 'As'
+        print('A_s SET to', A_s)
     else:
         if ('sigma8' in cosmo_pars_fid.keys()):
             sigma8 = cosmo_pars_fid['sigma8']
             sigma8_or_As = 'sigma8'
+            print('sigma8 FIXED to fiducial value of', sigma8)
         elif ('A_s' in cosmo_pars_fid.keys()):
             A_s = cosmo_pars_fid['A_s']
             sigma8_or_As = 'As'
+            print('A_s FIXED to fiducial value of', A_s)
 
     if ('n_s' in params_lhs.keys()):
         n_s = params_lhs['n_s'][param_idx]
+        print('n_s SET to', n_s)
     else:
         n_s = cosmo_pars_fid['n_s']
+        print('n_s FIXED to fiducial value of', n_s)
 
     if ('w_0' in params_lhs.keys()):
         w_0 = params_lhs['w_0'][param_idx]
+        print('w_0 SET to', w_0)
     else:
         w_0 = cosmo_pars_fid['w_0']
+        print('w_0 FIXED to fiducial value of', w_0)
 
     if ('w_a' in params_lhs.keys()):
         w_a = params_lhs['w_a'][param_idx]
+        print('w_a SET to', w_a)
     else:
         w_a = cosmo_pars_fid['w_a']
+        print('w_a FIXED to fiducial value of', w_a)
 
     if ('c_min' in params_lhs.keys()):
         c_min = params_lhs['c_min'][param_idx]
         eta_0 = eta_0_val(c_min)
+        print('c_min SET to', c_min)
+        print('eta_0 SET to', eta_0)
     else:
         c_min = cosmo_pars_fid['c_min']
         eta_0 = cosmo_pars_fid['eta_0']
+        print('c_min FIXED to fiducial value of', c_min)
+        print('eta_0 FIXED to fiducial value of', eta_0)
 
     if ('Mv' in params_lhs.keys()):
         Mv = params_lhs['Mv'][param_idx]
+        print('Mv SET to', Mv)
     else:
         Mv = cosmo_pars_fid['Mv']
+        print('Mv FIXED to fiducial value of', Mv)
+
+    if ('z' in params_lhs.keys()):
+        z_array = np.array([params_lhs['z'][param_idx]])
+        z_val = params_lhs['z'][param_idx]
+        print('z SET to', z_val)
+    else:
+        z_val = cosmo_pars_fid['z']
+        print('z FIXED to fiducial value of', z_val)
 
     omega_b = Omega_b*h*h
     omega_cdm = Omega_cdm*h*h
@@ -425,25 +456,19 @@ for param_idx in range(start_idx, stop_idx):
     class_start = time.time()
 
     try:
-        Cosmo_nl = Class()
-        Cosmo_nl.set(class_settings)
-        Cosmo_nl.compute()
+        cclass = Class()
+        cclass.set(class_settings)
+        cclass.compute()
     except:
         print('!!! Encountered classy error in node index #'+str(param_idx)+' . Skipping it !!!')
         continue
 
     print("The classy.CLASS object is made!")
 
-    CosmoClassObject = CosmoClass(Cosmo_nl)
+    CosmoClassObject = CosmoClass(cclass)
 
     class_end = time.time()
     print("The computation of classy.CLASS and CosmoClass objects take %ss"%(class_end - class_start))
-    
-    ####################################################################################
-    
-    if ('z' in params_lhs.keys()):
-        z_array = np.array([params_lhs['z'][param_idx]])
-        z_val = params_lhs['z'][param_idx]
 
     #################################################################################################################################
     #################################################################################################################################
