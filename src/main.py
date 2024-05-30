@@ -20,7 +20,7 @@ import constants
 from misc_utils import num_correlations
 import input
 import sys
-from window_utils import iZ_A2pt
+from window_utils import iZ_A2pt, iZ_A2pt_binaveraged
 
 try:
     import healpy as hp
@@ -485,23 +485,24 @@ for param_idx in range(start_idx, stop_idx):
         np.savetxt(H_path+"H"+filename_extension, H_val.T)
 
     if (compute_area_prefactor == 'yes'):
+        print("Computing the area prefactors for i3PCF")
         ## set the angular bins in which to compute the local 2PCFs
         min_sep_tc = input.min_sep_tc
         max_sep_tc = input.max_sep_tc
         nbins_tc = input.nbins_tc
+        
+        binedges = np.radians(np.geomspace(min_sep_tc,max_sep_tc,nbins_tc+1)/60)
+        bincenters = np.sqrt(binedges[1:]*binedges[:-1])
 
-        kk = treecorr.KKCorrelation(min_sep=min_sep_tc, max_sep=max_sep_tc, nbins=nbins_tc, sep_units='arcmin')
-        alpha_arcmins = kk.rnom
-        alpha_min_arcmins = kk.left_edges
-        alpha_max_arcmins = kk.right_edges
-
-        iZ_A2pt_array = np.zeros([alpha_arcmins.size])
-
-        for i in range(iZ_A2pt_array.size):
-            iZ_A2pt_array[i] = iZ_A2pt([np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), theta_T])
-
-        dat = np.array([alpha_arcmins, alpha_min_arcmins, alpha_max_arcmins, iZ_A2pt_array])
-
+        if input.theta_averaged_A2pt == 'yes':
+            iZ_A2pt = iZ_A2pt_binaveraged(binedges, theta_T)
+        else:
+            iZ_A2pt = np.zeros([nbins_tc])
+            for i, alpha in enumerate(bincenters):
+                iZ_A2pt[i] = iZ_A2pt(alpha, theta_T)
+        
+        dat = np.array([bincenters, binedges[:-1], binedges[1:], iZ_A2pt])
+        print(iZ_A2pt)
         np.savetxt(area_prefactor_path+"iZ_A2pt_W+"+str(theta_T_arcmins)+"_alpha_"+str(min_sep_tc)+"_"+str(max_sep_tc)+"_"+str(nbins_tc)+".dat", dat.T)
 
     if (compute_P_grid == 'yes'):

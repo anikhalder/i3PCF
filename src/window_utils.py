@@ -1,6 +1,7 @@
 import numpy as np
 from scipy.special import j1
 import vegas
+from scipy.integrate import quad, trapz
 
 ######################################################################################
 
@@ -85,7 +86,7 @@ class d_iZ_A2pt_batch(vegas.BatchIntegrand):
 
         return window_factor
 
-def iZ_A2pt(params):
+def iZ_A2pt_old(params):
     # Function to compute the A2opt area pre-factor for iZ between alpha_min and alpha_max
     # Use polar coordinates here
     # Without loss of generality can always assume that vector alpha coincides with the positive x-axis i.e. phi_alpha = 0.
@@ -100,3 +101,34 @@ def iZ_A2pt(params):
     iZ_A2pt = integ(d_iZ_A2pt, nitn=5, neval=1e5).mean
 
     return iZ_A2pt
+
+def iZ_A2pt_binaveraged(binedges, theta_Q):
+    """ Calculates the average Area prefactor across bins
+        for the i3PCF 
+
+    Args:
+        binedges (array): Edges of angular bins for the i3PCF in radians
+        theta_Q (float): Radius of patches in radians
+    """
+    def A2pt(alpha):
+        def integrand_r(r):
+            def integrand_phi(phi):
+                return np.heaviside(1-np.sqrt((r**2 + alpha**2 + 2*r*alpha*np.cos(phi)))/theta_Q, 1)
+            return r*np.heaviside(1-r/theta_Q, 1)*quad(integrand_phi, 0, 2*np.pi, limit=10000)[0]
+        return quad(integrand_r, 0, theta_Q, limit=10000)[0]
+    return np.array([quad(A2pt, binedges[i], binedges[i+1], limit=1000)[0]/(binedges[i+1] - binedges[i]) for i in range(len(binedges)-1)])
+
+def iZ_A2pt(alpha, theta_Q):
+    """ Calculates the Area prefactor at specific angles for the i3PCF 
+
+    Args:
+        alpha (array): angle relative to patch centerin radians
+        theta_Q (float): Radius of patches in radians
+    """
+    def integrand_r(r):
+        def integrand_phi(phi):
+            return np.heaviside(1-np.sqrt((r**2 + alpha**2 + 2*r*alpha*np.cos(phi)))/theta_Q, 1)
+        phi_arr = np.linspace(0, 2*np.pi, 1000)
+        return r*np.heaviside(1-r/theta_Q, 1)*trapz(integrand_phi(phi_arr), phi_arr)
+    return quad(integrand_r, 0, theta_Q, limit=1000)[0]
+    

@@ -39,7 +39,7 @@ z_array = np.array([0.006387739907950163,
 ### DESC SkySim5000/HACC fiducial cosmology
 cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0}
 
-#params_lhs = np.load('../data/cosmo_parameters/test_iB_LHS_5parameter_file_5e2points.npz')
+#params_lhs = np.load('../data/cosmo_parameters/CosmoGridV1.npz')
 params_lhs = {}
 
 ########################################################
@@ -51,12 +51,12 @@ P3D_type = 'nl' # lin, nl
 compute_P_grid = 'yes' # yes, no
 compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'no' # yes, no
-compute_iB_spectra_and_correlations = 'no' # yes, no
-compute_area_prefactor = 'no' # yes, no
-
-compute_chi_D_values = 'no'
-compute_H_values = 'no'
+compute_iB_grid = 'yes' # yes, no
+compute_iB_spectra_and_correlations = 'yes' # yes, no
+compute_area_prefactor = 'yes' # yes, no
+theta_averaged_A2pt = 'yes' #Average over angle for A2pt or just use bincenters
+compute_chi_D_values = 'yes'
+compute_H_values = 'yes'
 use_Dirac_comb = False
 
 nside = 512 # Set to None to ignore
@@ -114,7 +114,7 @@ max_sep_tc = binedges[-1]
 #SOURCE_BIN_NAME_LIST = ['SBIN4']
 #SOURCE_BIN_VALUES = ['']
 
-SOURCE_BIN_NAME_LIST = ['SBIN1', 'SBIN2', 'SBIN3', 'SBIN4']
+SOURCE_BIN_NAME_LIST = ['BIN1', 'BIN2', 'BIN3', 'BIN4']
 SOURCE_BIN_VALUES = ['', '', '', '']
 
 SOURCE_BIN_delta_photoz_values = [0.0]
