@@ -28,7 +28,7 @@ _R_max_ = 50.0 # [Mpc]
 _f_sq_ = input.f_sq
 
 ### number of redshift bins used in LOS projection (linear spacing)
-_N_los_ = 250 
+_N_los_ = int(_z_max_*100)
 
 ### for halo quantities
 _M_SUN_ = 1.98847e30 # Solar mass in kg
