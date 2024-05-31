@@ -996,8 +996,7 @@ for param_idx in range(start_idx, stop_idx):
         H_0 = CosmoClassObject.H_z(0)
         Omega0_m = CosmoClassObject.Omega0_m
 
-        z_array_los = np.linspace(0.01, 2.0, constants._N_los_)
-        #z_array_los = np.linspace(0.01, 3.5, constants._N_los_) # for Dirac COSMOGRIDV1
+        z_array_los = np.linspace(0.01, constants._z_max_, constants._N_los_)
         chi_inv_z_array_los = 1./CosmoClassObject.chi_z(z_array_los)
         H_inv_z_array_los = 1./CosmoClassObject.H_z(z_array_los)
 

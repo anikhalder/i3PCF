@@ -42,7 +42,7 @@ class CosmoClass:
         #self.z_grid_points_ascending = np.flip(self.z_grid_points_decending)
 
         self.k_grid_points_ascending = np.logspace(np.log10(self.k_min), np.log10(self.k_max), constants._k_grid_npts_)
-        self.z_grid_points_ascending = np.arange(self.z_min, self.z_max, step = constants._z_grid_zstep_)
+        self.z_grid_points_ascending = np.arange(self.z_min, self.z_max + constants._z_grid_zstep_, step = constants._z_grid_zstep_)
 
         ### tabulate power spectrum (with RectBivariateSpline interpolation)
         #self.P3D_k_z_lin = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, ClassyClassObject_nl.pk_lin)
