@@ -435,9 +435,9 @@ for param_idx in range(start_idx, stop_idx):
                     }
         
     else:
-        # for neutrino masses, BUT THIS NEEDS TO BE DEVELOPED FURTHER
+        # for neutrino masses
         m1, m2, m3 = get_masses(2.5e-3,7.37e-5, Mv, 'NH')
-        omega_nu = Mnu2omeganu(Mv, Omega_m)
+        omega_nu = Mnu2omeganu(Mv, Omega_m, Omega_b, h)
         class_settings  = {
                     'N_ur':0.00641,
                     'N_ncdm':3,
