@@ -34,7 +34,7 @@ z_array = np.array([0.006387739907950163,
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0} 
 
 ### COSMOGRIDV1 fiducial cosmology
-cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0}
+cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.02, 'z': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0}
 
 ### DESC SkySim5000/HACC fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w_0': -1.0, 'w_a': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0}
@@ -53,13 +53,13 @@ compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'yes' # yes, no
 compute_iB_spectra_and_correlations = 'yes' # yes, no
-compute_area_prefactor = 'yes' # yes, no
+compute_area_prefactor = 'no' # yes, no
 theta_averaged_A2pt = 'yes' #Average over angle for A2pt or just use bincenters
-compute_chi_D_values = 'yes'
-compute_H_values = 'yes'
+compute_chi_D_values = 'no'
+compute_H_values = 'no'
 use_Dirac_comb = False
 
-nside = 512 # Set to None to ignore
+nside = None # Set to None to ignore
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
 grid_type = 'shear_x_shear_COSMOGRIDV1'
