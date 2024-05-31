@@ -1040,8 +1040,8 @@ for param_idx in range(start_idx, stop_idx):
                         qs_z_array_los[SOURCE_BIN_idx,j] /= weights_sum
                 
                     else:
-                        qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN)
-                        #qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution_systematics(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN, CosmoClassObject.H_z, CosmoClassObject.D_plus_z, A_IA_0_NLA, alpha_IA_0_NLA, SOURCE_BIN_delta_photoz_values[SOURCE_BIN_idx], SOURCE_BIN_m_values[SOURCE_BIN_idx])
+                        #qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN)
+                        qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution_systematics(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN, CosmoClassObject.H_z, CosmoClassObject.D_plus_z, A_IA_0_NLA, alpha_IA_0_NLA, SOURCE_BIN_delta_photoz_values[SOURCE_BIN_idx], SOURCE_BIN_m_values[SOURCE_BIN_idx])
 
         if ('shear_x_shear' not in spectra_and_correlation_type):
             # Right now this is only for a single lens bin
