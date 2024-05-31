@@ -126,8 +126,6 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         
         SOURCE_BIN_delta_photoz_values = input.SOURCE_BIN_delta_photoz_values
         SOURCE_BIN_m_values = input.SOURCE_BIN_m_values
-        A_IA_0_NLA = input.A_IA_0_NLA
-        alpha_IA_0_NLA = input.alpha_IA_0_NLA
 
         num_2pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 2)
         num_i3pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 3)
@@ -400,6 +398,20 @@ for param_idx in range(start_idx, stop_idx):
         z_val = cosmo_pars_fid['z']
         print('z FIXED to fiducial value of', z_val)
 
+    if ('A_IA' in params_lhs.keys()):
+        A_IA_0_NLA = np.array([params_lhs['A_IA'][param_idx]])
+        print('A_IA SET to', A_IA_0_NLA)
+    else:
+        A_IA_0_NLA = cosmo_pars_fid['A_IA']
+        print('A_IA FIXED to fiducial value of', A_IA_0_NLA)
+
+    if ('alpha_IA' in params_lhs.keys()):
+        alpha_IA_0_NLA = np.array([params_lhs['alpha_IA'][param_idx]])
+        print('alpha_IA SET to', alpha_IA_0_NLA)
+    else:
+        alpha_IA_0_NLA = cosmo_pars_fid['alpha_IA']
+        print('alpha_IA FIXED to fiducial value of', alpha_IA_0_NLA)
+
     omega_b = Omega_b*h*h
     omega_cdm = Omega_cdm*h*h
     Omega_m = Omega_cdm + Omega_b
@@ -537,7 +549,7 @@ for param_idx in range(start_idx, stop_idx):
         end_grid = time.time()
         print("Computing the P(l,z) grid takes %ss"%(end_grid - start_grid))
 
-    if (compute_iB_grid == 'yes' and not('delta_photoz' in filename_extension or 'A_IA_0_NLA' in filename_extension or 'alpha_IA_0_NLA' in filename_extension)):
+    if (compute_iB_grid == 'yes'):
 
         print("Starting computation of iB(l,z) grid")
         start_grid = time.time()
