@@ -339,16 +339,16 @@ for param_idx in range(start_idx, stop_idx):
 
     if ('A_s' in params_lhs.keys()): # since latin-hypercube-sampling (LHS) is always in terms of A_s
         A_s = params_lhs['A_s'][param_idx]
-        sigma8_or_As = 'As'
+        sigma8_or_A_s = 'A_s'
         print('A_s SET to', A_s)
     else:
         if ('sigma8' in cosmo_pars_fid.keys()):
             sigma8 = cosmo_pars_fid['sigma8']
-            sigma8_or_As = 'sigma8'
+            sigma8_or_A_s = 'sigma8'
             print('sigma8 FIXED to fiducial value of', sigma8)
         elif ('A_s' in cosmo_pars_fid.keys()):
             A_s = cosmo_pars_fid['A_s']
-            sigma8_or_As = 'As'
+            sigma8_or_A_s = 'A_s'
             print('A_s FIXED to fiducial value of', A_s)
 
     if ('n_s' in params_lhs.keys()):
@@ -358,19 +358,19 @@ for param_idx in range(start_idx, stop_idx):
         n_s = cosmo_pars_fid['n_s']
         print('n_s FIXED to fiducial value of', n_s)
 
-    if ('w_0' in params_lhs.keys()):
-        w_0 = params_lhs['w_0'][param_idx]
-        print('w_0 SET to', w_0)
+    if ('w0' in params_lhs.keys()):
+        w0 = params_lhs['w0'][param_idx]
+        print('w0 SET to', w0)
     else:
-        w_0 = cosmo_pars_fid['w_0']
-        print('w_0 FIXED to fiducial value of', w_0)
+        w0 = cosmo_pars_fid['w0']
+        print('w0 FIXED to fiducial value of', w0)
 
-    if ('w_a' in params_lhs.keys()):
-        w_a = params_lhs['w_a'][param_idx]
-        print('w_a SET to', w_a)
+    if ('wa' in params_lhs.keys()):
+        wa = params_lhs['wa'][param_idx]
+        print('wa SET to', wa)
     else:
-        w_a = cosmo_pars_fid['w_a']
-        print('w_a FIXED to fiducial value of', w_a)
+        wa = cosmo_pars_fid['wa']
+        print('wa FIXED to fiducial value of', wa)
 
     if ('c_min' in params_lhs.keys()):
         c_min = params_lhs['c_min'][param_idx]
@@ -424,8 +424,8 @@ for param_idx in range(start_idx, stop_idx):
                     'n_s':n_s,
                     'Omega_Lambda':0.0,
                     'fluid_equation_of_state':'CLP',
-                    'w0_fld':w_0,
-                    'wa_fld':w_a,
+                    'w0_fld':w0,
+                    'wa_fld':wa,
                     'output':'mPk',
                     'P_k_max_1/Mpc':constants._k_max_pk_,
                     'z_max_pk':constants._z_max_pk_,
@@ -450,8 +450,8 @@ for param_idx in range(start_idx, stop_idx):
                     'n_s':n_s,
                     'Omega_Lambda':0.0,
                     'fluid_equation_of_state':'CLP',
-                    'w0_fld':w_0,
-                    'wa_fld':w_a,  
+                    'w0_fld':w0,
+                    'wa_fld':wa,  
                     'output':'mPk',
                     'P_k_max_1/Mpc':constants._k_max_pk_,
                     'z_max_pk':constants._z_max_pk_,
@@ -460,7 +460,7 @@ for param_idx in range(start_idx, stop_idx):
                     'c_min':c_min,
                     }
 
-    if (sigma8_or_As == 'As'):
+    if (sigma8_or_A_s == 'A_s'):
         class_settings['A_s'] = A_s
     else:
         class_settings['sigma8'] = sigma8
