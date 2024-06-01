@@ -68,7 +68,7 @@ def q_k_zs_distribution(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func):
    
     return 3./2. * H_0 * H_0 * Omega0_m * (1.+z) * chi_z * W_k_zs_distribution_z
 
-def q_k_zs_distribution_systematics(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func, H_z_func, D_plus_z_func, A_IA_0_NLA, alpha_IA_0_NLA, delta_photoz, m):
+def q_k_zs_distribution_systematics(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func, H_z_func, D_plus_z_func, A_IA_NLA, alpha_IA_NLA, delta_photoz, m):
     '''
     equations (10.42) and (10.41) combined of https://edoc.ub.uni-muenchen.de/23401/1/Friedrich_Oliver.pdf
     or equations (6.21) and (6.19) combined of https://arxiv.org/pdf/astro-ph/9912508.pdf
@@ -91,10 +91,10 @@ def q_k_zs_distribution_systematics(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_
    
     q_k_z = 3./2. * H_0 * H_0 * Omega0_m * (1.+z) * chi_z * W_k_zs_distribution_z
 
-    if (A_IA_0_NLA == 0.0):
+    if (A_IA_NLA == 0.0):
         return (1+m)*q_k_z
     else:
-        f_IA_NLA_z = - A_IA_0_NLA * 0.0134 * Omega0_m * ((1.+z)/1.62)**alpha_IA_0_NLA * D_plus_z_func(0)/D_plus_z_func(z)
+        f_IA_NLA_z = - A_IA_NLA * 0.0134 * Omega0_m * ((1.+z)/1.62)**alpha_IA_NLA * D_plus_z_func(0)/D_plus_z_func(z)
         return (1+m)*(q_k_z + f_IA_NLA_z * H_z_func(z) * n_s_z_func(z + delta_photoz))
 
 # Halo projection kernels

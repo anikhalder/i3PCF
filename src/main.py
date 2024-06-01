@@ -398,19 +398,19 @@ for param_idx in range(start_idx, stop_idx):
         z_val = cosmo_pars_fid['z']
         print('z FIXED to fiducial value of', z_val)
 
-    if ('A_IA' in params_lhs.keys()):
-        A_IA_0_NLA = np.array([params_lhs['A_IA'][param_idx]])
-        print('A_IA SET to', A_IA_0_NLA)
+    if ('A_IA_NLA' in params_lhs.keys()):
+        A_IA_NLA = np.array([params_lhs['A_IA_NLA'][param_idx]])
+        print('A_IA_NLA SET to', A_IA_NLA)
     else:
-        A_IA_0_NLA = cosmo_pars_fid['A_IA']
-        print('A_IA FIXED to fiducial value of', A_IA_0_NLA)
+        A_IA_NLA = cosmo_pars_fid['A_IA_NLA']
+        print('A_IA_NLA FIXED to fiducial value of', A_IA_NLA)
 
-    if ('alpha_IA' in params_lhs.keys()):
-        alpha_IA_0_NLA = np.array([params_lhs['alpha_IA'][param_idx]])
-        print('alpha_IA SET to', alpha_IA_0_NLA)
+    if ('alpha_IA_NLA' in params_lhs.keys()):
+        alpha_IA_NLA = np.array([params_lhs['alpha_IA_NLA'][param_idx]])
+        print('alpha_IA_NLA SET to', alpha_IA_NLA)
     else:
-        alpha_IA_0_NLA = cosmo_pars_fid['alpha_IA']
-        print('alpha_IA FIXED to fiducial value of', alpha_IA_0_NLA)
+        alpha_IA_NLA = cosmo_pars_fid['alpha_IA_NLA']
+        print('alpha_IA_NLA FIXED to fiducial value of', alpha_IA_NLA)
 
     omega_b = Omega_b*h*h
     omega_cdm = Omega_cdm*h*h
@@ -915,7 +915,7 @@ for param_idx in range(start_idx, stop_idx):
         start_spectra_and_correlations = time.time()
 
         filename_extension_grid = filename_extension
-        if (('delta_photoz' in filename_extension) or ('A_IA_0_NLA' in filename_extension) or ('alpha_IA_0_NLA' in filename_extension)):
+        if (('delta_photoz' in filename_extension) or ('A_IA_NLA' in filename_extension) or ('alpha_IA_NLA' in filename_extension)):
             filename_extension_grid = '.dat'
 
         #####################
@@ -1040,7 +1040,7 @@ for param_idx in range(start_idx, stop_idx):
                 
                     else:
                         #qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN)
-                        qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution_systematics(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN, CosmoClassObject.H_z, CosmoClassObject.D_plus_z, A_IA_0_NLA, alpha_IA_0_NLA, SOURCE_BIN_delta_photoz_values[SOURCE_BIN_idx], SOURCE_BIN_m_values[SOURCE_BIN_idx])
+                        qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution_systematics(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN, CosmoClassObject.H_z, CosmoClassObject.D_plus_z, A_IA_NLA, alpha_IA_NLA, SOURCE_BIN_delta_photoz_values[SOURCE_BIN_idx], SOURCE_BIN_m_values[SOURCE_BIN_idx])
 
         if ('shear_x_shear' not in spectra_and_correlation_type):
             # Right now this is only for a single lens bin
