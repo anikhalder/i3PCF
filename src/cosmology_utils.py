@@ -10,13 +10,13 @@ import multiprocessing as mp
 import constants
 
 class CosmoClass:
-    def __init__(self, ClassyClassObject_nl, k_min_max=[constants._k_min_,constants._k_max_], z_min_max=[constants._z_min_,constants._z_max_]):
+    def __init__(self, cclass, k_min_max=[constants._k_min_,constants._k_max_], z_min_max=[constants._z_min_,constants._z_max_]):
      
         ## store parameters
-        self.sigma8_0 = ClassyClassObject_nl.sigma8()
-        self.n_s = ClassyClassObject_nl.n_s()
-        self.h = ClassyClassObject_nl.h()
-        self.Omega0_m = ClassyClassObject_nl.Omega0_m()
+        self.sigma8_0 = cclass.sigma8()
+        self.n_s = cclass.n_s()
+        self.h = cclass.h()
+        self.Omega0_m = cclass.Omega0_m()
         self.f_sq = constants._f_sq_
 
         self.k_min = k_min_max[0]
@@ -25,19 +25,19 @@ class CosmoClass:
         self.z_max = z_min_max[1]
 
         ### tabulate background quantities
-        self.chi_z = interpolate.interp1d(ClassyClassObject_nl.get_background()['z'], ClassyClassObject_nl.get_background()['comov. dist.'], kind='cubic', fill_value=0.0)
-        self.z_chi = interpolate.interp1d(ClassyClassObject_nl.get_background()['comov. dist.'], ClassyClassObject_nl.get_background()['z'], kind='cubic', fill_value=0.0)
-        self.H_z = interpolate.interp1d(ClassyClassObject_nl.get_background()['z'], ClassyClassObject_nl.get_background()['H [1/Mpc]'], kind='cubic', fill_value=0.0)
-        self.D_plus_z = interpolate.interp1d(ClassyClassObject_nl.get_background()['z'], ClassyClassObject_nl.get_background()['gr.fac. D'], kind='cubic', fill_value=0.0) # normalised to 1 at z=0
+        self.chi_z = interpolate.interp1d(cclass.get_background()['z'], cclass.get_background()['comov. dist.'], kind='cubic', fill_value=0.0)
+        self.z_chi = interpolate.interp1d(cclass.get_background()['comov. dist.'], cclass.get_background()['z'], kind='cubic', fill_value=0.0)
+        self.H_z = interpolate.interp1d(cclass.get_background()['z'], cclass.get_background()['H [1/Mpc]'], kind='cubic', fill_value=0.0)
+        self.D_plus_z = interpolate.interp1d(cclass.get_background()['z'], cclass.get_background()['gr.fac. D'], kind='cubic', fill_value=0.0) # normalised to 1 at z=0
         
-        self.rho_crit_z = interpolate.interp1d(ClassyClassObject_nl.get_background()['z'], ClassyClassObject_nl.get_background()['(.)rho_crit']*constants._rho_class_to_SI_units_* constants._kg_m3_to_M_sun_Mpc3_units_ , kind='cubic', fill_value=0.0) # in [M_sun/Mpc^3]
+        self.rho_crit_z = interpolate.interp1d(cclass.get_background()['z'], cclass.get_background()['(.)rho_crit']*constants._rho_class_to_SI_units_* constants._kg_m3_to_M_sun_Mpc3_units_ , kind='cubic', fill_value=0.0) # in [M_sun/Mpc^3]
         self.rho0_m = self.Omega0_m * self.rho_crit_z(0.) # in [M_sun/Mpc^3]
 
         ## k,z grid points
-        #ClassyClassObject_k_grid_points = ClassyClassObject_nl.get_pk_and_k_and_z()[1]
+        #ClassyClassObject_k_grid_points = cclass.get_pk_and_k_and_z()[1]
         #self.k_grid_points_ascending = ClassyClassObject_k_grid_points[(ClassyClassObject_k_grid_points >= self.k_min ) & (ClassyClassObject_k_grid_points <= self.k_max)]
 
-        #ClassyClassObject_z_grid_points = ClassyClassObject_nl.get_pk_and_k_and_z()[2]
+        #ClassyClassObject_z_grid_points = cclass.get_pk_and_k_and_z()[2]
         #self.z_grid_points_decending = ClassyClassObject_z_grid_points[(ClassyClassObject_z_grid_points >= self.z_min ) & (ClassyClassObject_z_grid_points <= self.z_max)]
         #self.z_grid_points_ascending = np.flip(self.z_grid_points_decending)
 
@@ -45,12 +45,12 @@ class CosmoClass:
         self.z_grid_points_ascending = np.arange(self.z_min, self.z_max + constants._z_grid_zstep_, step = constants._z_grid_zstep_)
 
         ### tabulate power spectrum (with RectBivariateSpline interpolation)
-        #self.P3D_k_z_lin = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, ClassyClassObject_nl.pk_lin)
-        #self.P3D_k_z_nl = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, ClassyClassObject_nl.pk)
+        #self.P3D_k_z_lin = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk_lin)
+        #self.P3D_k_z_nl = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk)
 
         ## new way
-        P3D_k_z_lin_grid_points = ClassyClassObject_nl.get_pk_array(self.k_grid_points_ascending, self.z_grid_points_ascending, self.k_grid_points_ascending.size, self.z_grid_points_ascending.size, 0).reshape(self.z_grid_points_ascending.size, self.k_grid_points_ascending.size).T
-        P3D_k_z_nl_grid_points = ClassyClassObject_nl.get_pk_array(self.k_grid_points_ascending, self.z_grid_points_ascending, self.k_grid_points_ascending.size, self.z_grid_points_ascending.size, 1).reshape(self.z_grid_points_ascending.size, self.k_grid_points_ascending.size).T
+        P3D_k_z_lin_grid_points = cclass.get_pk_array(self.k_grid_points_ascending, self.z_grid_points_ascending, self.k_grid_points_ascending.size, self.z_grid_points_ascending.size, 0).reshape(self.z_grid_points_ascending.size, self.k_grid_points_ascending.size).T
+        P3D_k_z_nl_grid_points = cclass.get_pk_array(self.k_grid_points_ascending, self.z_grid_points_ascending, self.k_grid_points_ascending.size, self.z_grid_points_ascending.size, 1).reshape(self.z_grid_points_ascending.size, self.k_grid_points_ascending.size).T
 
         self.P3D_k_z_lin = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_lin_grid_points)
         self.P3D_k_z_nl = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_nl_grid_points)
@@ -58,7 +58,7 @@ class CosmoClass:
         ### tabulate power spectrum tilt
         n_eff_lin_k_grid_points = np.zeros(self.k_grid_points_ascending.size)
         for i in range(self.k_grid_points_ascending.size):
-            n_eff_lin_k_grid_points[i] = ClassyClassObject_nl.pk_tilt(self.k_grid_points_ascending[i], 0.0) # pk_tilt of class gives the logarithmic derivative wrt linear Pk
+            n_eff_lin_k_grid_points[i] = cclass.pk_tilt(self.k_grid_points_ascending[i], 0.0) # pk_tilt of class gives the logarithmic derivative wrt linear Pk
 
         self.n_eff_lin_k = interpolate.interp1d(self.k_grid_points_ascending, n_eff_lin_k_grid_points, kind='cubic', fill_value=0.0)
         self.n_eff_lin_k_smoothed = interpolate.UnivariateSpline(self.k_grid_points_ascending, n_eff_lin_k_grid_points)
@@ -85,8 +85,8 @@ class CosmoClass:
             self.P3D_k_z_nl = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_nl_grid_points)
 
         ## NOTE: one needs to add a new function called pk_tilt_nonlinear in classy.pyx file of class_public/python to get the logarithmic derivative wrt nonlinear Pk
-        #self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, ClassyClassObject_nl.pk_nonlinear_tilt)
-        ####self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid_parallel(self.k_grid_points_ascending, self.z_grid_points_ascending, ClassyClassObject_nl.pk_nonlinear_tilt)
+        #self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk_nonlinear_tilt)
+        ####self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid_parallel(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk_nonlinear_tilt)
 
         ### tabulate quantities for various biscpectrum recipes (e.g. GM, response functions etc, nonlinear Pk tilt etc.) in k,z grid (parallel)
         self.RF_G_1_table_data_loaded = False
@@ -106,7 +106,7 @@ class CosmoClass:
             sigma8z = self.sigma8_z(z)
 
             #return [a_GM(n_eff, q, sigma8z), b_GM(n_eff, q), c_GM(n_eff, q), self.compute_RF_G_1_k_z(k, z), self.compute_RF_G_K_k_z(k, z)]
-            return [a_GM(n_eff, q, sigma8z), b_GM(n_eff, q), c_GM(n_eff, q), self.compute_RF_G_1_k_z(k, z), self.compute_RF_G_K_k_z(k, z), ClassyClassObject_nl.pk_nonlinear_tilt(k,z)]
+            return [a_GM(n_eff, q, sigma8z), b_GM(n_eff, q), c_GM(n_eff, q), self.compute_RF_G_1_k_z(k, z), self.compute_RF_G_K_k_z(k, z), cclass.pk_nonlinear_tilt(k,z)]
 
         k_and_z_list = list(itertools.product(self.k_grid_points_ascending, self.z_grid_points_ascending))
 
@@ -118,7 +118,7 @@ class CosmoClass:
                 R = R_and_z[0]
                 z = R_and_z[1]
 
-                return [ClassyClassObject_nl.sigma(R, z), ClassyClassObject_nl.sigma_squared_prime(R, z), ClassyClassObject_nl.sigma_prime(R, z)]
+                return [cclass.sigma(R, z), cclass.sigma_squared_prime(R, z), cclass.sigma_prime(R, z)]
 
             self.R_grid_points_ascending = np.logspace(np.log10(constants._R_min_), np.log10(constants._R_max_), 100)
             #self.R_grid_points_ascending = np.arange(constants._R_min_, constants._R_max_, step=0.1)
