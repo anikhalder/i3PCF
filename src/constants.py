@@ -1,18 +1,17 @@
 import numpy as np
 import input
 
-### k_max [1/Mpc] and z_max settings for CLASS power spectrum 
+### k_max_pk [1/Mpc] and z_max_pk settings for CLASS power spectrum (set these to larger values than reguired for _k_max_ and _z_max_)
 #_k_max_pk_ = 70.0 # for tracer x lensing
 _k_max_pk_ = 200.0
-
-_z_max_pk_ = 3.0
+_z_max_pk_ = 3.0 
 
 ### k_min and k_max [1/Mpc]; z_min and z_max settings for power spectrum of the CosmoClass grid
 _k_min_ = 5.e-4 # [1/Mpc]
 _k_max_ = 0.75*_k_max_pk_ # [1/Mpc]
 
 _z_min_ = 0.0
-_z_max_ = 2.5
+_z_max_ = 2.5 # note that the G_K response function can only be computed up to redshift = 2.63
 
 _k_grid_npts_ = 500
 _z_grid_zstep_ = 0.05
