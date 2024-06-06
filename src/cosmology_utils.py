@@ -587,8 +587,10 @@ class CosmoClass:
             self.RF_G_1_z_max_table_data = RF_G_1_z_table_data[-1]
             self.RF_G_1_table_data_loaded = True
 
-        if (z > self.RF_G_1_z_max_table_data):
-            return 0.0
+        #if (z > self.RF_G_1_z_max_table_data):
+        #    return 0.0
+
+        # NOTE: if z > self.RF_G_1_z_max_table_data ; just set it in accordance with the value at the last redshift in the table
 
         k_min = self.RF_G_1_k_min_table_data
         k_max = self.RF_G_1_k_max_table_data
@@ -613,8 +615,10 @@ class CosmoClass:
             self.RF_G_K_z_max_table_data = RF_G_K_z_table_data[-1]
             self.RF_G_K_table_data_loaded = True
 
-        if (z > self.RF_G_K_z_max_table_data):
-            return 0.0
+        #if (z > self.RF_G_K_z_max_table_data):
+        #    return 0.0
+
+        # NOTE: if z > self.RF_G_K_z_max_table_data ; just set it in accordance with the value at the last redshift in the table
 
         k_min = self.RF_G_K_k_min_table_data
         k_max = self.RF_G_K_k_max_table_data
