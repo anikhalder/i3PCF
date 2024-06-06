@@ -1,12 +1,13 @@
 import numpy as np
+import constants
 
 ### (l,z) grid settings
-l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 113).astype(int)) # 100 integer l values
-#l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 247).astype(int)) # 200 integer l values
-#l_array = np.unique(np.logspace(np.log10(2), np.log10(15000), 719).astype(int)) # 500 integer l values
+l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 113).astype(int)) # e.g. 100 integer l values when _l_max_ = 15000
+#l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 247).astype(int)) # e.g. 200 integer l values when _l_max_ = 15000
+#l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 719).astype(int)) # e.g. 500 integer l values when _l_max_ = 15000
 
-z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(2.0), 27)) # 30 z values
-#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(3.5), 35)) # 30 z values # for Dirac COSMOGRIDV1
+z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 47)) # 50 z values
 
 '''
 #The following z_array are the mean redshifts of the COSMOGRIDV1 fiducial particle shells.
@@ -63,7 +64,7 @@ nside = None # Set to None to ignore
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
 grid_type = 'shear_x_shear_COSMOGRIDV1'
-spectra_and_correlation_type = 'shear_x_shear_DESY3_COSMOGRIDV1_Dirac_center'
+spectra_and_correlation_type = 'shear_x_shear_DESY3_COSMOGRIDV1'
 
 ### correlation name list
 # Naming convention aperture : a : shear aperture mass ; g : galaxy mean number density in tophat filter
@@ -102,7 +103,6 @@ binedges = np.geomspace(min_sep_tc, max_sep_tc, nbins_max+1)
 binedges = binedges[np.where(binedges <= 2 * theta_T_arcmins - 5)]
 nbins_tc = len(binedges)-1
 max_sep_tc = binedges[-1]
-
 
 ### SOURCE bin name and values
 #SOURCE_BIN_NAME_LIST = ['BIN12', 'BIN34']
@@ -148,8 +148,6 @@ if (B3D_type == 'nl'):
     iB_gmm_type = 'GMRF'
     iB_gtt_type = 'GMRF'
     iB_ggg_type = 'GM'
-
-f_sq = 7
 
 ### paths to save/load grids, spectra and correlations
 P_l_z_grid_path = "../output/grids/P_"+P3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
