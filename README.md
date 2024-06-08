@@ -6,28 +6,59 @@ This repository hosts code for computing theoretical predictions for the integra
 ## Repository structure
 
 - **/data/** folder contains pre-tabulated data (such as redshift distributions of galaxies etc.) that must be loaded and used in the code.
+- **/helper/** folder contains some helper files (e.g. file containing functions which need to be copied to classy.pyx).
 - **/output/** folder contains the paths in which the code's output (e.g. spectra, correlation functions, etc.) will be saved.
 - **/src/** folder contains the files for performing the computations. The base file is main.py which performs all the computations.
 
-## Dependencies
+## Installation
 
-- **vegas** (Monte-Carlo integration)
-- **class** (Boltzmann solver)
-- **treecorr** (for computing the binning of the correlation functions)
+For a clean installation, first create a new environment (e.g. name i3PCF) with conda 
 
-A requirement before running this code:
+```
+conda create -n i3PCF python=3
+```
 
-Recompile class after editing the python/class.pyx file by adding the following functions.
+Once created, activate the environment
+
+```
+conda activate i3PCF
+```
+
+We need the following dependencies for the running of the i3PCF code:
+
+- [**numpy**](https://pypi.org/project/numpy/) 
+- [**scipy**](https://pypi.org/project/scipy/) 
+- [**matplotlib**](https://pypi.org/project/matplotlib/)
+- [**pandas**](https://pypi.org/project/pandas/)
+- [**vegas**](https://pypi.org/project/vegas/) (Monte-Carlo integration)
+- [**treecorr**](https://pypi.org/project/TreeCorr/) (for computing the binning of the correlation functions)
+- [**healpy**](https://pypi.org/project/healpy/) (for operations on the sphere)
+- [**classy**](https://pypi.org/project/classy/) (Boltzmann solver)
+
+All of these can be installed with pip:
+
+```
+pip install numpy scipy matplotlib pandas vegas treecorr healpy classy
+```
+
+*For advanced uses*: The following tweak to classy needs to be performed:
+
+Reinstall (or recompile) classy after editing the python/classy.pyx file by adding the following functions
+
  - sigma_squared_prime
  - sigma_prime
  - pk_nonlinear_tilt
+
+ (please follow the instructions in the file helper/classy_functions_to_add.txt)
 
 ## Running the code
 
 - Give your desired input settings in the file **/src/input.py** (e.g. number of tomographic bins, kind of correlations shear x galaxy, which bispectrum recipe to use, etc.)
 - Execute the code from inside the **/src/** folder with:
 
-**python main.py 0 1**
+```
+python main.py 0 1
+```
 
 where the 0 and 1 are needed to tell the code which cosmologies to execute e.g. if you have an array with multiple cosmologies (from Latin-hypercube sampling), then 0 and 1 says start at the 0th index of the array and stop until you reach the 1st index.
  
