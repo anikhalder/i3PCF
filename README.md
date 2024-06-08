@@ -24,7 +24,7 @@ Once created, activate the environment
 conda activate i3PCF
 ```
 
-We need the following dependencies for the running of the i3PCF code:
+We need the following dependencies for running of the i3PCF code:
 
 - [**numpy**](https://pypi.org/project/numpy/) 
 - [**scipy**](https://pypi.org/project/scipy/) 
