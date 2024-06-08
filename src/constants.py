@@ -26,7 +26,7 @@ _R_max_ = 50.0 # [Mpc]
 ### GMRF _f_sq_ value
 _f_sq_ = 7
 
-### l_max for 2D spectra
+### l_max for 2D spectra (set it to an integer value)
 _l_max_ = 15000
 
 ### number of redshift bins used in LOS projection (linear spacing)
