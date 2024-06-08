@@ -1,0 +1,91 @@
+### Helper functions which need to be added to python/classy.pyx file (in the class_public directory wherever it is installed in the machine)
+
+############################################################################################################
+
+# Step 1: First find the following function in classy.pyx:
+
+############################################################################################################
+
+    # Gives effective logarithmic slope of P_L(k,z) (total matter) for a given (k,z)
+    def pk_tilt(self,double k,double z):
+        
+        .
+        .
+        .
+        .
+
+        return pk_tilt
+
+############################################################################################################
+
+# Step 2: Then copy the following functions after the pk_tilt function:
+
+############################################################################################################
+
+    # Added manually : Gives d sigma^2(R,z) / d R for a given (R,z)
+    def sigma_squared_prime(self,double R,double z):
+        """
+        Gives derivative of the sigma^2 (total matter) wth respect to R for a given R and z
+        (R is the radius in units of Mpc)
+
+        .. note::
+
+            there is an additional check to verify whether output contains `mPk`,
+            and whether k_max > ...
+            because otherwise a segfault will occur
+
+        """
+        cdef double sigma_squared_prime
+
+        if (self.pt.has_pk_matter == _FALSE_):
+            raise CosmoSevereError("No power spectrum computed. In order to get d sigma^2(R,z) / d R you must add mPk to the list of outputs.")
+
+        if (self.pt.k_max_for_pk < self.ba.h):
+            raise CosmoSevereError("In order to get sigma(R,z) you must set 'P_k_max_h/Mpc' to 1 or bigger, in order to have k_max > 1 h/Mpc.")
+
+        if fourier_sigmas_at_z(&self.pr,&self.ba,&self.fo,R,z,self.nl.index_pk_m,out_sigma_prime,&sigma_squared_prime)==_FAILURE_:
+            raise CosmoSevereError(self.nl.error_message)
+
+        return sigma_squared_prime # in [1/Mpc]
+
+    # Added manually : Gives d sigma(R,z) / d R for a given (R,z)
+    def sigma_prime(self,double R,double z):
+        """
+        Gives derivative of the sigma (total matter) wth respect to R for a given R and z
+        (R is the radius in units of Mpc)
+        """
+        cdef double sigma_prime
+
+        sigma_prime = self.sigma_squared_prime(R, z) / (2.*self.sigma(R,z)) # in [1/Mpc]
+
+        return sigma_prime
+
+    # Added manually : Gives effective logarithmic slope of P_NL(k,z) (total matter) for a given (k,z)
+    def pk_nonlinear_tilt(self,double k,double z):
+        """
+        Gives effective logarithmic slope of P_NL(k,z) (total matter) for a given k and z
+        (k is the wavenumber in units of 1/Mpc, z is the redshift, the output is dimensionless)
+
+        .. note::
+
+            there is an additional check to verify whether output contains `mPk` and whether k is in the right range
+
+        """
+        cdef double pk_tilt
+
+        if (self.pt.has_pk_matter == _FALSE_):
+            raise CosmoSevereError("No power spectrum computed. In order to get pk_tilt(k,z) you must add mPk to the list of outputs.")
+
+        if (k < self.fo.k[1] or k > self.fo.k[self.fo.k_size-2]):
+            raise CosmoSevereError("In order to get pk_tilt at k=%e 1/Mpc, you should compute P(k,z) in a wider range of k's"%k)
+
+        if fourier_pk_tilt_at_k_and_z(&self.ba,&self.pm,&self.fo,pk_nonlinear,k,z,self.fo.index_pk_total,&pk_tilt)==_FAILURE_:
+            raise CosmoSevereError(self.fo.error_message)
+
+        return pk_tilt
+
+############################################################################################################
+
+# Step 3: Recompile class and reinstall the classy python package
+
+############################################################################################################
