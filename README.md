@@ -41,7 +41,7 @@ All of these can be installed with pip:
 pip install numpy scipy matplotlib pandas vegas treecorr healpy classy
 ```
 
-*For advanced uses --> *: The following tweak to classy needs to be performed:
+*For advanced uses* -- The following tweak to classy needs to be performed:
 
 Reinstall (or recompile) classy after editing the python/classy.pyx file by adding the following functions
 
