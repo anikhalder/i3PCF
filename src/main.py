@@ -22,10 +22,14 @@ import input
 import sys
 from window_utils import iZ_A2pt, iZ_A2pt_binaveraged
 
-'''
 try:
     import healpy as hp
     healpy_installed = True
+except:
+    print('!!! Encountered error while importing healpy !!!')
+    healpy_installed = False
+
+'''
 except ModuleNotFoundError:
     print("Healpy not installed. Cannot use healpy for pixel window function calculations.")
     healpy_installed = False
