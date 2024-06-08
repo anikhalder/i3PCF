@@ -35,29 +35,30 @@ z_array = np.array([0.006387739907950163,
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0} 
 
 ### COSMOGRIDV1 fiducial cosmology
-cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.02, 'z': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0}
+cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'z': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 2.9509837679531363e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'z': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### DESC SkySim5000/HACC fiducial cosmology
-#cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'z': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
-#params_lhs = np.load('../data/cosmo_parameters/CosmoGridV1.npz')
+#params_lhs = np.load('../data/cosmo_parameters/i3pcf_sobol_training_wo_ell_2.6e5_nodes_part1.csv')
 params_lhs = {}
 
 ########################################################
 ########################################################
 
-P3D_set_k_gt_k_nl_to_zero = False
-
 P3D_type = 'nl' # lin, nl
-compute_P_grid = 'yes' # yes, no
-compute_P_spectra_and_correlations = 'yes' # yes, no
+compute_P_grid = 'no' # yes, no
+compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'yes' # yes, no
-compute_iB_spectra_and_correlations = 'yes' # yes, no
+compute_iB_grid = 'no' # yes, no
+compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_area_prefactor = 'no' # yes, no
 theta_averaged_A2pt = 'no' # Average over angle for A2pt or just use bincenters (only used if compute_area_prefactor == 'yes')
 compute_chi_D_values = 'no'
 compute_H_values = 'no'
+
+P3D_set_k_gt_k_nl_to_zero = False
 use_Dirac_comb = False
 
 nside = None # Set to None to ignore
