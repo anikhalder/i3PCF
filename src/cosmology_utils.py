@@ -3,10 +3,9 @@ import numpy as np
 from scipy import interpolate
 from bispectrum import *
 from scipy.optimize import fsolve
-from input import P3D_set_k_gt_k_nl_to_zero
-
-import itertools
-import multiprocessing as mp
+#from input import P3D_set_k_gt_k_nl_to_zero
+#import itertools
+#import multiprocessing as mp
 import constants
 
 class CosmoClass:
@@ -66,11 +65,12 @@ class CosmoClass:
 
         ### tabulate non-linear scale from linear power spectrum 
         k_nl_z_grid_points = np.zeros(self.z_grid_points_ascending.size)
-        for i in range(self.z_grid_points_ascending.size):
-            k_nl_z_grid_points[i] = self.compute_k_nl_z_pk_lin(self.z_grid_points_ascending[i])
+        for j in range(self.z_grid_points_ascending.size):
+            k_nl_z_grid_points[j] = self.compute_k_nl_z_pk_lin(self.z_grid_points_ascending[j])
 
         self.k_nl_z_pk_lin = interpolate.interp1d(self.z_grid_points_ascending, k_nl_z_grid_points, kind='cubic', fill_value=0.0)
 
+        '''
         # k > k_NL set to zero
 
         if (P3D_set_k_gt_k_nl_to_zero == True):
@@ -83,10 +83,7 @@ class CosmoClass:
 
             self.P3D_k_z_lin = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_lin_grid_points)
             self.P3D_k_z_nl = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_nl_grid_points)
-
-        ## NOTE: one needs to add a new function called pk_tilt_nonlinear in classy.pyx file of class_public/python to get the logarithmic derivative wrt nonlinear Pk
-        #self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk_nonlinear_tilt)
-        ####self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid_parallel(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk_nonlinear_tilt)
+        '''
 
         ### tabulate quantities for various biscpectrum recipes (e.g. GM, response functions etc, nonlinear Pk tilt etc.) in k,z grid (parallel)
         self.RF_G_1_table_data_loaded = False
@@ -94,6 +91,54 @@ class CosmoClass:
    
         self.compute_RF_G_1_k_z(0.5, 0.2) # just an initial call with random arguments to simply load the G1 and GK tables
         self.compute_RF_G_K_k_z(0.5, 0.2)
+
+        #'''
+        ############################################################################################################
+
+        # compute grid quantities serially
+
+        B3D_a_GM_k_z_grid_points = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
+        B3D_b_GM_k_z_grid_points = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
+        B3D_c_GM_k_z_grid_points = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
+        RF_G_1_k_z_grid_points   = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
+        RF_G_K_k_z_grid_points   = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
+        n_eff_nl_k_z_grid_points = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
+
+        for j in range(self.z_grid_points_ascending.size):
+
+            z = self.z_grid_points_ascending[j]
+            sigma8z = self.sigma8_z(z)
+
+            n_eff_nl_k_z_grid_points[:,j] = np.gradient(np.log(P3D_k_z_nl_grid_points[:, j]), np.log(self.k_grid_points_ascending))
+
+            for i in range(self.k_grid_points_ascending.size):
+
+                k = self.k_grid_points_ascending[i]
+                n_eff = self.n_eff_lin_k_smoothed(k)
+                q = k/k_nl_z_grid_points[j]  # non-linearity ratio
+
+                B3D_a_GM_k_z_grid_points[i][j] = a_GM(n_eff, q, sigma8z)
+                B3D_b_GM_k_z_grid_points[i][j] = b_GM(n_eff, q)
+                B3D_c_GM_k_z_grid_points[i][j] = c_GM(n_eff, q)
+                RF_G_1_k_z_grid_points[i][j] = self.compute_RF_G_1_k_z(k, z)
+                RF_G_K_k_z_grid_points[i][j] = self.compute_RF_G_K_k_z(k, z)
+
+        self.B3D_a_GM_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, B3D_a_GM_k_z_grid_points)
+        self.B3D_b_GM_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, B3D_b_GM_k_z_grid_points)
+        self.B3D_c_GM_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, B3D_c_GM_k_z_grid_points)
+        self.RF_G_1_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, RF_G_1_k_z_grid_points)
+        self.RF_G_K_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, RF_G_K_k_z_grid_points)
+        self.n_eff_nl_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, n_eff_nl_k_z_grid_points)
+
+
+        '''
+        ############################################################################################################
+
+        # compute grid quantities with parallel processing
+
+        ## NOTE: one needs to add a new function called pk_tilt_nonlinear in classy.pyx file of class_public/python to get the logarithmic derivative wrt nonlinear Pk
+        #self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk_nonlinear_tilt)
+        ####self.n_eff_nl_k_z = function_interp2d_RectBivariateSpline_grid_parallel(self.k_grid_points_ascending, self.z_grid_points_ascending, cclass.pk_nonlinear_tilt)
 
         global populate_k_z_grid_quantities
 
@@ -163,6 +208,9 @@ class CosmoClass:
             self.sigma_R_z = interpolate.RectBivariateSpline(self.R_grid_points_ascending, self.z_grid_points_ascending, sigma_R_z_grid_points)
             self.sigma_squared_prime_R_z = interpolate.RectBivariateSpline(self.R_grid_points_ascending, self.z_grid_points_ascending, sigma_squared_prime_R_z_grid_points)
             self.sigma_prime_R_z = interpolate.RectBivariateSpline(self.R_grid_points_ascending, self.z_grid_points_ascending, sigma_prime_R_z_grid_points)
+
+        ############################################################################################################
+        '''
 
     def sigma8_z(self, z):
         return self.D_plus_z(z)*self.sigma8_0
