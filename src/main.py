@@ -26,7 +26,7 @@ try:
     import healpy as hp
     healpy_installed = True
 except:
-    print('!!! Encountered error while importing healpy !!!')
+    print('!!! Encountered error while importing healpy !!!', flush=True)
     healpy_installed = False
 
 '''
@@ -400,10 +400,11 @@ if __name__ == "__main__":
         if ('z' in params_lhs.keys()):
             z_array = np.array([params_lhs['z'][param_idx]])
             z_val = params_lhs['z'][param_idx]
-            print('z SET to', z_val)
+            print('z and z_array SET to', z_val)
         else:
-            z_val = cosmo_pars_fid['z']
-            print('z FIXED to fiducial value of', z_val)
+            z_array = input.z_array
+            z_val = float('NaN')
+            print('z set to NAN and z_array to the default grid values')
 
         if ('A_IA_NLA' in params_lhs.keys()):
             A_IA_NLA = np.array([params_lhs['A_IA_NLA'][param_idx]])
@@ -1503,4 +1504,4 @@ if __name__ == "__main__":
     pool.join()
 
     end_program = time.time()
-    print('\nTime taken for execution the whole power spectrum and integrated bispectrum calculation (seconds):', end_program - start_program) 
+    print('\nTime taken for execution of the whole script (seconds):', end_program - start_program) 
