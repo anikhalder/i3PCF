@@ -484,6 +484,9 @@ if __name__ == "__main__":
         if (compute_area_prefactor == 'yes'):
             print("Computing the area prefactors for i3PCF")
             ## set the angular bins in which to compute the local 2PCFs
+            
+            area_compute_time = time.time()
+            
             min_sep_tc = input.min_sep_tc
             max_sep_tc = input.max_sep_tc
             nbins_tc = input.nbins_tc
@@ -500,6 +503,8 @@ if __name__ == "__main__":
             
             dat = np.array([bincenters, binedges[:-1], binedges[1:], iZ_A2pt])
             np.savetxt(area_prefactor_path+"iZ_A2pt_W+"+str(theta_T_arcmins)+"_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+".dat", dat.T)
+            
+            print(f"Computing the area prefactors for the i3PCF took {(time.time()-area_compute_time):.2f}s")
 
         if (compute_P_grid == 'yes'):
 
