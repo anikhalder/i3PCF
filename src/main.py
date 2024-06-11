@@ -434,8 +434,8 @@ if __name__ == "__main__":
         if (Mv != 0.0):
             # for massive neutrinos
 
-            m1, m2, m3 = get_masses(Mv, 'DEGENERATE') # degenerate neutrinos (e.g. in COSMOGRIDV1)
-            #m1, m2, m3 = get_masses(Mv, 'NORMAL', 2.5e-3, 7.37e-5) # normal hierarchy neutrinos
+            #m1, m2, m3 = get_masses(Mv, 'DEGENERATE') # degenerate neutrinos (e.g. in COSMOGRIDV1)
+            m1, m2, m3 = get_masses(Mv, 'NORMAL', 2.5e-3, 7.37e-5) # normal hierarchy neutrinos
             #m1, m2, m3 = get_masses(Mv, 'INVERTED', 2.5e-3, 7.37e-5) # inverted hierarchy neutrinos
             
             print('Neutrino masses --> m1, m2, m3 in [eV] =', m1, m2, m3)
