@@ -36,7 +36,8 @@ z_array = np.array([0.006387739907950163,
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0} 
 
 ### COSMOGRIDV1 fiducial cosmology
-cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 #cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 2.9509837679531363e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### DESC SkySim5000/HACC fiducial cosmology
@@ -54,8 +55,8 @@ P3D_type = 'nl' # lin, nl
 compute_P_grid = 'yes' # yes, no
 compute_P_spectra_and_correlations = 'yes' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'no' # yes, no
-compute_iB_spectra_and_correlations = 'no' # yes, no
+compute_iB_grid = 'yes' # yes, no
+compute_iB_spectra_and_correlations = 'yes' # yes, no
 compute_area_prefactor = 'no' # yes, no
 theta_averaged_A2pt = 'no' # Average over angle for A2pt or just use bincenters (only used if compute_area_prefactor == 'yes')
 compute_chi_D_values = 'no'
@@ -64,7 +65,7 @@ compute_H_values = 'no'
 P3D_set_k_gt_k_nl_to_zero = False
 use_Dirac_comb = False
 
-nside = None # Set to None to ignore
+nside = 512 # Set to None to ignore
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
 grid_type = 'shear_x_shear_COSMOGRIDV1'
@@ -118,11 +119,11 @@ max_sep_tc = binedges[-1]
 #SOURCE_BIN_NAME_LIST = ['SBIN4']
 #SOURCE_BIN_VALUES = ['']
 
-SOURCE_BIN_NAME_LIST = ['BIN1', 'BIN2', 'BIN3', 'BIN4']
+SOURCE_BIN_NAME_LIST = ['zmax35_BIN1', 'BIN2', 'BIN3', 'BIN4']
 SOURCE_BIN_VALUES = ['', '', '', '']
 
 SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0, 0.0]
-SOURCE_BIN_m_values = [1, 1, 1, 1]
+SOURCE_BIN_m_values = [0, 0, 0, 0]
 
 ### LENS bin name and type (only used when computing correlations with halos x lensing)
 halo_type_user = '' # 'all_halos'
