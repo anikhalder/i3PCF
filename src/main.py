@@ -495,13 +495,13 @@ if __name__ == "__main__":
             bincenters = np.sqrt(binedges[1:]*binedges[:-1])
 
             if input.theta_averaged_A2pt == 'yes':
-                iZ_A2pt = iZ_A2pt_binaveraged(binedges, theta_T)
+                A2pt = iZ_A2pt_binaveraged(binedges, theta_T)
             else:
-                iZ_A2pt = np.zeros([nbins_tc])
+                A2pt = np.zeros([nbins_tc])
                 for i, alpha in enumerate(bincenters):
-                    iZ_A2pt[i] = iZ_A2pt(alpha, theta_T)
+                    A2pt[i] = iZ_A2pt(alpha, theta_T)
             
-            dat = np.array([bincenters, binedges[:-1], binedges[1:], iZ_A2pt])
+            dat = np.array([bincenters, binedges[:-1], binedges[1:], A2pt])
             np.savetxt(area_prefactor_path+"iZ_A2pt_W+"+str(theta_T_arcmins)+"_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+".dat", dat.T)
             
             print(f"Computing the area prefactors for the i3PCF took {(time.time()-area_compute_time):.2f}s")
