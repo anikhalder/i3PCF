@@ -24,7 +24,7 @@ _R_min_ = 0.1 # [Mpc]
 _R_max_ = 50.0 # [Mpc]
 
 ### GMRF _f_sq_ value
-_f_sq_ = 7
+_f_sq_ = 5
 
 ### l_max for 2D spectra (set it to an integer value)
 _l_max_ = 15000
