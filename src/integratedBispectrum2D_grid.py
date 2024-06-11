@@ -126,8 +126,12 @@ def iB_app_l_z_integration(params):
             diB_app_l_z = diB_l_z_batch(l, z, "iB_UWWp", theta_U, theta_T, CosmoClassObject, "B_GM")
         else:
             diB_app_l_z = diB_l_z_batch(l, z, "iB_UWWp", theta_U, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_app_l_z, nitn=5, neval=2e4) # warm-up the MC grid importance sampling for initial adapting of the grid
-    iB_app_l_z = integ(diB_app_l_z, nitn=5, neval=6e5).mean
+    integ(diB_app_l_z, nitn=5, neval=3e4) # warm-up the MC grid importance sampling for initial adapting of the grid
+    iB_app_l_z = integ(diB_app_l_z, nitn=5, neval=7e5).mean
+
+    # default settings used previously for 100 ell values
+    #integ(diB_app_l_z, nitn=5, neval=2e4) # warm-up the MC grid importance sampling for initial adapting of the grid
+    #iB_app_l_z = integ(diB_app_l_z, nitn=5, neval=6e5).mean
 
     return iB_app_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -148,8 +152,8 @@ def iB_amm_l_z_integration(params):
             diB_amm_l_z = diB_l_z_batch(l, z, "iB_UWWm", theta_U, theta_T, CosmoClassObject, "B_GM")
         else:
             diB_amm_l_z = diB_l_z_batch(l, z, "iB_UWWm", theta_U, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_amm_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_amm_l_z = integ(diB_amm_l_z, nitn=5, neval=6e5).mean
+    integ(diB_amm_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_amm_l_z = integ(diB_amm_l_z, nitn=5, neval=7e5).mean
 
     return iB_amm_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -170,22 +174,22 @@ def iB_att_l_z_integration(params):
             diB_att_b1_l_z = diB_l_z_batch(l, z, "iB_UWWt", theta_U, theta_T, CosmoClassObject, "B_GM")
         elif (input.iB_att_type == 'GMRF'):
             diB_att_b1_l_z = diB_l_z_batch(l, z, "iB_UWWt", theta_U, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_att_b1_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_att_b1_l_z = integ(diB_att_b1_l_z, nitn=5, neval=6e5).mean
+    integ(diB_att_b1_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_att_b1_l_z = integ(diB_att_b1_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_att_b2_l_z = diB_l_z_batch(l, z, "iB_UWWt", theta_U, theta_T, CosmoClassObject, "B_mgm_b2_lin")
     elif (B3D_type == 'nl'):
         diB_att_b2_l_z = diB_l_z_batch(l, z, "iB_UWWt", theta_U, theta_T, CosmoClassObject, "B_mgm_b2_nl")
-    integ(diB_att_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_att_b2_l_z = integ(diB_att_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_att_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_att_b2_l_z = integ(diB_att_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_att_bs2_l_z = diB_l_z_batch(l, z, "iB_UWWt", theta_U, theta_T, CosmoClassObject, "B_mgm_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_att_bs2_l_z = diB_l_z_batch(l, z, "iB_UWWt", theta_U, theta_T, CosmoClassObject, "B_mgm_bs2_nl")
-    integ(diB_att_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_att_bs2_l_z = integ(diB_att_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_att_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_att_bs2_l_z = integ(diB_att_bs2_l_z, nitn=5, neval=7e5).mean
 
     return iB_att_b1_l_z, iB_att_b2_l_z, iB_att_bs2_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -206,29 +210,29 @@ def iB_agg_l_z_integration(params):
             diB_agg_b1sq_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_GM")
         elif (input.iB_agg_type == 'GMRF'):
             diB_agg_b1sq_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_agg_b1sq_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_agg_b1sq_l_z = integ(diB_agg_b1sq_l_z, nitn=5, neval=6e5).mean
+    integ(diB_agg_b1sq_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_agg_b1sq_l_z = integ(diB_agg_b1sq_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_agg_b1_b2_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_mgg_b1_b2_lin")
     elif (B3D_type == 'nl'):
         diB_agg_b1_b2_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_mgg_b1_b2_nl")
-    integ(diB_agg_b1_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_agg_b1_b2_l_z = integ(diB_agg_b1_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_agg_b1_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_agg_b1_b2_l_z = integ(diB_agg_b1_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_agg_b1_bs2_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_mgg_b1_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_agg_b1_bs2_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_mgg_b1_bs2_nl")
-    integ(diB_agg_b1_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_agg_b1_bs2_l_z = integ(diB_agg_b1_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_agg_b1_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_agg_b1_bs2_l_z = integ(diB_agg_b1_bs2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_agg_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_mgg_eps_epsdelta_lin")
     elif (B3D_type == 'nl'):
         diB_agg_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_UWW", theta_U, theta_T, CosmoClassObject, "B_mgg_eps_epsdelta_nl")
-    integ(diB_agg_eps_epsdelta_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_agg_eps_epsdelta_l_z = integ(diB_agg_eps_epsdelta_l_z, nitn=5, neval=6e5).mean
+    integ(diB_agg_eps_epsdelta_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_agg_eps_epsdelta_l_z = integ(diB_agg_eps_epsdelta_l_z, nitn=5, neval=7e5).mean
 
     return iB_agg_b1sq_l_z, iB_agg_b1_b2_l_z, iB_agg_b1_bs2_l_z, iB_agg_eps_epsdelta_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -249,22 +253,22 @@ def iB_gpp_l_z_integration(params):
             diB_gpp_b1_l_z = diB_l_z_batch(l, z, "iB_WWWp", theta_T, theta_T, CosmoClassObject, "B_GM")
         elif (input.iB_gpp_type == 'GMRF'):
             diB_gpp_b1_l_z = diB_l_z_batch(l, z, "iB_WWWp", theta_T, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_gpp_b1_l_z, nitn=5, neval=2e4) # warm-up the MC grid importance sampling for initial adapting of the grid
-    iB_gpp_b1_l_z = integ(diB_gpp_b1_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gpp_b1_l_z, nitn=5, neval=3e4) # warm-up the MC grid importance sampling for initial adapting of the grid
+    iB_gpp_b1_l_z = integ(diB_gpp_b1_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gpp_b2_l_z = diB_l_z_batch(l, z, "iB_WWWp", theta_T, theta_T, CosmoClassObject, "B_gmm_b2_lin")
     elif (B3D_type == 'nl'):
         diB_gpp_b2_l_z = diB_l_z_batch(l, z, "iB_WWWp", theta_T, theta_T, CosmoClassObject, "B_gmm_b2_nl")
-    integ(diB_gpp_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid 
-    iB_gpp_b2_l_z = integ(diB_gpp_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gpp_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid 
+    iB_gpp_b2_l_z = integ(diB_gpp_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gpp_bs2_l_z = diB_l_z_batch(l, z, "iB_WWWp", theta_T, theta_T, CosmoClassObject, "B_gmm_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_gpp_bs2_l_z = diB_l_z_batch(l, z, "iB_WWWp", theta_T, theta_T, CosmoClassObject, "B_gmm_bs2_nl")
-    integ(diB_gpp_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid 
-    iB_gpp_bs2_l_z = integ(diB_gpp_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gpp_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid 
+    iB_gpp_bs2_l_z = integ(diB_gpp_bs2_l_z, nitn=5, neval=7e5).mean
 
     return iB_gpp_b1_l_z, iB_gpp_b2_l_z, iB_gpp_bs2_l_z
 
@@ -285,22 +289,22 @@ def iB_gmm_l_z_integration(params):
             diB_gmm_b1_l_z = diB_l_z_batch(l, z, "iB_WWWm", theta_T, theta_T, CosmoClassObject, "B_GM")
         elif (input.iB_gmm_type == 'GMRF'):
             diB_gmm_b1_l_z = diB_l_z_batch(l, z, "iB_WWWm", theta_T, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_gmm_b1_l_z, nitn=5, neval=2e4) # warm-up the MC grid 
-    iB_gmm_b1_l_z = integ(diB_gmm_b1_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gmm_b1_l_z, nitn=5, neval=3e4) # warm-up the MC grid 
+    iB_gmm_b1_l_z = integ(diB_gmm_b1_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gmm_b2_l_z = diB_l_z_batch(l, z, "iB_WWWm", theta_T, theta_T, CosmoClassObject, "B_gmm_b2_lin")
     elif (B3D_type == 'nl'):
         diB_gmm_b2_l_z = diB_l_z_batch(l, z, "iB_WWWm", theta_T, theta_T, CosmoClassObject, "B_gmm_b2_nl")
-    integ(diB_gmm_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid 
-    iB_gmm_b2_l_z = integ(diB_gmm_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gmm_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid 
+    iB_gmm_b2_l_z = integ(diB_gmm_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gmm_bs2_l_z = diB_l_z_batch(l, z, "iB_WWWm", theta_T, theta_T, CosmoClassObject, "B_gmm_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_gmm_bs2_l_z = diB_l_z_batch(l, z, "iB_WWWm", theta_T, theta_T, CosmoClassObject, "B_gmm_bs2_nl")
-    integ(diB_gmm_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid 
-    iB_gmm_bs2_l_z = integ(diB_gmm_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gmm_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid 
+    iB_gmm_bs2_l_z = integ(diB_gmm_bs2_l_z, nitn=5, neval=7e5).mean
 
     return iB_gmm_b1_l_z, iB_gmm_b2_l_z, iB_gmm_bs2_l_z
 
@@ -321,29 +325,29 @@ def iB_gtt_l_z_integration(params):
             diB_gtt_b1sq_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_GM")
         elif (input.iB_gtt_type == 'GMRF'):
             diB_gtt_b1sq_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_gtt_b1sq_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_gtt_b1sq_l_z = integ(diB_gtt_b1sq_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gtt_b1sq_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_gtt_b1sq_l_z = integ(diB_gtt_b1sq_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gtt_b1_b2_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_b2_lin")
     elif (B3D_type == 'nl'):
         diB_gtt_b1_b2_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_b2_nl")
-    integ(diB_gtt_b1_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_gtt_b1_b2_l_z = integ(diB_gtt_b1_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gtt_b1_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_gtt_b1_b2_l_z = integ(diB_gtt_b1_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gtt_b1_bs2_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_gtt_b1_bs2_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_bs2_nl")
-    integ(diB_gtt_b1_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_gtt_b1_bs2_l_z = integ(diB_gtt_b1_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gtt_b1_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_gtt_b1_bs2_l_z = integ(diB_gtt_b1_bs2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gtt_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_ggm_eps_epsdelta_lin")
     elif (B3D_type == 'nl'):
         diB_gtt_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_WWWt", theta_T, theta_T, CosmoClassObject, "B_ggm_eps_epsdelta_nl")
-    integ(diB_gtt_eps_epsdelta_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_gtt_eps_epsdelta_l_z = integ(diB_gtt_eps_epsdelta_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gtt_eps_epsdelta_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_gtt_eps_epsdelta_l_z = integ(diB_gtt_eps_epsdelta_l_z, nitn=5, neval=7e5).mean
 
     return iB_gtt_b1sq_l_z, iB_gtt_b1_b2_l_z, iB_gtt_b1_bs2_l_z, iB_gtt_eps_epsdelta_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -364,34 +368,34 @@ def iB_ggg_l_z_integration(params):
             diB_ggg_b1cu_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_GM")
         elif (input.iB_ggg_type == 'GMRF'):
             diB_ggg_b1cu_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_GMRF")        
-    integ(diB_ggg_b1cu_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggg_b1cu_l_z = integ(diB_ggg_b1cu_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggg_b1cu_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggg_b1cu_l_z = integ(diB_ggg_b1cu_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_ggg_b1sq_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggg_b1sq_b2_lin")
     elif (B3D_type == 'nl'):
         diB_ggg_b1sq_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggg_b1sq_b2_nl")
-    integ(diB_ggg_b1sq_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggg_b1sq_b2_l_z = integ(diB_ggg_b1sq_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggg_b1sq_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggg_b1sq_b2_l_z = integ(diB_ggg_b1sq_b2_l_z, nitn=5, neval=7e5).mean
     
     if (B3D_type == 'lin'):
         diB_ggg_b1sq_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggg_b1sq_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_ggg_b1sq_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggg_b1sq_bs2_nl")
-    integ(diB_ggg_b1sq_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggg_b1sq_bs2_l_z = integ(diB_ggg_b1sq_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggg_b1sq_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggg_b1sq_bs2_l_z = integ(diB_ggg_b1sq_bs2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_ggg_b1_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggg_b1_eps_epsdelta_lin")
     elif (B3D_type == 'nl'):
         diB_ggg_b1_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggg_b1_eps_epsdelta_nl")
-    integ(diB_ggg_b1_eps_epsdelta_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggg_b1_eps_epsdelta_l_z = integ(diB_ggg_b1_eps_epsdelta_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggg_b1_eps_epsdelta_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggg_b1_eps_epsdelta_l_z = integ(diB_ggg_b1_eps_epsdelta_l_z, nitn=5, neval=7e5).mean
 
     # careful with this as it can return flat spectrum leading to troubles in real space (better to calculate analytcally?)
     diB_ggg_eps_eps_eps_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggg_eps_eps_eps")
-    integ(diB_ggg_eps_eps_eps_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggg_eps_eps_eps_l_z = integ(diB_ggg_eps_eps_eps_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggg_eps_eps_eps_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggg_eps_eps_eps_l_z = integ(diB_ggg_eps_eps_eps_l_z, nitn=5, neval=7e5).mean
 
     return iB_ggg_b1cu_l_z, iB_ggg_b1sq_b2_l_z, iB_ggg_b1sq_bs2_l_z, iB_ggg_b1_eps_epsdelta_l_z, iB_ggg_eps_eps_eps_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -412,8 +416,8 @@ def iB_akk_l_z_integration(params):
         diB_akk_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_tree")
     elif (B3D_type == 'nl'):
         diB_akk_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_akk_l_z, nitn=5, neval=2e4) # warm-up the MC grid importance sampling for initial adapting of the grid
-    iB_akk_l_z = integ(diB_akk_l_z, nitn=5, neval=6e5).mean
+    integ(diB_akk_l_z, nitn=5, neval=3e4) # warm-up the MC grid importance sampling for initial adapting of the grid
+    iB_akk_l_z = integ(diB_akk_l_z, nitn=5, neval=7e5).mean
 
     return iB_akk_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -431,22 +435,22 @@ def iB_agk_l_z_integration(params):
         diB_agk_b1_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_tree")
     elif (B3D_type == 'nl'):
         diB_agk_b1_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_agk_b1_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_agk_b1_l_z = integ(diB_agk_b1_l_z, nitn=5, neval=6e5).mean
+    integ(diB_agk_b1_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_agk_b1_l_z = integ(diB_agk_b1_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_agk_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_mgm_b2_lin")
     elif (B3D_type == 'nl'):
         diB_agk_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_mgm_b2_nl")
-    integ(diB_agk_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_agk_b2_l_z = integ(diB_agk_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_agk_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_agk_b2_l_z = integ(diB_agk_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_agk_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_mgm_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_agk_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_mgm_bs2_nl")
-    integ(diB_agk_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_agk_bs2_l_z = integ(diB_agk_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_agk_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_agk_bs2_l_z = integ(diB_agk_bs2_l_z, nitn=5, neval=7e5).mean
 
     return iB_agk_b1_l_z, iB_agk_b2_l_z, iB_agk_bs2_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
 
@@ -464,22 +468,22 @@ def iB_gkk_l_z_integration(params):
         diB_gkk_b1_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_tree")
     elif (B3D_type == 'nl'):
         diB_gkk_b1_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_gkk_b1_l_z, nitn=5, neval=2e4) # warm-up the MC grid importance sampling for initial adapting of the grid
-    iB_gkk_b1_l_z = integ(diB_gkk_b1_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gkk_b1_l_z, nitn=5, neval=3e4) # warm-up the MC grid importance sampling for initial adapting of the grid
+    iB_gkk_b1_l_z = integ(diB_gkk_b1_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gkk_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_gmm_b2_lin")
     elif (B3D_type == 'nl'):
         diB_gkk_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_gmm_b2_nl")
-    integ(diB_gkk_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid 
-    iB_gkk_b2_l_z = integ(diB_gkk_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gkk_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid 
+    iB_gkk_b2_l_z = integ(diB_gkk_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_gkk_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_gmm_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_gkk_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_gmm_bs2_nl")
-    integ(diB_gkk_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid 
-    iB_gkk_bs2_l_z = integ(diB_gkk_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_gkk_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid 
+    iB_gkk_bs2_l_z = integ(diB_gkk_bs2_l_z, nitn=5, neval=7e5).mean
 
     return iB_gkk_b1_l_z, iB_gkk_b2_l_z, iB_gkk_bs2_l_z
 
@@ -497,28 +501,28 @@ def iB_ggk_l_z_integration(params):
         diB_ggk_b1sq_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_tree")
     elif (B3D_type == 'nl'):
         diB_ggk_b1sq_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_GMRF")
-    integ(diB_ggk_b1sq_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggk_b1sq_l_z = integ(diB_ggk_b1sq_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggk_b1sq_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggk_b1sq_l_z = integ(diB_ggk_b1sq_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_ggk_b1_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_b2_lin")
     elif (B3D_type == 'nl'):
         diB_ggk_b1_b2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_b2_nl")
-    integ(diB_ggk_b1_b2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggk_b1_b2_l_z = integ(diB_ggk_b1_b2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggk_b1_b2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggk_b1_b2_l_z = integ(diB_ggk_b1_b2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_ggk_b1_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_bs2_lin")
     elif (B3D_type == 'nl'):
         diB_ggk_b1_bs2_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggm_b1_bs2_nl")
-    integ(diB_ggk_b1_bs2_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggk_b1_bs2_l_z = integ(diB_ggk_b1_bs2_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggk_b1_bs2_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggk_b1_bs2_l_z = integ(diB_ggk_b1_bs2_l_z, nitn=5, neval=7e5).mean
 
     if (B3D_type == 'lin'):
         diB_ggk_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggm_eps_epsdelta_lin")
     elif (B3D_type == 'nl'):
         diB_ggk_eps_epsdelta_l_z = diB_l_z_batch(l, z, "iB_WWW", theta_T, theta_T, CosmoClassObject, "B_ggm_eps_epsdelta_nl")
-    integ(diB_ggk_eps_epsdelta_l_z, nitn=5, neval=2e4) # warm-up the MC grid
-    iB_ggk_eps_epsdelta_l_z = integ(diB_ggk_eps_epsdelta_l_z, nitn=5, neval=6e5).mean
+    integ(diB_ggk_eps_epsdelta_l_z, nitn=5, neval=3e4) # warm-up the MC grid
+    iB_ggk_eps_epsdelta_l_z = integ(diB_ggk_eps_epsdelta_l_z, nitn=5, neval=7e5).mean
 
     return iB_ggk_b1sq_l_z, iB_ggk_b1_b2_l_z, iB_ggk_b1_bs2_l_z, iB_ggk_eps_epsdelta_l_z  #* (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)

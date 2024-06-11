@@ -2,14 +2,12 @@ import numpy as np
 import constants
 
 ### (l,z) grid settings
-#l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 82).astype(int)) # e.g. 75 integer l values when _l_max_ = 15000
-#l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 88).astype(int)) # e.g. 80 integer l values when _l_max_ = 15000
-l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 113).astype(int)) # e.g. 100 integer l values when _l_max_ = 15000
+l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 88).astype(int)) # e.g. 80 integer l values when _l_max_ = 15000
+#l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 113).astype(int)) # e.g. 100 integer l values when _l_max_ = 15000
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 247).astype(int)) # e.g. 200 integer l values when _l_max_ = 15000
-#l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 719).astype(int)) # e.g. 500 integer l values when _l_max_ = 15000
 
-#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
-z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
+z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 47)) # 50 z values
 
 '''
@@ -44,6 +42,7 @@ cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649,
 ### DESC SkySim5000/HACC fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
+### Set the parameters which you want to be different from fiducial cosmology
 #params_lhs = np.load('../data/cosmo_parameters/i3pcf_sobol_training_wo_ell_2.6e5_nodes_part1.csv')
 params_lhs = {}
 #params_lhs = {'z': np.array([0.02])}
