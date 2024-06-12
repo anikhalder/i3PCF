@@ -8,7 +8,7 @@ _z_min_ = 0.0
 _z_max_ = 2.5 # note that the G_K response function can only be computed up to a max z = 2.63 and G_1 up to z = 3.0
 #_z_max_ = 3.5 # for COSMOGRIDV1
 
-### k_max_pk [1/Mpc] and z_max_pk settings for CLASS power spectrum (set these to larger values than reguired for _k_max_ and _z_max_)
+### k_max_pk [1/Mpc] and z_max_pk settings for CLASS power spectrum (set these to larger values than required for _k_max_ and _z_max_)
 #_k_max_pk_ = 70.0 # for tracer x lensing
 _k_max_pk_ = 1.2*_k_max_
 _z_max_pk_ = 1.2*_z_max_ 
