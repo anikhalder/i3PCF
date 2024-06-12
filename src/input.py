@@ -37,7 +37,11 @@ z_array = np.array([0.006387739907950163,
 
 ### COSMOGRIDV1 fiducial cosmology
 cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
-#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 2.9509837679531363e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 3.069798834826492e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+
+### COSMOGRIDV1 fiducial cosmology with no neutrinos i.e. Mv = 0.0
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 2.9509837678758487e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### DESC SkySim5000/HACC fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
