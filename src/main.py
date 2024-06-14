@@ -544,7 +544,7 @@ if __name__ == "__main__":
             #np.savetxt(P_l_z_grid_path+"P_eps_eps_l_z_grid"+filename_extension, P_eps_eps_l_z_grid)
 
             end_grid = time.time()
-            print("Computing the P(l,z) grid takes %ss"%(end_grid - start_grid))
+            print("Computing the P(l,z) grid took %ss"%(end_grid - start_grid))
 
         if (compute_iB_grid == 'yes'):
 
@@ -898,7 +898,7 @@ if __name__ == "__main__":
                 np.savetxt(iB_l_z_grid_path+"iB_ggk_eps_epsdelta_l_z_grid"+filename_extension, iB_ggk_eps_epsdelta_l_z_grid)
 
             end_grid = time.time()
-            print("Computing the iB(l,z) grids take %ss"%(end_grid - start_grid))
+            print("Computing the iB(l,z) grids took %ss"%(end_grid - start_grid))
 
         #################################################################################################################################
         #################################################################################################################################
@@ -1502,7 +1502,7 @@ if __name__ == "__main__":
                             corr_idx += 1 
 
             end_spectra_and_correlations = time.time()
-            print("Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations take %ss"%(end_spectra_and_correlations - start_spectra_and_correlations))   
+            print("Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations took %ss"%(end_spectra_and_correlations - start_spectra_and_correlations))   
         
         #####################
 
