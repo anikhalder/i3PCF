@@ -55,11 +55,11 @@ params_lhs = {}
 ########################################################
 
 P3D_type = 'nl' # lin, nl
-compute_P_grid = 'yes' # yes, no
-compute_P_spectra_and_correlations = 'yes' # yes, no
+compute_P_grid = 'no' # yes, no
+compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'yes' # yes, no
-compute_iB_spectra_and_correlations = 'yes' # yes, no
+compute_iB_grid = 'no' # yes, no
+compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_area_prefactor = 'no' # yes, no
 theta_averaged_A2pt = 'no' # Average over angle for A2pt or just use bincenters (only used if compute_area_prefactor == 'yes')
 compute_chi_D_values = 'no'

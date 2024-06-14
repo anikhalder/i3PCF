@@ -392,13 +392,15 @@ if __name__ == "__main__":
             print('Mv FIXED to fiducial value of', Mv)
 
         if ('z' in params_lhs.keys()):
-            z_array = np.array([params_lhs['z'][param_idx]])
             z_val = params_lhs['z'][param_idx]
-            print('z and z_array SET to', z_val)
+            z_array = np.array([params_lhs['z'][param_idx]])
+            print('z SET to', z_val)
+            print('z_array SET to', z_array)
         else:
-            z_array = input.z_array
             z_val = float('NaN')
-            print('z set to NAN and z_array to the default grid values')
+            z_array = input.z_array
+            print('z FIXED to NaN')
+            print('z_array FIXED to default z-grid values')
 
         if ('A_IA_NLA' in params_lhs.keys()):
             A_IA_NLA = np.array([params_lhs['A_IA_NLA'][param_idx]])
@@ -459,6 +461,12 @@ if __name__ == "__main__":
         except:
             print('!!! Encountered classy error in node index #'+str(param_idx)+' . Skipping it !!!')
             continue
+
+        if (sigma8_or_A_s == 'A_s'):
+            print('A_s COMPUTED to be', cclass.get_current_derived_parameters(['A_s'])['A_s'])
+        else:
+            print('sigma8 COMPUTED to be', cclass.sigma8())
+        print('S8 COMPUTED to be', cclass.S8())
 
         print("\nThe classy.CLASS object is made!")
 
