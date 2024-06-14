@@ -163,7 +163,7 @@ P_l_z_grid_path = "../output/grids/P_"+P3D_type+"_grids_l"+str(l_array.size)+"_z
 if (B3D_type == 'lin'):
     iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
 elif (B3D_type == 'nl'):
-    iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_J0_GM_J2J4_GMRF_fsq7_"+grid_type+"/"
+    iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
 
 if (compute_P_spectra_and_correlations == 'yes'):
     P_spectra_path = "../output/spectra/P_"+P3D_type+"_spectra_l"+str(l_array.size)+"_"+spectra_and_correlation_type+"/"
@@ -175,8 +175,8 @@ if (compute_iB_spectra_and_correlations == 'yes'):
         iZ_correlations_path = "../output/correlations/iZ_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_correlations_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_"+spectra_and_correlation_type+"/"
     
     elif (B3D_type == 'nl'):
-        iB_spectra_path = "../output/spectra/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_spectra_l"+str(l_array.size)+"_J0_GM_J2J4_GMRF_fsq7_"+spectra_and_correlation_type+"/"
-        iZ_correlations_path = "../output/correlations/iZ_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_correlations_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_J0_GM_J2J4_GMRF_fsq7_"+spectra_and_correlation_type+"/"
+        iB_spectra_path = "../output/spectra/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_spectra_l"+str(l_array.size)+"_"+spectra_and_correlation_type+"/"
+        iZ_correlations_path = "../output/correlations/iZ_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_correlations_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_"+spectra_and_correlation_type+"/"
 
 if (compute_area_prefactor == 'yes'):
     area_prefactor_path = "../output/area_prefactor/"
