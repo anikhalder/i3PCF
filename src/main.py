@@ -338,7 +338,7 @@ if __name__ == "__main__":
             if ('sigma8' in cosmo_pars_fid.keys()):
                 sigma8 = cosmo_pars_fid['sigma8']
                 sigma8_or_A_s = 'sigma8'
-                print('sigma8 FIXED to fiducial value of', sigma8)
+                print('sigma8 SET to', sigma8)
             elif ('A_s' in cosmo_pars_fid.keys()):
                 A_s = cosmo_pars_fid['A_s']
                 sigma8_or_A_s = 'A_s'
