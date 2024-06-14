@@ -51,6 +51,8 @@ cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649,
 params_lhs = {}
 #params_lhs = {'z': np.array([0.02])}
 
+NEUTRINO_HIERARCHY = 'DEGENERATE' # can be set to 'DEGNERATE', 'NORMAL', 'INVERTED', note that it is only used if Mv is not 0.0
+
 ########################################################
 ########################################################
 
@@ -62,8 +64,7 @@ compute_iB_grid = 'no' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_area_prefactor = 'no' # yes, no
 theta_averaged_A2pt = 'no' # Average over angle for A2pt or just use bincenters (only used if compute_area_prefactor == 'yes')
-compute_chi_D_values = 'no'
-compute_H_values = 'no'
+compute_H_chi_D_values = 'no'
 
 P3D_set_k_gt_k_nl_to_zero = False
 use_Dirac_comb = False
@@ -180,3 +181,9 @@ if (compute_iB_spectra_and_correlations == 'yes'):
 
 if (compute_area_prefactor == 'yes'):
     area_prefactor_path = "../output/area_prefactor/"
+
+if (compute_area_prefactor == 'yes'):
+    area_prefactor_path = "../output/area_prefactor/"
+
+if (compute_H_chi_D_values == 'yes'):
+    H_chi_D_values_path = "../output/H_chi_D_values/"

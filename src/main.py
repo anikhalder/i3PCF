@@ -49,9 +49,7 @@ B3D_type = input.B3D_type
 compute_iB_grid = input.compute_iB_grid
 compute_iB_spectra_and_correlations = input.compute_iB_spectra_and_correlations
 compute_area_prefactor = input.compute_area_prefactor
-
-compute_chi_D_values = input.compute_chi_D_values
-compute_H_values = input.compute_H_values
+compute_H_chi_D_values = input.compute_H_chi_D_values
 
 halo_type_user = input.halo_type_user
 
@@ -95,9 +93,9 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     #alpha_min_arcmins_xi = binedges[:-1]
     #alpha_max_arcmins_xi = binedges[1:]
 
-    np.savetxt("../data/angular_bins/alpha_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_arcmins_xi.T)
-    np.savetxt("../data/angular_bins/alpha_min_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_min_arcmins_xi.T)
-    np.savetxt("../data/angular_bins/alpha_max_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_max_arcmins_xi.T)
+    np.savetxt("../output/angular_bins/alpha_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_arcmins_xi.T)
+    np.savetxt("../output/angular_bins/alpha_min_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_min_arcmins_xi.T)
+    np.savetxt("../output/angular_bins/alpha_max_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_max_arcmins_xi.T)
 
     ## set the angular bins in which to compute the local 2PCFs
     min_sep_tc = input.min_sep_tc
@@ -109,9 +107,9 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     alpha_min_arcmins = kk.left_edges
     alpha_max_arcmins = kk.right_edges
 
-    np.savetxt("../data/angular_bins/alpha_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_arcmins.T)
-    np.savetxt("../data/angular_bins/alpha_min_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_min_arcmins.T)
-    np.savetxt("../data/angular_bins/alpha_max_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_max_arcmins.T)
+    np.savetxt("../output/angular_bins/alpha_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_arcmins.T)
+    np.savetxt("../output/angular_bins/alpha_min_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_min_arcmins.T)
+    np.savetxt("../output/angular_bins/alpha_max_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_max_arcmins.T)
 
     if ('halo' in spectra_and_correlation_type or 'galaxy' in spectra_and_correlation_type):
     
@@ -134,8 +132,8 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
 
     ## pre-compute or load the bin-averaged values
 
-    if (os.path.exists('../data/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy') == False or
-        os.path.exists('../data/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False):
+    if (os.path.exists('../output/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy') == False or
+        os.path.exists('../output/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False):
 
         print("Computing bin-averaged values of Legendre polynomials for xi and zeta")
 
@@ -152,10 +150,10 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
             xit_bin_averaged_values[i,:] = xit_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
             xi_bin_averaged_values[i,:] = xi_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
 
-        np.save('../data/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xip_bin_averaged_values)
-        np.save('../data/angular_bins/xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xim_bin_averaged_values)
-        np.save('../data/angular_bins/xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xit_bin_averaged_values)
-        np.save('../data/angular_bins/xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xi_bin_averaged_values)
+        np.save('../output/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xip_bin_averaged_values)
+        np.save('../output/angular_bins/xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xim_bin_averaged_values)
+        np.save('../output/angular_bins/xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xit_bin_averaged_values)
+        np.save('../output/angular_bins/xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xi_bin_averaged_values)
 
         zetap_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
         zetam_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
@@ -168,22 +166,22 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
             zetat_bin_averaged_values[i,:] = xit_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
             zeta_bin_averaged_values[i,:] = xi_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
 
-        np.save('../data/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetap_bin_averaged_values)
-        np.save('../data/angular_bins/zetam_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetam_bin_averaged_values)
-        np.save('../data/angular_bins/zetat_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetat_bin_averaged_values)
-        np.save('../data/angular_bins/zeta_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zeta_bin_averaged_values)
+        np.save('../output/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetap_bin_averaged_values)
+        np.save('../output/angular_bins/zetam_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetam_bin_averaged_values)
+        np.save('../output/angular_bins/zetat_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetat_bin_averaged_values)
+        np.save('../output/angular_bins/zeta_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zeta_bin_averaged_values)
 
     print("Loading pe-computed bin-averaged values of Legendre polynomials for xi and zeta")
 
-    xip_theta_bin_averaged_values = np.load('../data/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
-    xim_theta_bin_averaged_values = np.load('../data/angular_bins/xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
-    xit_theta_bin_averaged_values = np.load('../data/angular_bins/xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
-    xi_theta_bin_averaged_values = np.load('../data/angular_bins/xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xip_theta_bin_averaged_values = np.load('../output/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xim_theta_bin_averaged_values = np.load('../output/angular_bins/xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xit_theta_bin_averaged_values = np.load('../output/angular_bins/xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xi_theta_bin_averaged_values = np.load('../output/angular_bins/xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
 
-    zetap_theta_bin_averaged_values = np.load('../data/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
-    zetam_theta_bin_averaged_values = np.load('../data/angular_bins/zetam_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
-    zetat_theta_bin_averaged_values = np.load('../data/angular_bins/zetat_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
-    zeta_theta_bin_averaged_values = np.load('../data/angular_bins/zeta_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    zetap_theta_bin_averaged_values = np.load('../output/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    zetam_theta_bin_averaged_values = np.load('../output/angular_bins/zetam_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    zetat_theta_bin_averaged_values = np.load('../output/angular_bins/zetat_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    zeta_theta_bin_averaged_values = np.load('../output/angular_bins/zeta_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
 
     def xip_theta_bin_averaged(ell, C_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
@@ -278,17 +276,11 @@ if (compute_area_prefactor == 'yes'):
     if (os.path.isdir(area_prefactor_path) == False):
         os.mkdir(area_prefactor_path)
 
-if (compute_chi_D_values == 'yes'):
+if (compute_H_chi_D_values == 'yes'):
 
-    chi_D_path = input.chi_D_path
-    if (os.path.isdir(chi_D_path) == False):
-        os.mkdir(chi_D_path)
-
-if (compute_H_values == 'yes'):
-
-    H_path = input.H_path
-    if (os.path.isdir(H_path) == False):
-        os.mkdir(H_path)
+    H_chi_D_path = input.H_chi_D_path
+    if (os.path.isdir(H_chi_D_path) == False):
+        os.mkdir(H_chi_D_path)
 
 #####################
 
@@ -477,17 +469,16 @@ if __name__ == "__main__":
 
         #################################################################################################################################
         #################################################################################################################################
-        # STEP 2: Create (l,z) grids for P_3D(l,z) and/or iB_3D(l,z)
+        # STEP 2: Create (l,z) grids for P_3D(l,z) and/or iB_3D(l,z) (also for H_chi_D values and area prefactors)
         #################################################################################################################################
         #################################################################################################################################
         
-        if (compute_chi_D_values == 'yes'):
-            chi_D_vals = np.array([CosmoClassObject.chi_z(z_val), CosmoClassObject.D_plus_z(z_val)])
-            np.savetxt(chi_D_path+"chi_D"+filename_extension, chi_D_vals.T)
-
-        if (compute_H_values == 'yes'):
-            H_val = np.array([CosmoClassObject.H_z(z_val)])
-            np.savetxt(H_path+"H"+filename_extension, H_val.T)
+        if (compute_H_chi_D_values == 'yes'):
+            if (z_val == float('NaN')):
+                print("Specify the redshift z at which to compute H(z), chi(z) and D(z) values!")
+            else:
+                H_chi_D_vals = np.array([CosmoClassObject.H_z(z_val), CosmoClassObject.chi_z(z_val), CosmoClassObject.D_plus_z(z_val)])
+                np.savetxt(H_chi_D_path+"H_chi_D"+filename_extension, H_chi_D_vals.T)
 
         if (compute_area_prefactor == 'yes'):
             print("Computing the area prefactors for i3PCF")
