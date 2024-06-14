@@ -3,7 +3,7 @@
 # Except this file
 !.gitignore
 !A2pt/
-!area_prefactor/
+!angular_bins/
 !correlations/
 !grids/
 !H_chi_D/
