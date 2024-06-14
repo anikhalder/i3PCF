@@ -48,8 +48,8 @@ cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649,
 
 ### Set the parameters which you want to be different from fiducial cosmology
 #params_lhs = np.load('../data/cosmo_parameters/i3pcf_sobol_training_wo_ell_2.6e5_nodes_part1.csv')
-params_lhs = {}
-#params_lhs = {'z': np.array([0.02])}
+#params_lhs = {}
+params_lhs = {'z': np.array([0.02])}
 
 NEUTRINO_HIERARCHY = 'DEGENERATE' # can be set to 'DEGNERATE', 'NORMAL', 'INVERTED', note that it is only used if Mv is not 0.0
 
@@ -62,9 +62,9 @@ compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'no' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
-compute_area_prefactor = 'no' # yes, no
-theta_averaged_A2pt = 'no' # Average over angle for A2pt or just use bincenters (only used if compute_area_prefactor == 'yes')
-compute_H_chi_D_values = 'no'
+compute_A2pt = 'no' # yes, no
+compute_A2pt_bin_averaged = 'no' # yes, no
+compute_H_chi_D = 'no'
 
 P3D_set_k_gt_k_nl_to_zero = False
 use_Dirac_comb = False
@@ -159,31 +159,37 @@ if (B3D_type == 'nl'):
     iB_ggg_type = 'GM'
 
 ### paths to save/load grids, spectra and correlations
-P_l_z_grid_path = "../output/grids/P_"+P3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
+P_l_z_grid_path = '../output/grids/P_'+P3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'
 
 if (B3D_type == 'lin'):
-    iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
+    iB_l_z_grid_path = '../output/grids/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'
 elif (B3D_type == 'nl'):
-    iB_l_z_grid_path = "../output/grids/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_grids_l"+str(l_array.size)+"_z"+str(z_array.size)+"_"+grid_type+"/"
+    iB_l_z_grid_path = '../output/grids/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'
 
 if (compute_P_spectra_and_correlations == 'yes'):
-    P_spectra_path = "../output/spectra/P_"+P3D_type+"_spectra_l"+str(l_array.size)+"_"+spectra_and_correlation_type+"/"
-    xi_correlations_path = "../output/correlations/xi_"+P3D_type+"_correlations_alpha_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_"+spectra_and_correlation_type+"/"
 
+    angular_bins_path = '../output/angular_bins/'
+
+    P_spectra_path = '../output/spectra/P_'+P3D_type+'_spectra_l'+str(l_array.size)+'_'+spectra_and_correlation_type+'/'
+    xi_correlations_path = '../output/correlations/xi_'+P3D_type+'_correlations_alpha_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_'+spectra_and_correlation_type+'/'
+    
 if (compute_iB_spectra_and_correlations == 'yes'):
+
+    angular_bins_path = '../output/angular_bins/'
+
     if (B3D_type == 'lin'):
-        iB_spectra_path = "../output/spectra/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_spectra_l"+str(l_array.size)+"_"+spectra_and_correlation_type+"/"
-        iZ_correlations_path = "../output/correlations/iZ_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_correlations_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_"+spectra_and_correlation_type+"/"
+        iB_spectra_path = '../output/spectra/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_spectra_l'+str(l_array.size)+'_'+spectra_and_correlation_type+'/'
+        iZ_correlations_path = '../output/correlations/iZ_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_correlations_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_'+spectra_and_correlation_type+'/'
     
     elif (B3D_type == 'nl'):
-        iB_spectra_path = "../output/spectra/iB_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_spectra_l"+str(l_array.size)+"_"+spectra_and_correlation_type+"/"
-        iZ_correlations_path = "../output/correlations/iZ_U"+str(theta_U_arcmins)+"W"+str(theta_T_arcmins)+"W"+str(theta_T_arcmins)+"_"+B3D_type+"_correlations_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_"+spectra_and_correlation_type+"/"
+        iB_spectra_path = '../output/spectra/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_spectra_l'+str(l_array.size)+'_'+spectra_and_correlation_type+'/'
+        iZ_correlations_path = '../output/correlations/iZ_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_correlations_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_'+spectra_and_correlation_type+'/'
 
-if (compute_area_prefactor == 'yes'):
-    area_prefactor_path = "../output/area_prefactor/"
+if (compute_A2pt == 'yes'):
+    A2pt_path = '../output/A2pt/'
 
-if (compute_area_prefactor == 'yes'):
-    area_prefactor_path = "../output/area_prefactor/"
+if (compute_A2pt == 'yes'):
+    A2pt_path = '../output/A2pt/'
 
-if (compute_H_chi_D_values == 'yes'):
-    H_chi_D_values_path = "../output/H_chi_D_values/"
+if (compute_H_chi_D == 'yes'):
+    H_chi_D_path = '../output/H_chi_D/'

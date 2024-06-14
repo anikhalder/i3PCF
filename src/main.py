@@ -20,7 +20,7 @@ import constants
 from misc_utils import num_correlations
 import input
 import sys
-from window_utils import iZ_A2pt, iZ_A2pt_binaveraged
+from window_utils import iZ_A2pt, iZ_A2pt_bin_averaged
 
 try:
     import healpy as hp
@@ -48,8 +48,9 @@ compute_P_spectra_and_correlations = input.compute_P_spectra_and_correlations
 B3D_type = input.B3D_type
 compute_iB_grid = input.compute_iB_grid
 compute_iB_spectra_and_correlations = input.compute_iB_spectra_and_correlations
-compute_area_prefactor = input.compute_area_prefactor
-compute_H_chi_D_values = input.compute_H_chi_D_values
+compute_A2pt = input.compute_A2pt
+compute_A2pt_bin_averaged = input.compute_A2pt_bin_averaged
+compute_H_chi_D = input.compute_H_chi_D
 
 halo_type_user = input.halo_type_user
 
@@ -75,6 +76,8 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     
     spectra_and_correlation_type = input.spectra_and_correlation_type
 
+    angular_bins_path = input.angular_bins_path
+
     ## set the angular bins in which to compute the global 2PCFs
 
     min_sep_tc_xi = input.min_sep_tc_xi
@@ -93,9 +96,9 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     #alpha_min_arcmins_xi = binedges[:-1]
     #alpha_max_arcmins_xi = binedges[1:]
 
-    np.savetxt("../output/angular_bins/alpha_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_arcmins_xi.T)
-    np.savetxt("../output/angular_bins/alpha_min_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_min_arcmins_xi.T)
-    np.savetxt("../output/angular_bins/alpha_max_angles_arcmins_xi_"+str(int(min_sep_tc_xi))+"_"+str(int(max_sep_tc_xi))+"_"+str(nbins_tc_xi)+"_bins.tab", alpha_max_arcmins_xi.T)
+    np.savetxt(angular_bins_path+'alpha_xi_angles_cen_arcmins_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bins.tab', alpha_arcmins_xi.T)
+    np.savetxt(angular_bins_path+'alpha_xi_angles_min_arcmins_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bins.tab', alpha_min_arcmins_xi.T)
+    np.savetxt(angular_bins_path+'alpha_xi_angles_max_arcmins_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bins.tab', alpha_max_arcmins_xi.T)
 
     ## set the angular bins in which to compute the local 2PCFs
     min_sep_tc = input.min_sep_tc
@@ -107,9 +110,9 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     alpha_min_arcmins = kk.left_edges
     alpha_max_arcmins = kk.right_edges
 
-    np.savetxt("../output/angular_bins/alpha_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_arcmins.T)
-    np.savetxt("../output/angular_bins/alpha_min_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_min_arcmins.T)
-    np.savetxt("../output/angular_bins/alpha_max_angles_arcmins_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+"_bins.tab", alpha_max_arcmins.T)
+    np.savetxt(angular_bins_path+'alpha_iZ_W'+str(theta_T_arcmins)+'_angles_cen_arcmins_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bins.tab', alpha_arcmins.T)
+    np.savetxt(angular_bins_path+'alpha_iZ_W'+str(theta_T_arcmins)+'_angles_min_arcmins_'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bins.tab', alpha_min_arcmins.T)
+    np.savetxt(angular_bins_path+'alpha_iZ_W'+str(theta_T_arcmins)+'_angles_max_arcmins_'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bins.tab', alpha_max_arcmins.T)
 
     if ('halo' in spectra_and_correlation_type or 'galaxy' in spectra_and_correlation_type):
     
@@ -132,10 +135,10 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
 
     ## pre-compute or load the bin-averaged values
 
-    if (os.path.exists('../output/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy') == False or
-        os.path.exists('../output/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False):
+    if (os.path.exists(angular_bins_path+'xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy') == False or
+        os.path.exists(angular_bins_path+'iZp_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False):
 
-        print("Computing bin-averaged values of Legendre polynomials for xi and zeta")
+        print('Computing bin-averaged values of Legendre polynomials for xi and iZ')
 
         ell = np.arange(0, constants._l_max_-1)
 
@@ -150,38 +153,38 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
             xit_bin_averaged_values[i,:] = xit_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
             xi_bin_averaged_values[i,:] = xi_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell)
 
-        np.save('../output/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xip_bin_averaged_values)
-        np.save('../output/angular_bins/xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xim_bin_averaged_values)
-        np.save('../output/angular_bins/xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xit_bin_averaged_values)
-        np.save('../output/angular_bins/xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xi_bin_averaged_values)
+        np.save(angular_bins_path+'xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xip_bin_averaged_values)
+        np.save(angular_bins_path+'xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xim_bin_averaged_values)
+        np.save(angular_bins_path+'xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xit_bin_averaged_values)
+        np.save(angular_bins_path+'xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values', xi_bin_averaged_values)
 
-        zetap_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
-        zetam_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
-        zetat_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
-        zeta_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+        iZp_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+        iZm_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+        iZt_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
+        iZ_bin_averaged_values = np.zeros([alpha_arcmins.size, ell.size-2])
 
         for i in range(alpha_arcmins.size):
-            zetap_bin_averaged_values[i,:] = xip_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
-            zetam_bin_averaged_values[i,:] = xim_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
-            zetat_bin_averaged_values[i,:] = xit_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
-            zeta_bin_averaged_values[i,:] = xi_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+            iZp_bin_averaged_values[i,:] = xip_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+            iZm_bin_averaged_values[i,:] = xim_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+            iZt_bin_averaged_values[i,:] = xit_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
+            iZ_bin_averaged_values[i,:] = xi_theta_bin_averaged_Legendre(np.radians(alpha_min_arcmins[i]/60), np.radians(alpha_max_arcmins[i]/60), ell)
 
-        np.save('../output/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetap_bin_averaged_values)
-        np.save('../output/angular_bins/zetam_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetam_bin_averaged_values)
-        np.save('../output/angular_bins/zetat_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zetat_bin_averaged_values)
-        np.save('../output/angular_bins/zeta_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', zeta_bin_averaged_values)
+        np.save(angular_bins_path+'iZp_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', iZp_bin_averaged_values)
+        np.save(angular_bins_path+'iZm_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', iZm_bin_averaged_values)
+        np.save(angular_bins_path+'iZt_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', iZt_bin_averaged_values)
+        np.save(angular_bins_path+'iZ_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', iZ_bin_averaged_values)
 
-    print("Loading pe-computed bin-averaged values of Legendre polynomials for xi and zeta")
+    print('Loading pe-computed bin-averaged values of Legendre polynomials for xi and iZ')
 
-    xip_theta_bin_averaged_values = np.load('../output/angular_bins/xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
-    xim_theta_bin_averaged_values = np.load('../output/angular_bins/xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
-    xit_theta_bin_averaged_values = np.load('../output/angular_bins/xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
-    xi_theta_bin_averaged_values = np.load('../output/angular_bins/xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xip_theta_bin_averaged_values = np.load(angular_bins_path+'xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xim_theta_bin_averaged_values = np.load(angular_bins_path+'xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xit_theta_bin_averaged_values = np.load(angular_bins_path+'xit_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
+    xi_theta_bin_averaged_values = np.load(angular_bins_path+'xi_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
 
-    zetap_theta_bin_averaged_values = np.load('../output/angular_bins/zetap_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
-    zetam_theta_bin_averaged_values = np.load('../output/angular_bins/zetam_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
-    zetat_theta_bin_averaged_values = np.load('../output/angular_bins/zetat_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
-    zeta_theta_bin_averaged_values = np.load('../output/angular_bins/zeta_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    iZp_theta_bin_averaged_values = np.load(angular_bins_path+'iZp_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    iZm_theta_bin_averaged_values = np.load(angular_bins_path+'iZm_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    iZt_theta_bin_averaged_values = np.load(angular_bins_path+'iZt_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
+    iZ_theta_bin_averaged_values = np.load(angular_bins_path+'iZ_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy')
 
     def xip_theta_bin_averaged(ell, C_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
@@ -207,30 +210,30 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         P_l_bin_averaged = xi_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * P_l_bin_averaged * C_l), axis=1 )
 
-    def zetap_theta_bin_averaged(ell, iB_ell):
+    def iZp_theta_bin_averaged(ell, iB_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         iB_l = iB_ell[2:]
-        G_l_2_x_p_bin_averaged = zetap_theta_bin_averaged_values
+        G_l_2_x_p_bin_averaged = iZp_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_p_bin_averaged / (l*l*(l+1.)*(l+1.)) * iB_l), axis=1 )
 
-    def zetam_theta_bin_averaged(ell, iB_ell):
+    def iZm_theta_bin_averaged(ell, iB_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         iB_l = iB_ell[2:]
-        G_l_2_x_m_bin_averaged = zetam_theta_bin_averaged_values
+        G_l_2_x_m_bin_averaged = iZm_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * 2. * G_l_2_x_m_bin_averaged / (l*l*(l+1.)*(l+1.)) * iB_l), axis=1 )
 
-    def zetat_theta_bin_averaged(ell, iB_ell):
+    def iZt_theta_bin_averaged(ell, iB_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         iB_l = iB_ell[2:]
-        P_l_2_bin_averaged = zetat_theta_bin_averaged_values
+        P_l_2_bin_averaged = iZt_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * P_l_2_bin_averaged / (l*(l+1)) * iB_l), axis=1 )
 
-    def zeta_theta_bin_averaged(ell, iB_ell):
+    def iZ_theta_bin_averaged(ell, iB_ell):
         l = ell[2:] # take the values from ell=2,...,ell_max for the summation below
         iB_l = iB_ell[2:]
-        P_l_bin_averaged = zeta_theta_bin_averaged_values
+        P_l_bin_averaged = iZ_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * P_l_bin_averaged * iB_l), axis=1 )
-
+    
 P_l_z_grid_path = input.P_l_z_grid_path
 iB_l_z_grid_path = input.iB_l_z_grid_path
 
@@ -238,15 +241,15 @@ if (compute_P_grid == 'yes'):
     if (os.path.isdir(P_l_z_grid_path) == False):
         os.mkdir(P_l_z_grid_path)
 
-    np.savetxt(P_l_z_grid_path+"l_array.tab", l_array.T)
-    np.savetxt(P_l_z_grid_path+"z_array.tab", z_array.T)
+    np.savetxt(P_l_z_grid_path+'l_array.tab', l_array.T)
+    np.savetxt(P_l_z_grid_path+'z_array.tab', z_array.T)
 
 if (compute_iB_grid == 'yes'):
     if (os.path.isdir(iB_l_z_grid_path) == False):
         os.mkdir(iB_l_z_grid_path)
     
-    np.savetxt(iB_l_z_grid_path+"l_array.tab", l_array.T)
-    np.savetxt(iB_l_z_grid_path+"z_array.tab", z_array.T)
+    np.savetxt(iB_l_z_grid_path+'l_array.tab', l_array.T)
+    np.savetxt(iB_l_z_grid_path+'z_array.tab', z_array.T)
 
 if (compute_P_spectra_and_correlations == 'yes'):
 
@@ -270,13 +273,40 @@ if (compute_iB_spectra_and_correlations == 'yes'):
     if (os.path.isdir(iZ_correlations_path) == False):
         os.mkdir(iZ_correlations_path)
 
-if (compute_area_prefactor == 'yes'):
+if (compute_A2pt == 'yes' or compute_A2pt_bin_averaged == 'yes'):
+    print('Computing the area pre-factors for iZ')
 
-    area_prefactor_path = input.area_prefactor_path
-    if (os.path.isdir(area_prefactor_path) == False):
-        os.mkdir(area_prefactor_path)
+    A2pt_path = input.A2pt_path
+    if (os.path.isdir(A2pt_path) == False):
+        os.mkdir(A2pt_path)
 
-if (compute_H_chi_D_values == 'yes'):
+    ## set the angular bins in which to compute the local 2PCFs
+    area_compute_time = time.time()
+    
+    min_sep_tc = input.min_sep_tc
+    max_sep_tc = input.max_sep_tc
+    nbins_tc = input.nbins_tc
+    
+    binedges = np.radians(np.geomspace(min_sep_tc,max_sep_tc,nbins_tc+1)/60)
+    bincenters = np.sqrt(binedges[1:]*binedges[:-1])
+
+    if (compute_A2pt_bin_averaged == 'yes'):
+        A2pt = iZ_A2pt_bin_averaged(binedges, theta_T)
+    else:
+        A2pt = np.zeros([nbins_tc])
+        for i, alpha in enumerate(bincenters):
+            A2pt[i] = iZ_A2pt(alpha, theta_T)
+    
+    dat = np.array([bincenters, binedges[:-1], binedges[1:], A2pt])
+
+    if (compute_A2pt_bin_averaged == 'yes'): 
+        np.savetxt(A2pt_path+'A2pt_bin_averaged_iZ_W'+str(theta_T_arcmins)+'_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'.dat', dat.T)
+    else:
+        np.savetxt(A2pt_path+'A2pt_iZ_W'+str(theta_T_arcmins)+'_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'.dat', dat.T)
+    
+    print(f'Computing the area prefactors for iZ took {(time.time()-area_compute_time):.2f}s')
+
+if (compute_H_chi_D == 'yes'):
 
     H_chi_D_path = input.H_chi_D_path
     if (os.path.isdir(H_chi_D_path) == False):
@@ -289,14 +319,14 @@ if (compute_H_chi_D_values == 'yes'):
 def eta_0_val(c_min):
     return 1.03-0.11*c_min
 
-if __name__ == "__main__":
+if __name__ == '__main__':
 
     # Multiprocess the nested loop over l and z such that more worker processors can be used simultaneously to evaluate multiple points on the (l,z) grid
     pool = mp.Pool(processes=mp.cpu_count()-2)
 
     for param_idx in range(start_idx, stop_idx):
 
-        filename_extension = "_param_idx_" + str(param_idx) + ".dat"
+        filename_extension = '_param_idx_' + str(param_idx) + '.dat'
 
         #################################################################################################################################
         #################################################################################################################################
@@ -460,54 +490,29 @@ if __name__ == "__main__":
             print('sigma8 COMPUTED to be', cclass.sigma8())
         print('S8 COMPUTED to be', cclass.S8())
 
-        print("\nThe classy.CLASS object is made!")
+        print('\nThe classy.CLASS object is made!')
 
         CosmoClassObject = CosmoClass(cclass)
 
         class_end = time.time()
-        print("The computation of classy.CLASS and CosmoClass objects took %ss"%(class_end - class_start))
+        print('The computation of classy.CLASS and CosmoClass objects took %ss'%(class_end - class_start))
 
         #################################################################################################################################
         #################################################################################################################################
-        # STEP 2: Create (l,z) grids for P_3D(l,z) and/or iB_3D(l,z) (also for H_chi_D values and area prefactors)
+        # STEP 2: Create (l,z) grids for P_3D(l,z) and/or iB_3D(l,z) (also for H_chi_D values)
         #################################################################################################################################
         #################################################################################################################################
         
-        if (compute_H_chi_D_values == 'yes'):
+        if (compute_H_chi_D == 'yes'):
             if (z_val == float('NaN')):
-                print("Specify the redshift z at which to compute H(z), chi(z) and D(z) values!")
+                print('Specify the redshift z at which to compute H(z), chi(z) and D(z) values!')
             else:
                 H_chi_D_vals = np.array([CosmoClassObject.H_z(z_val), CosmoClassObject.chi_z(z_val), CosmoClassObject.D_plus_z(z_val)])
-                np.savetxt(H_chi_D_path+"H_chi_D"+filename_extension, H_chi_D_vals.T)
-
-        if (compute_area_prefactor == 'yes'):
-            print("Computing the area prefactors for i3PCF")
-            ## set the angular bins in which to compute the local 2PCFs
-            
-            area_compute_time = time.time()
-            
-            min_sep_tc = input.min_sep_tc
-            max_sep_tc = input.max_sep_tc
-            nbins_tc = input.nbins_tc
-            
-            binedges = np.radians(np.geomspace(min_sep_tc,max_sep_tc,nbins_tc+1)/60)
-            bincenters = np.sqrt(binedges[1:]*binedges[:-1])
-
-            if input.theta_averaged_A2pt == 'yes':
-                A2pt = iZ_A2pt_binaveraged(binedges, theta_T)
-            else:
-                A2pt = np.zeros([nbins_tc])
-                for i, alpha in enumerate(bincenters):
-                    A2pt[i] = iZ_A2pt(alpha, theta_T)
-            
-            dat = np.array([bincenters, binedges[:-1], binedges[1:], A2pt])
-            np.savetxt(area_prefactor_path+"iZ_A2pt_W+"+str(theta_T_arcmins)+"_alpha_"+str(int(min_sep_tc))+"_"+str(int(max_sep_tc))+"_"+str(nbins_tc)+".dat", dat.T)
-            
-            print(f"Computing the area prefactors for the i3PCF took {(time.time()-area_compute_time):.2f}s")
+                np.savetxt(H_chi_D_path+'H_chi_D'+filename_extension, H_chi_D_vals.T)
 
         if (compute_P_grid == 'yes'):
 
-            print("Starting computation of P(l,z) grid")
+            print('Starting computation of P(l,z) grid')
             start_grid = time.time()
 
             # Power spectrum
@@ -519,27 +524,27 @@ if __name__ == "__main__":
 
             P_l_z_paramlist = list(itertools.product(P_l_z_param_0_array, P_l_z_param_1_array, P_l_z_param_2_array, P_l_z_param_3_array))
 
-            print("Computing P(l,z) grid")
+            print('Computing P(l,z) grid')
 
             results_P_l_z = pool.map(P_l_z, P_l_z_paramlist)
             P_l_z_grid = np.array(results_P_l_z)
             P_l_z_grid = P_l_z_grid.reshape((l_array.size, z_array.size))
 
-            np.savetxt(P_l_z_grid_path+"P_l_z_grid"+filename_extension, P_l_z_grid)
+            np.savetxt(P_l_z_grid_path+'P_l_z_grid'+filename_extension, P_l_z_grid)
 
             # scale-dependent stochasticity
             #results_P_eps_eps_l_z = pool.map(P_eps_eps_l_z, P_l_z_paramlist)
             #P_eps_eps_l_z_grid = np.array(results_P_eps_eps_l_z)
             #P_eps_eps_l_z_grid = P_eps_eps_l_z_grid.reshape((l_array.size, z_array.size))
 
-            #np.savetxt(P_l_z_grid_path+"P_eps_eps_l_z_grid"+filename_extension, P_eps_eps_l_z_grid)
+            #np.savetxt(P_l_z_grid_path+'P_eps_eps_l_z_grid'+filename_extension, P_eps_eps_l_z_grid)
 
             end_grid = time.time()
-            print("Computing the P(l,z) grid took %ss"%(end_grid - start_grid))
+            print('Computing the P(l,z) grid took %ss'%(end_grid - start_grid))
 
         if (compute_iB_grid == 'yes'):
 
-            print("Starting computation of iB(l,z) grid")
+            print('Starting computation of iB(l,z) grid')
             start_grid = time.time()
 
             # Integrated bispectra
@@ -558,7 +563,7 @@ if __name__ == "__main__":
 
                 # iB_app : < shear aperture mass inside theta_U compensated * position-dependent shear-shear plus 2PCF inside theta_T tophat >
 
-                print("Computing iB_app(l,z) grid")
+                print('Computing iB_app(l,z) grid')
 
                 try:
                     results_iB_app_l_z = pool.map(iB_app_l_z_integration, iB_l_z_paramlist)
@@ -568,13 +573,13 @@ if __name__ == "__main__":
                 iB_app_l_z_grid = np.array(results_iB_app_l_z) * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_app_l_z_grid = iB_app_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_app_l_z_grid"+filename_extension, iB_app_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_app_l_z_grid'+filename_extension, iB_app_l_z_grid)
 
             if ('amm' in iZ_correlation_name_list):
 
                 # iB_amm : < shear aperture mass inside theta_U compensated * position-dependent shear-shear minus 2PCF inside theta_T tophat >
 
-                print("Computing iB_amm(l,z) grid")
+                print('Computing iB_amm(l,z) grid')
 
                 try:
                     results_iB_amm_l_z = pool.map(iB_amm_l_z_integration, iB_l_z_paramlist)
@@ -584,13 +589,13 @@ if __name__ == "__main__":
                 iB_amm_l_z_grid = np.array(results_iB_amm_l_z) * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_amm_l_z_grid = iB_amm_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_amm_l_z_grid"+filename_extension, iB_amm_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_amm_l_z_grid'+filename_extension, iB_amm_l_z_grid)
 
             if ('att' in iZ_correlation_name_list):
 
                 # iB_att : < shear aperture mass inside theta_U compensated * position-dependent tangential-shear 2PCF inside theta_T tophat >
 
-                print("Computing iB_att(l,z) grid")
+                print('Computing iB_att(l,z) grid')
 
                 try:
                     results_iB_att_l_z = pool.map(iB_att_l_z_integration, iB_l_z_paramlist)
@@ -611,15 +616,15 @@ if __name__ == "__main__":
                 iB_att_bs2_l_z_grid = results_iB_att_l_z[:,2] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_att_bs2_l_z_grid = iB_att_bs2_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_att_b1_l_z_grid"+filename_extension, iB_att_b1_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_att_b2_l_z_grid"+filename_extension, iB_att_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_att_bs2_l_z_grid"+filename_extension, iB_att_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_att_b1_l_z_grid'+filename_extension, iB_att_b1_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_att_b2_l_z_grid'+filename_extension, iB_att_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_att_bs2_l_z_grid'+filename_extension, iB_att_bs2_l_z_grid)
 
             if ('agg' in iZ_correlation_name_list):
 
                 # iB_agg : < shear aperture mass inside theta_U compensated * position-dependent galaxy clustering 2PCF inside theta_T tophat >
 
-                print("Computing iB_agg(l,z) grid")
+                print('Computing iB_agg(l,z) grid')
 
                 try:
                     results_iB_agg_l_z = pool.map(iB_agg_l_z_integration, iB_l_z_paramlist)
@@ -644,16 +649,16 @@ if __name__ == "__main__":
                 iB_agg_eps_epsdelta_l_z_grid = results_iB_agg_l_z[:,3] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_agg_eps_epsdelta_l_z_grid = iB_agg_eps_epsdelta_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_agg_b1sq_l_z_grid"+filename_extension, iB_agg_b1sq_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_agg_b1_b2_l_z_grid"+filename_extension, iB_agg_b1_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_agg_b1_bs2_l_z_grid"+filename_extension, iB_agg_b1_bs2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_agg_eps_epsdelta_l_z_grid"+filename_extension, iB_agg_eps_epsdelta_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_agg_b1sq_l_z_grid'+filename_extension, iB_agg_b1sq_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_agg_b1_b2_l_z_grid'+filename_extension, iB_agg_b1_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_agg_b1_bs2_l_z_grid'+filename_extension, iB_agg_b1_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_agg_eps_epsdelta_l_z_grid'+filename_extension, iB_agg_eps_epsdelta_l_z_grid)
 
             if ('gpp' in iZ_correlation_name_list):
 
                 # iB_gpp : < mean galaxy density inside theta_T tophat * position-dependent shear-shear plus 2PCF inside theta_T tophat >
 
-                print("Computing iB_gpp(l,z) grid")
+                print('Computing iB_gpp(l,z) grid')
 
                 try:
                     results_iB_gpp_l_z = pool.map(iB_gpp_l_z_integration, iB_l_z_paramlist)
@@ -674,15 +679,15 @@ if __name__ == "__main__":
                 iB_gpp_bs2_l_z_grid = results_iB_gpp_l_z[:,2] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_gpp_bs2_l_z_grid = iB_gpp_bs2_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_gpp_b1_l_z_grid"+filename_extension, iB_gpp_b1_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gpp_b2_l_z_grid"+filename_extension, iB_gpp_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gpp_bs2_l_z_grid"+filename_extension, iB_gpp_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gpp_b1_l_z_grid'+filename_extension, iB_gpp_b1_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gpp_b2_l_z_grid'+filename_extension, iB_gpp_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gpp_bs2_l_z_grid'+filename_extension, iB_gpp_bs2_l_z_grid)
 
             if ('gmm' in iZ_correlation_name_list):
 
                 # iB_gmm : < mean galaxy density inside theta_T tophat * position-dependent shear-shear minus 2PCF inside theta_T tophat >
 
-                print("Computing iB_gmm(l,z) grid")
+                print('Computing iB_gmm(l,z) grid')
 
                 try:
                     results_iB_gmm_l_z = pool.map(iB_gmm_l_z_integration, iB_l_z_paramlist)
@@ -703,15 +708,15 @@ if __name__ == "__main__":
                 iB_gmm_bs2_l_z_grid = results_iB_gmm_l_z[:,2] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_gmm_bs2_l_z_grid = iB_gmm_bs2_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_gmm_b1_l_z_grid"+filename_extension, iB_gmm_b1_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gmm_b2_l_z_grid"+filename_extension, iB_gmm_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gmm_bs2_l_z_grid"+filename_extension, iB_gmm_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gmm_b1_l_z_grid'+filename_extension, iB_gmm_b1_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gmm_b2_l_z_grid'+filename_extension, iB_gmm_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gmm_bs2_l_z_grid'+filename_extension, iB_gmm_bs2_l_z_grid)
 
             if ('gtt' in iZ_correlation_name_list):
 
                 # iB_gtt : < mean galaxy density inside theta_T tophat * position-dependent tangential-shear 2PCF inside theta_T tophat >
 
-                print("Computing iB_gtt(l,z) grid")
+                print('Computing iB_gtt(l,z) grid')
 
                 try:
                     results_iB_gtt_l_z = pool.map(iB_gtt_l_z_integration, iB_l_z_paramlist)
@@ -736,16 +741,16 @@ if __name__ == "__main__":
                 iB_gtt_eps_epsdelta_l_z_grid = results_iB_gtt_l_z[:,3] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_gtt_eps_epsdelta_l_z_grid = iB_gtt_eps_epsdelta_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_gtt_b1sq_l_z_grid"+filename_extension, iB_gtt_b1sq_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gtt_b1_b2_l_z_grid"+filename_extension, iB_gtt_b1_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gtt_b1_bs2_l_z_grid"+filename_extension, iB_gtt_b1_bs2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gtt_eps_epsdelta_l_z_grid"+filename_extension, iB_gtt_eps_epsdelta_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gtt_b1sq_l_z_grid'+filename_extension, iB_gtt_b1sq_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gtt_b1_b2_l_z_grid'+filename_extension, iB_gtt_b1_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gtt_b1_bs2_l_z_grid'+filename_extension, iB_gtt_b1_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gtt_eps_epsdelta_l_z_grid'+filename_extension, iB_gtt_eps_epsdelta_l_z_grid)
 
             if ('ggg' in iZ_correlation_name_list):
 
                 # iB_ggg : < mean galaxy density inside theta_T tophat * position-dependent galaxy clustering 2PCF inside theta_T tophat >
 
-                print("Computing iB_ggg(l,z) grid")
+                print('Computing iB_ggg(l,z) grid')
 
                 try:
                     results_iB_ggg_l_z = pool.map(iB_ggg_l_z_integration, iB_l_z_paramlist)
@@ -774,17 +779,17 @@ if __name__ == "__main__":
                 iB_ggg_eps_eps_eps_l_z_grid = results_iB_ggg_l_z[:,4] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_ggg_eps_eps_eps_l_z_grid = iB_ggg_eps_eps_eps_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_ggg_b1cu_l_z_grid"+filename_extension, iB_ggg_b1cu_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_ggg_b1sq_b2_l_z_grid"+filename_extension, iB_ggg_b1sq_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_ggg_b1sq_bs2_l_z_grid"+filename_extension, iB_ggg_b1sq_bs2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_ggg_b1_eps_epsdelta_l_z_grid"+filename_extension, iB_ggg_b1_eps_epsdelta_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_ggg_eps_eps_eps_l_z_grid"+filename_extension, iB_ggg_eps_eps_eps_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggg_b1cu_l_z_grid'+filename_extension, iB_ggg_b1cu_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggg_b1sq_b2_l_z_grid'+filename_extension, iB_ggg_b1sq_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggg_b1sq_bs2_l_z_grid'+filename_extension, iB_ggg_b1sq_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggg_b1_eps_epsdelta_l_z_grid'+filename_extension, iB_ggg_b1_eps_epsdelta_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggg_eps_eps_eps_l_z_grid'+filename_extension, iB_ggg_eps_eps_eps_l_z_grid)
 
             if ('akk' in iZ_correlation_name_list):
 
                 # iB_akk : < mean convergence inside theta_T tophat * position-dependent convergence 2PCF inside theta_T tophat >
 
-                print("Computing iB_akk(l,z) grid")
+                print('Computing iB_akk(l,z) grid')
 
                 try:
                     results_iB_akk_l_z = pool.map(iB_akk_l_z_integration, iB_l_z_paramlist)
@@ -794,13 +799,13 @@ if __name__ == "__main__":
                 iB_akk_l_z_grid = np.array(results_iB_akk_l_z) * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_akk_l_z_grid = iB_akk_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_akk_l_z_grid"+filename_extension, iB_akk_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_akk_l_z_grid'+filename_extension, iB_akk_l_z_grid)
 
             if ('agk' in iZ_correlation_name_list):
 
                 # iB_agk : < mean convergence inside theta_T tophat * position-dependent galaxy-convergence 2PCF inside theta_T tophat >
 
-                print("Computing iB_agk(l,z) grid")
+                print('Computing iB_agk(l,z) grid')
 
                 try:
                     results_iB_agk_l_z = pool.map(iB_agk_l_z_integration, iB_l_z_paramlist)
@@ -821,15 +826,15 @@ if __name__ == "__main__":
                 iB_agk_bs2_l_z_grid = results_iB_agk_l_z[:,2] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_agk_bs2_l_z_grid = iB_agk_bs2_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_agk_b1_l_z_grid"+filename_extension, iB_agk_b1_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_agk_b2_l_z_grid"+filename_extension, iB_agk_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_agk_bs2_l_z_grid"+filename_extension, iB_agk_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_agk_b1_l_z_grid'+filename_extension, iB_agk_b1_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_agk_b2_l_z_grid'+filename_extension, iB_agk_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_agk_bs2_l_z_grid'+filename_extension, iB_agk_bs2_l_z_grid)
 
             if ('gkk' in iZ_correlation_name_list):
 
                 # iB_gkk : < mean galaxy density inside theta_T tophat * position-dependent convergence 2PCF inside theta_T tophat >
 
-                print("Computing iB_gkk(l,z) grid")
+                print('Computing iB_gkk(l,z) grid')
 
                 try:
                     results_iB_gkk_l_z = pool.map(iB_gkk_l_z_integration, iB_l_z_paramlist)
@@ -850,15 +855,15 @@ if __name__ == "__main__":
                 iB_gkk_bs2_l_z_grid = results_iB_gkk_l_z[:,2] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_gkk_bs2_l_z_grid = iB_gkk_bs2_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_gkk_b1_l_z_grid"+filename_extension, iB_gkk_b1_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gkk_b2_l_z_grid"+filename_extension, iB_gkk_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_gkk_bs2_l_z_grid"+filename_extension, iB_gkk_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gkk_b1_l_z_grid'+filename_extension, iB_gkk_b1_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gkk_b2_l_z_grid'+filename_extension, iB_gkk_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_gkk_bs2_l_z_grid'+filename_extension, iB_gkk_bs2_l_z_grid)
 
             if ('ggk' in iZ_correlation_name_list):
 
                 # iB_ggk : < mean galaxy density inside theta_T tophat * position-dependent galaxy-convergence 2PCF inside theta_T tophat >
 
-                print("Computing iB_ggk(l,z) grid")
+                print('Computing iB_ggk(l,z) grid')
 
                 try:
                     results_iB_ggk_l_z = pool.map(iB_ggk_l_z_integration, iB_l_z_paramlist)
@@ -883,13 +888,13 @@ if __name__ == "__main__":
                 iB_ggk_eps_epsdelta_l_z_grid = results_iB_ggk_l_z[:,3] * (np.pi * theta_T**2)**2 * (1./(2.*np.pi)**4)
                 iB_ggk_eps_epsdelta_l_z_grid = iB_ggk_eps_epsdelta_l_z_grid.reshape((l_array.size, z_array.size))
 
-                np.savetxt(iB_l_z_grid_path+"iB_ggk_b1sq_l_z_grid"+filename_extension, iB_ggk_b1sq_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_ggk_b1_b2_l_z_grid"+filename_extension, iB_ggk_b1_b2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_ggk_b1_bs2_l_z_grid"+filename_extension, iB_ggk_b1_bs2_l_z_grid)
-                np.savetxt(iB_l_z_grid_path+"iB_ggk_eps_epsdelta_l_z_grid"+filename_extension, iB_ggk_eps_epsdelta_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggk_b1sq_l_z_grid'+filename_extension, iB_ggk_b1sq_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggk_b1_b2_l_z_grid'+filename_extension, iB_ggk_b1_b2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggk_b1_bs2_l_z_grid'+filename_extension, iB_ggk_b1_bs2_l_z_grid)
+                np.savetxt(iB_l_z_grid_path+'iB_ggk_eps_epsdelta_l_z_grid'+filename_extension, iB_ggk_eps_epsdelta_l_z_grid)
 
             end_grid = time.time()
-            print("Computing the iB(l,z) grids took %ss"%(end_grid - start_grid))
+            print('Computing the iB(l,z) grids took %ss'%(end_grid - start_grid))
 
         #################################################################################################################################
         #################################################################################################################################
@@ -899,7 +904,7 @@ if __name__ == "__main__":
 
         if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correlations == 'yes'):
 
-            print("Starting computation of P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations")
+            print('Starting computation of P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations')
             start_spectra_and_correlations = time.time()
 
             filename_extension_grid = filename_extension
@@ -911,72 +916,72 @@ if __name__ == "__main__":
             # Load pre-computed grids
             if (compute_P_spectra_and_correlations == 'yes' and compute_P_grid == 'no'):
                 
-                P_l_z_grid = np.loadtxt(P_l_z_grid_path+"P_l_z_grid"+filename_extension_grid)
+                P_l_z_grid = np.loadtxt(P_l_z_grid_path+'P_l_z_grid'+filename_extension_grid)
                 
                 # scale-dependent stochasticity
-                #P_eps_eps_l_z_grid = np.loadtxt(P_l_z_grid_path+"P_eps_eps_l_z_grid"+filename_extension_grid)
+                #P_eps_eps_l_z_grid = np.loadtxt(P_l_z_grid_path+'P_eps_eps_l_z_grid'+filename_extension_grid)
 
             if (compute_iB_spectra_and_correlations == 'yes' and compute_iB_grid == 'no'):
                 # For galaxy x shear (UWW) integrated bispectra grids
 
                 if ('app' in iZ_correlation_name_list):
-                    iB_app_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_app_l_z_grid"+filename_extension_grid)
+                    iB_app_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_app_l_z_grid'+filename_extension_grid)
 
                 if ('amm' in iZ_correlation_name_list):
-                    iB_amm_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_amm_l_z_grid"+filename_extension_grid)
+                    iB_amm_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_amm_l_z_grid'+filename_extension_grid)
 
                 if ('att' in iZ_correlation_name_list):
-                    iB_att_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_att_b1_l_z_grid"+filename_extension_grid)
-                    iB_att_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_att_b2_l_z_grid"+filename_extension_grid)
-                    iB_att_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_att_bs2_l_z_grid"+filename_extension_grid)
+                    iB_att_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_att_b1_l_z_grid'+filename_extension_grid)
+                    iB_att_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_att_b2_l_z_grid'+filename_extension_grid)
+                    iB_att_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_att_bs2_l_z_grid'+filename_extension_grid)
 
                 if ('agg' in iZ_correlation_name_list):
-                    iB_agg_b1sq_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_agg_b1sq_l_z_grid"+filename_extension_grid)
-                    iB_agg_b1_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_agg_b1_b2_l_z_grid"+filename_extension_grid)
-                    iB_agg_b1_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_agg_b1_bs2_l_z_grid"+filename_extension_grid)
-                    iB_agg_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_agg_eps_epsdelta_l_z_grid"+filename_extension_grid)
+                    iB_agg_b1sq_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_agg_b1sq_l_z_grid'+filename_extension_grid)
+                    iB_agg_b1_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_agg_b1_b2_l_z_grid'+filename_extension_grid)
+                    iB_agg_b1_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_agg_b1_bs2_l_z_grid'+filename_extension_grid)
+                    iB_agg_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_agg_eps_epsdelta_l_z_grid'+filename_extension_grid)
 
                 if ('gpp' in iZ_correlation_name_list):
-                    iB_gpp_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gpp_b1_l_z_grid"+filename_extension_grid)
-                    iB_gpp_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gpp_b2_l_z_grid"+filename_extension_grid)
-                    iB_gpp_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gpp_bs2_l_z_grid"+filename_extension_grid)
+                    iB_gpp_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gpp_b1_l_z_grid'+filename_extension_grid)
+                    iB_gpp_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gpp_b2_l_z_grid'+filename_extension_grid)
+                    iB_gpp_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gpp_bs2_l_z_grid'+filename_extension_grid)
 
                 if ('gmm' in iZ_correlation_name_list):
-                    iB_gmm_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gmm_b1_l_z_grid"+filename_extension_grid)
-                    iB_gmm_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gmm_b2_l_z_grid"+filename_extension_grid)
-                    iB_gmm_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gmm_bs2_l_z_grid"+filename_extension_grid)
+                    iB_gmm_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gmm_b1_l_z_grid'+filename_extension_grid)
+                    iB_gmm_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gmm_b2_l_z_grid'+filename_extension_grid)
+                    iB_gmm_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gmm_bs2_l_z_grid'+filename_extension_grid)
 
                 if ('gtt' in iZ_correlation_name_list):
-                    iB_gtt_b1sq_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gtt_b1sq_l_z_grid"+filename_extension_grid)
-                    iB_gtt_b1_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gtt_b1_b2_l_z_grid"+filename_extension_grid)
-                    iB_gtt_b1_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gtt_b1_bs2_l_z_grid"+filename_extension_grid)
-                    iB_gtt_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gtt_eps_epsdelta_l_z_grid"+filename_extension_grid)
+                    iB_gtt_b1sq_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gtt_b1sq_l_z_grid'+filename_extension_grid)
+                    iB_gtt_b1_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gtt_b1_b2_l_z_grid'+filename_extension_grid)
+                    iB_gtt_b1_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gtt_b1_bs2_l_z_grid'+filename_extension_grid)
+                    iB_gtt_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gtt_eps_epsdelta_l_z_grid'+filename_extension_grid)
 
                 if ('ggg' in iZ_correlation_name_list):
-                    iB_ggg_b1cu_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggg_b1cu_l_z_grid"+filename_extension_grid)
-                    iB_ggg_b1sq_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggg_b1sq_b2_l_z_grid"+filename_extension_grid)
-                    iB_ggg_b1sq_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggg_b1sq_bs2_l_z_grid"+filename_extension_grid)
-                    iB_ggg_b1_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggg_b1_eps_epsdelta_l_z_grid"+filename_extension_grid)
-                    iB_ggg_eps_eps_eps_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggg_eps_eps_eps_l_z_grid"+filename_extension_grid)
+                    iB_ggg_b1cu_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggg_b1cu_l_z_grid'+filename_extension_grid)
+                    iB_ggg_b1sq_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggg_b1sq_b2_l_z_grid'+filename_extension_grid)
+                    iB_ggg_b1sq_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggg_b1sq_bs2_l_z_grid'+filename_extension_grid)
+                    iB_ggg_b1_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggg_b1_eps_epsdelta_l_z_grid'+filename_extension_grid)
+                    iB_ggg_eps_eps_eps_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggg_eps_eps_eps_l_z_grid'+filename_extension_grid)
 
                 if ('akk' in iZ_correlation_name_list):
-                    iB_akk_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_akk_l_z_grid"+filename_extension_grid)
+                    iB_akk_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_akk_l_z_grid'+filename_extension_grid)
 
                 if ('agk' in iZ_correlation_name_list):
-                    iB_agk_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_agk_b1_l_z_grid"+filename_extension_grid)
-                    iB_agk_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_agk_b2_l_z_grid"+filename_extension_grid)
-                    iB_agk_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_agk_bs2_l_z_grid"+filename_extension_grid)
+                    iB_agk_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_agk_b1_l_z_grid'+filename_extension_grid)
+                    iB_agk_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_agk_b2_l_z_grid'+filename_extension_grid)
+                    iB_agk_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_agk_bs2_l_z_grid'+filename_extension_grid)
 
                 if ('gkk' in iZ_correlation_name_list):
-                    iB_gkk_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gkk_b1_l_z_grid"+filename_extension_grid)
-                    iB_gkk_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gkk_b2_l_z_grid"+filename_extension_grid)
-                    iB_gkk_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_gkk_bs2_l_z_grid"+filename_extension_grid)
+                    iB_gkk_b1_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gkk_b1_l_z_grid'+filename_extension_grid)
+                    iB_gkk_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gkk_b2_l_z_grid'+filename_extension_grid)
+                    iB_gkk_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_gkk_bs2_l_z_grid'+filename_extension_grid)
 
                 if ('ggk' in iZ_correlation_name_list):
-                    iB_ggk_b1sq_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggk_b1sq_l_z_grid"+filename_extension_grid)
-                    iB_ggk_b1_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggk_b1_b2_l_z_grid"+filename_extension_grid)
-                    iB_ggk_b1_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggk_b1_bs2_l_z_grid"+filename_extension_grid)
-                    iB_ggk_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+"iB_ggk_eps_epsdelta_l_z_grid"+filename_extension_grid)
+                    iB_ggk_b1sq_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggk_b1sq_l_z_grid'+filename_extension_grid)
+                    iB_ggk_b1_b2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggk_b1_b2_l_z_grid'+filename_extension_grid)
+                    iB_ggk_b1_bs2_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggk_b1_bs2_l_z_grid'+filename_extension_grid)
+                    iB_ggk_eps_epsdelta_l_z_grid = np.loadtxt(iB_l_z_grid_path+'iB_ggk_eps_epsdelta_l_z_grid'+filename_extension_grid)
 
             #####################
             # setup LOS projection kernels
@@ -1054,7 +1059,7 @@ if __name__ == "__main__":
                             M_h_min = 10**13.3424226808 / CosmoClassObject.h
                         M_h_max = 10**15.5 / CosmoClassObject.h
                         N_halos = N_h(z_h_min, z_h_max, M_h_min, M_h_max, CosmoClassObject.rho0_m, CosmoClassObject.sigma_R_z, CosmoClassObject.sigma_prime_R_z, CosmoClassObject.chi_z, CosmoClassObject.H_z)
-                        print("Number of halos = ", N_halos)
+                        print('Number of halos = ', N_halos)
                     else:
                         n_l_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[0])
                         n_l_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[1])
@@ -1087,7 +1092,7 @@ if __name__ == "__main__":
 
             if (compute_P_spectra_and_correlations == 'yes'):
 
-                print("Computing P(l) spectra and xi(alpha) correlations")
+                print('Computing P(l) spectra and xi(alpha) correlations')
 
                 corr_idx = 0
                 for a in range(len(SOURCE_BIN_NAME_LIST)):
@@ -1137,7 +1142,7 @@ if __name__ == "__main__":
                             P_l_z_integrand_grid = P_l_z_grid_los * P_z_weight_array_los[0,:]
                             P_l = np.trapz(P_l_z_integrand_grid, x=z_array_los, axis=1)
 
-                            np.savetxt(P_spectra_path+"P_"+xi_correlation_name+"_l_"+q1_bin_name+"_"+q2_bin_name+filename_extension, P_l.T)
+                            np.savetxt(P_spectra_path+'P_'+xi_correlation_name+'_l_'+q1_bin_name+'_'+q2_bin_name+filename_extension, P_l.T)
 
                             ell, P_ell = C_ell_spherical_sky(l_array, P_l)
                                                     
@@ -1163,7 +1168,7 @@ if __name__ == "__main__":
                             elif (xi_correlation_name == 'gg' or xi_correlation_name == 'kk' or xi_correlation_name == 'gk'):
                                 xi_array_bin_averaged = xi_theta_bin_averaged(ell, P_ell)   
                                 
-                            np.savetxt(xi_correlations_path+"xi_"+xi_correlation_name+"_"+q1_bin_name+"_"+q2_bin_name+filename_extension, xi_array_bin_averaged.T) 
+                            np.savetxt(xi_correlations_path+'xi_'+xi_correlation_name+'_'+q1_bin_name+'_'+q2_bin_name+filename_extension, xi_array_bin_averaged.T) 
 
                             '''
                             # scale-dependent stochasticity
@@ -1178,7 +1183,7 @@ if __name__ == "__main__":
                                 P_eps_eps_l_z_integrand_grid = P_eps_eps_l_z_grid_los * P_z_weight_array_los[1,:]
                                 P_eps_eps_l = np.trapz(P_eps_eps_l_z_integrand_grid, x=z_array_los, axis=1)
 
-                                np.savetxt(P_spectra_path+"P_eps_eps_"+xi_correlation_name+"_l_"+q1_bin_name+"_"+q2_bin_name+filename_extension, P_eps_eps_l.T)
+                                np.savetxt(P_spectra_path+'P_eps_eps_'+xi_correlation_name+'_l_'+q1_bin_name+'_'+q2_bin_name+filename_extension, P_eps_eps_l.T)
 
                                 ell, P_eps_eps_ell = C_ell_spherical_sky(l_array, P_eps_eps_l)
 
@@ -1189,14 +1194,14 @@ if __name__ == "__main__":
                                 for i in range(alpha_min_arcmins_xi.size):
                                     xi_eps_eps_array_bin_averaged[i] = xi_theta_bin_averaged(np.radians(alpha_min_arcmins_xi[i]/60), np.radians(alpha_max_arcmins_xi[i]/60), ell, P_eps_eps_ell)          
 
-                                np.savetxt(xi_correlations_path+"xi_eps_eps_"+xi_correlation_name+"_"+q1_bin_name+"_"+q2_bin_name+filename_extension, xi_eps_eps_array_bin_averaged.T) 
+                                np.savetxt(xi_correlations_path+'xi_eps_eps_'+xi_correlation_name+'_'+q1_bin_name+'_'+q2_bin_name+filename_extension, xi_eps_eps_array_bin_averaged.T) 
                             '''
                             
                         corr_idx += 1
 
             if (compute_iB_spectra_and_correlations == 'yes'):     
 
-                print("Computing iB(l) spectra and iZ(alpha) correlations")
+                print('Computing iB(l) spectra and iZ(alpha) correlations')
 
                 corr_idx = 0
                 for a in range(len(SOURCE_BIN_NAME_LIST)):
@@ -1417,7 +1422,7 @@ if __name__ == "__main__":
                                 iB_5_l_z_integrand_grid = iB_5_l_z_grid_los * iB_z_weight_array_los[4,:]
                                 iB_l[4] = np.trapz(iB_5_l_z_integrand_grid, x=z_array_los, axis=1)
 
-                                np.savetxt(iB_spectra_path+"iB_"+iZ_correlation_name+"_l_"+q1_bin_name+"_"+q2_bin_name+"_"+q3_bin_name+filename_extension, iB_l.T)
+                                np.savetxt(iB_spectra_path+'iB_'+iZ_correlation_name+'_l_'+q1_bin_name+'_'+q2_bin_name+'_'+q3_bin_name+filename_extension, iB_l.T)
 
                                 ell, iB_1_ell = C_ell_spherical_sky(l_array, iB_l[0])
                                 ell, iB_2_ell = C_ell_spherical_sky(l_array, iB_l[1])
@@ -1448,52 +1453,52 @@ if __name__ == "__main__":
                                 iZ_array_bin_averaged = np.zeros([6, alpha_min_arcmins.size]) ## for testing if the sum of iB_ells before Harmonic transform helps or not in any way
 
                                 if (iZ_correlation_name == 'app'):
-                                    iZ_array_bin_averaged[0] = zetap_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[0] = iZp_theta_bin_averaged(ell, iB_1_ell)
                                     iZ_array_bin_averaged[5] = iZ_array_bin_averaged[0] ##
                                 elif (iZ_correlation_name == 'amm'):
-                                    iZ_array_bin_averaged[0] = zetam_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[0] = iZm_theta_bin_averaged(ell, iB_1_ell)
                                     iZ_array_bin_averaged[5] = iZ_array_bin_averaged[0] ##
                                 elif (iZ_correlation_name == 'att'):
-                                    iZ_array_bin_averaged[0] = zetat_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1] = zetat_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2] = zetat_theta_bin_averaged(ell, iB_3_ell)
-                                    iZ_array_bin_averaged[5] = zetat_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0] = iZt_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1] = iZt_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2] = iZt_theta_bin_averaged(ell, iB_3_ell)
+                                    iZ_array_bin_averaged[5] = iZt_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'agg'):
-                                    iZ_array_bin_averaged[0] = zeta_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1] = zeta_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2] = zeta_theta_bin_averaged(ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3] = zeta_theta_bin_averaged(ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[5] = zeta_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##
+                                    iZ_array_bin_averaged[0] = iZ_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1] = iZ_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2] = iZ_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3] = iZ_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[5] = iZ_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##
                                 elif (iZ_correlation_name == 'gpp'):
-                                    iZ_array_bin_averaged[0] = zetap_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1] = zetap_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2] = zetap_theta_bin_averaged(ell, iB_3_ell) 
-                                    iZ_array_bin_averaged[5] = zetap_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0] = iZp_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1] = iZp_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2] = iZp_theta_bin_averaged(ell, iB_3_ell) 
+                                    iZ_array_bin_averaged[5] = iZp_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'gmm'):
-                                    iZ_array_bin_averaged[0] = zetam_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1] = zetam_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2] = zetam_theta_bin_averaged(ell, iB_3_ell) 
-                                    iZ_array_bin_averaged[5] = zetam_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
+                                    iZ_array_bin_averaged[0] = iZm_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1] = iZm_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2] = iZm_theta_bin_averaged(ell, iB_3_ell) 
+                                    iZ_array_bin_averaged[5] = iZm_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell) ##
                                 elif (iZ_correlation_name == 'gtt'):
-                                    iZ_array_bin_averaged[0] = zetat_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1] = zetat_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2] = zetat_theta_bin_averaged(ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3] = zetat_theta_bin_averaged(ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[5] = zetat_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##    
+                                    iZ_array_bin_averaged[0] = iZt_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1] = iZt_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2] = iZt_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3] = iZt_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[5] = iZt_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell) ##    
                                 elif (iZ_correlation_name == 'ggg' or iZ_correlation_name == 'akk' or iZ_correlation_name == 'agk' or iZ_correlation_name == 'gkk' or iZ_correlation_name == 'ggk'):
-                                    iZ_array_bin_averaged[0] = zeta_theta_bin_averaged(ell, iB_1_ell)
-                                    iZ_array_bin_averaged[1] = zeta_theta_bin_averaged(ell, iB_2_ell)
-                                    iZ_array_bin_averaged[2] = zeta_theta_bin_averaged(ell, iB_3_ell)    
-                                    iZ_array_bin_averaged[3] = zeta_theta_bin_averaged(ell, iB_4_ell)   
-                                    iZ_array_bin_averaged[4] = zeta_theta_bin_averaged(ell, iB_5_ell) 
-                                    iZ_array_bin_averaged[5] = zeta_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell+iB_5_ell) ##    
+                                    iZ_array_bin_averaged[0] = iZ_theta_bin_averaged(ell, iB_1_ell)
+                                    iZ_array_bin_averaged[1] = iZ_theta_bin_averaged(ell, iB_2_ell)
+                                    iZ_array_bin_averaged[2] = iZ_theta_bin_averaged(ell, iB_3_ell)    
+                                    iZ_array_bin_averaged[3] = iZ_theta_bin_averaged(ell, iB_4_ell)   
+                                    iZ_array_bin_averaged[4] = iZ_theta_bin_averaged(ell, iB_5_ell) 
+                                    iZ_array_bin_averaged[5] = iZ_theta_bin_averaged(ell, iB_1_ell+iB_2_ell+iB_3_ell+iB_4_ell+iB_5_ell) ##    
 
-                                np.savetxt(iZ_correlations_path+"iZ_"+iZ_correlation_name+"_"+q1_bin_name+"_"+q2_bin_name+"_"+q3_bin_name+filename_extension, iZ_array_bin_averaged.T)  
+                                np.savetxt(iZ_correlations_path+'iZ_'+iZ_correlation_name+'_'+q1_bin_name+'_'+q2_bin_name+'_'+q3_bin_name+filename_extension, iZ_array_bin_averaged.T)  
 
                             corr_idx += 1 
 
             end_spectra_and_correlations = time.time()
-            print("Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations took %ss"%(end_spectra_and_correlations - start_spectra_and_correlations))   
+            print('Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations))   
         
         #####################
 

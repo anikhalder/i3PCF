@@ -87,7 +87,7 @@ class d_iZ_A2pt_batch(vegas.BatchIntegrand):
         return window_factor
 
 def iZ_A2pt_old(params):
-    # Function to compute the A2opt area pre-factor for iZ between alpha_min and alpha_max
+    # Function to compute the A2pt area pre-factor for iZ between alpha_min and alpha_max
     # Use polar coordinates here
     # Without loss of generality can always assume that vector alpha coincides with the positive x-axis i.e. phi_alpha = 0.
     alpha_min = params[0]
@@ -102,8 +102,8 @@ def iZ_A2pt_old(params):
 
     return iZ_A2pt
 
-def iZ_A2pt_binaveraged(binedges, theta_Q):
-    """ Calculates the average Area prefactor across bins
+def iZ_A2pt_bin_averaged(binedges, theta_Q):
+    """ Calculates the A2pt (area pre-factor) averaged over bin widths
         for the i3PCF 
 
     Args:
@@ -119,7 +119,7 @@ def iZ_A2pt_binaveraged(binedges, theta_Q):
     return np.array([quad(A2pt, binedges[i], binedges[i+1], limit=1000)[0]/(binedges[i+1] - binedges[i]) for i in range(len(binedges)-1)])
 
 def iZ_A2pt(alpha, theta_Q):
-    """ Calculates the Area prefactor at specific angles for the i3PCF 
+    """ Calculates the A2pt (area pre-factor) at specific angles for the i3PCF 
 
     Args:
         alpha (array): angle relative to patch centerin radians

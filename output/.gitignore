@@ -2,9 +2,9 @@
 *
 # Except this file
 !.gitignore
-!angular_bins/
+!A2pt/
 !area_prefactor/
 !correlations/
 !grids/
-!H_chi_D_values/
+!H_chi_D/
 !spectra/
