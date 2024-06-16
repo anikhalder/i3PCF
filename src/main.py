@@ -482,7 +482,7 @@ if __name__ == '__main__':
             print('!!! Encountered classy error in node index #'+str(param_idx)+' . Skipping it !!!')
             continue
 
-        if (sigma8_or_A_s == 'A_s'):
+        if (sigma8_or_A_s == 'sigma8'):
             print('A_s COMPUTED to be', cclass.get_current_derived_parameters(['A_s'])['A_s'])
         else:
             print('sigma8 COMPUTED to be', cclass.sigma8())
