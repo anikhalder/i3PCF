@@ -328,6 +328,8 @@ def main_function():
 
         filename_extension = '_param_idx_' + str(param_idx) + '.dat'
 
+        print('\n##############################:\n')
+
         #################################################################################################################################
         #################################################################################################################################
         # STEP 1: Create class object and helper cosmology object
@@ -337,7 +339,7 @@ def main_function():
         cosmo_pars_fid = input.cosmo_pars_fid
         params_lhs = input.params_lhs
 
-        print('\nSetting up parameters:\n', flush=True)
+        print('\nSetting up parameters for node idx '+str(param_idx)+':\n')
 
         if ('Omega_b' in params_lhs.keys()):
             Omega_b = params_lhs['Omega_b'][param_idx]
@@ -498,7 +500,7 @@ def main_function():
         CosmoClassObject = CosmoClass(cclass)
 
         class_end = time.time()
-        print('The computation of classy.CLASS and CosmoClass objects took %ss'%(class_end - class_start))
+        print('The computation of classy.CLASS and CosmoClass objects took %ss\n'%(class_end - class_start))
 
         #################################################################################################################################
         #################################################################################################################################
