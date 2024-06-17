@@ -6,6 +6,7 @@ start_program = time.time()
 
 import numpy as np
 import os
+import platform
 import itertools
 import multiprocessing as mp
 from neutrino_utils import *
@@ -17,7 +18,7 @@ from projection_kernels import *
 from scipy import interpolate
 from real_space_2D import *
 import constants
-from misc_utils import num_correlations
+from misc_utils import num_correlations, eta_0_val
 import input
 import sys
 from window_utils import iZ_A2pt, iZ_A2pt_bin_averaged
@@ -314,15 +315,14 @@ if (compute_H_chi_D == 'yes'):
 
 #####################
 
-# CLASS hyperparameters setup
+def main_function():
 
-def eta_0_val(c_min):
-    return 1.03-0.11*c_min
-
-if __name__ == '__main__':
-
-    # Multiprocess the nested loop over l and z such that more worker processors can be used simultaneously to evaluate multiple points on the (l,z) grid
-    pool = mp.Pool(processes=mp.cpu_count()-2)
+    pool_opened = False
+    if (compute_P_grid == 'yes' or compute_iB_grid == 'yes'):
+        pool_opened = True
+        # Multiprocess the nested loop over l and z such that more worker processors can be used simultaneously to evaluate multiple points on the (l,z) grid
+        pool = mp.Pool(processes=mp.cpu_count()-2)
+        print('Opened a pool of', mp.cpu_count()-2, 'worker processors')
 
     for param_idx in range(start_idx, stop_idx):
 
@@ -360,19 +360,23 @@ if __name__ == '__main__':
             h = cosmo_pars_fid['h']
             print('h FIXED to fiducial value of', h)
 
-        if ('A_s' in params_lhs.keys()): # since latin-hypercube-sampling (LHS) is always in terms of A_s
+        if ('A_s' in params_lhs.keys()):
             A_s = params_lhs['A_s'][param_idx]
             sigma8_or_A_s = 'A_s'
             print('A_s SET to', A_s)
+        elif ('sigma8' in params_lhs.keys()):
+            sigma8 = params_lhs['sigma8'][param_idx]
+            sigma8_or_A_s = 'sigma8'
+            print('sigma8 SET to', sigma8)
         else:
-            if ('sigma8' in cosmo_pars_fid.keys()):
-                sigma8 = cosmo_pars_fid['sigma8']
-                sigma8_or_A_s = 'sigma8'
-                print('sigma8 SET to', sigma8)
-            elif ('A_s' in cosmo_pars_fid.keys()):
+            if ('A_s' in cosmo_pars_fid.keys()):
                 A_s = cosmo_pars_fid['A_s']
                 sigma8_or_A_s = 'A_s'
                 print('A_s FIXED to fiducial value of', A_s)
+            elif ('sigma8' in cosmo_pars_fid.keys()):
+                sigma8 = cosmo_pars_fid['sigma8']
+                sigma8_or_A_s = 'sigma8'
+                print('sigma8 FIXED to fiducial value of', sigma8)
 
         if ('n_s' in params_lhs.keys()):
             n_s = params_lhs['n_s'][param_idx]
@@ -469,7 +473,7 @@ if __name__ == '__main__':
 
         if (sigma8_or_A_s == 'A_s'):
             class_settings['A_s'] = A_s
-        else:
+        elif (sigma8_or_A_s == 'sigma8'):
             class_settings['sigma8'] = sigma8
 
         class_start = time.time()
@@ -484,8 +488,9 @@ if __name__ == '__main__':
 
         if (sigma8_or_A_s == 'sigma8'):
             print('A_s COMPUTED to be', cclass.get_current_derived_parameters(['A_s'])['A_s'])
-        else:
+        elif (sigma8_or_A_s == 'A_s'):
             print('sigma8 COMPUTED to be', cclass.sigma8())
+
         print('S8 COMPUTED to be', cclass.S8())
 
         print('\nThe classy.CLASS object is made!')
@@ -1496,12 +1501,35 @@ if __name__ == '__main__':
                             corr_idx += 1 
 
             end_spectra_and_correlations = time.time()
-            print('Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations))   
-        
-        #####################
+            print('Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations)) 
 
-    pool.close()
-    pool.join()
+        #################################################################################################################################
+        #################################################################################################################################
+        # STEP 4: Delete class object and helper cosmology object
+        #################################################################################################################################
+        #################################################################################################################################
+
+        del CosmoClassObject
+        cclass.struct_cleanup()  
+        
+        #################################################################################################################################
+        #################################################################################################################################
+
+    if (pool_opened == True):
+        pool.close()
+        pool.join()
+        pool_opened = False
 
     end_program = time.time()
     print('\nTime taken for execution of the whole script (seconds):', end_program - start_program) 
+
+#####################
+
+# Run the main_function
+
+if platform.system() == "Darwin":  # macOS
+    if __name__ == '__main__':
+        main_function()
+    
+else: 
+    main_function()
