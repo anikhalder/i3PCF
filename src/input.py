@@ -32,6 +32,8 @@ z_array = np.array([0.006387739907950163,
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
+cosmo_fid_name = 'COSMOGRIDV1_fiducial_no_neutrinos' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'DESC_fiducial'
+
 ### T17 fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0} 
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0} 
@@ -47,12 +49,21 @@ cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649,
 ### DESC SkySim5000/HACC fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.0448, 'Omega_m': 0.2648, 'h': 0.71, 'n_s': 0.963, 'sigma8': 0.801, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
-### Set the parameters which you want to be different from fiducial cosmology
-#params_lhs = pd.read_csv('../data/cosmo_parameters/i3pcf_sobol_training_wo_ell_2.6e5_nodes_part1.csv')
-params_lhs = {}
-#params_lhs = {'z': np.array([0.02])}
-
 NEUTRINO_HIERARCHY = 'DEGENERATE' # can be set to 'DEGNERATE', 'NORMAL', 'INVERTED', note that it is only used if Mv is not 0.0
+
+### Set the parameters which you want to be different from fiducial cosmology
+
+# Hypercube Sampling filename
+HS_filename = '' 
+#HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
+
+if (HS_filename != ''):
+    params_dict = pd.read_csv('../data/cosmo_parameters/'+HS_filename+'.csv')
+    cosmo_parameters_name = cosmo_fid_name + HS_filename
+else:
+    params_dict = {}
+    #params_dict = {'z': np.array([0.02])}
+    cosmo_parameters_name = cosmo_fid_name
 
 ########################################################
 ########################################################
@@ -73,8 +84,8 @@ use_Dirac_comb = False
 nside = None # Set to None to ignore
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
-grid_type = 'shear_x_shear_COSMOGRIDV1'
-spectra_and_correlation_type = 'shear_x_shear_DESY3_COSMOGRIDV1'
+grid_type = 'shear_x_shear' + '_' + cosmo_parameters_name
+spectra_and_correlation_type = 'shear_x_shear_DESY3' + '_' + cosmo_parameters_name
 
 ### correlation name list
 # Naming convention aperture : a : shear aperture mass ; g : galaxy mean number density in tophat filter
@@ -158,6 +169,9 @@ if (B3D_type == 'nl'):
     iB_gmm_type = 'GMRF'
     iB_gtt_type = 'GMRF'
     iB_ggg_type = 'GM'
+
+### path to output cosmology parameters used for computation
+cosmo_parameters_output_path = '../output/cosmo_parameters_output/' + cosmo_parameters_name + '/'
 
 ### paths to save/load grids, spectra and correlations
 P_l_z_grid_path = '../output/grids/P_'+P3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'

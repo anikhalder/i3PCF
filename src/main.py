@@ -235,6 +235,10 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         P_l_bin_averaged = iZ_theta_bin_averaged_values
         return np.sum( ((2.*l+1) / (4*np.pi) * P_l_bin_averaged * iB_l), axis=1 )
     
+cosmo_parameters_output_path = input.cosmo_parameters_output_path
+if (os.path.isdir(cosmo_parameters_output_path) == False):
+    os.mkdir(cosmo_parameters_output_path)
+    
 P_l_z_grid_path = input.P_l_z_grid_path
 iB_l_z_grid_path = input.iB_l_z_grid_path
 
@@ -320,7 +324,7 @@ def main_function():
     pool_opened = False
     if (compute_P_grid == 'yes' or compute_iB_grid == 'yes'):
         pool_opened = True
-        # Multiprocess the nested loop over l and z such that more worker processors can be used simultaneously to evaluate multiple points on the (l,z) grid
+        # Open pool of workers to evaluate multiple points on the (l,z) grid simultaneously
         pool = mp.Pool(processes=mp.cpu_count()-2)
         print('\nOpened a pool of', mp.cpu_count()-2, 'worker processors')
 
@@ -337,37 +341,37 @@ def main_function():
         #################################################################################################################################
 
         cosmo_pars_fid = input.cosmo_pars_fid
-        params_lhs = input.params_lhs
+        params_dict = input.params_dict
 
         print('\nSetting up parameters for node index: '+str(param_idx)+'\n')
 
-        if ('Omega_b' in params_lhs.keys()):
-            Omega_b = params_lhs['Omega_b'][param_idx]
+        if ('Omega_b' in params_dict.keys()):
+            Omega_b = params_dict['Omega_b'][param_idx]
             print('Omega_b SET to', Omega_b)
         else:
             Omega_b = cosmo_pars_fid['Omega_b']
             print('Omega_b FIXED to fiducial value of', Omega_b)
         
-        if ('Omega_m' in params_lhs.keys()):
-            Omega_m = params_lhs['Omega_m'][param_idx]
+        if ('Omega_m' in params_dict.keys()):
+            Omega_m = params_dict['Omega_m'][param_idx]
             print('Omega_m SET to', Omega_m)
         else:
             Omega_m = cosmo_pars_fid['Omega_m'] 
             print('Omega_m FIXED to fiducial value of', Omega_m)
 
-        if ('h' in params_lhs.keys()):
-            h = params_lhs['h'][param_idx]
+        if ('h' in params_dict.keys()):
+            h = params_dict['h'][param_idx]
             print('h SET to', h)
         else:
             h = cosmo_pars_fid['h']
             print('h FIXED to fiducial value of', h)
 
-        if ('A_s' in params_lhs.keys()):
-            A_s = params_lhs['A_s'][param_idx]
+        if ('A_s' in params_dict.keys()):
+            A_s = params_dict['A_s'][param_idx]
             sigma8_or_A_s = 'A_s'
             print('A_s SET to', A_s)
-        elif ('sigma8' in params_lhs.keys()):
-            sigma8 = params_lhs['sigma8'][param_idx]
+        elif ('sigma8' in params_dict.keys()):
+            sigma8 = params_dict['sigma8'][param_idx]
             sigma8_or_A_s = 'sigma8'
             print('sigma8 SET to', sigma8)
         else:
@@ -380,29 +384,29 @@ def main_function():
                 sigma8_or_A_s = 'sigma8'
                 print('sigma8 FIXED to fiducial value of', sigma8)
 
-        if ('n_s' in params_lhs.keys()):
-            n_s = params_lhs['n_s'][param_idx]
+        if ('n_s' in params_dict.keys()):
+            n_s = params_dict['n_s'][param_idx]
             print('n_s SET to', n_s)
         else:
             n_s = cosmo_pars_fid['n_s']
             print('n_s FIXED to fiducial value of', n_s)
 
-        if ('w0' in params_lhs.keys()):
-            w0 = params_lhs['w0'][param_idx]
+        if ('w0' in params_dict.keys()):
+            w0 = params_dict['w0'][param_idx]
             print('w0 SET to', w0)
         else:
             w0 = cosmo_pars_fid['w0']
             print('w0 FIXED to fiducial value of', w0)
 
-        if ('wa' in params_lhs.keys()):
-            wa = params_lhs['wa'][param_idx]
+        if ('wa' in params_dict.keys()):
+            wa = params_dict['wa'][param_idx]
             print('wa SET to', wa)
         else:
             wa = cosmo_pars_fid['wa']
             print('wa FIXED to fiducial value of', wa)
 
-        if ('c_min' in params_lhs.keys()):
-            c_min = params_lhs['c_min'][param_idx]
+        if ('c_min' in params_dict.keys()):
+            c_min = params_dict['c_min'][param_idx]
             eta_0 = eta_0_val(c_min)
             print('c_min SET to', c_min)
             print('eta_0 SET to', eta_0)
@@ -412,16 +416,16 @@ def main_function():
             print('c_min FIXED to fiducial value of', c_min)
             print('eta_0 FIXED to fiducial value of', eta_0)
 
-        if ('Mv' in params_lhs.keys()):
-            Mv = params_lhs['Mv'][param_idx]
+        if ('Mv' in params_dict.keys()):
+            Mv = params_dict['Mv'][param_idx]
             print('Mv SET to', Mv)
         else:
             Mv = cosmo_pars_fid['Mv']
             print('Mv FIXED to fiducial value of', Mv)
 
-        if ('z' in params_lhs.keys()):
-            z_val = params_lhs['z'][param_idx]
-            z_array = np.array([params_lhs['z'][param_idx]])
+        if ('z' in params_dict.keys()):
+            z_val = params_dict['z'][param_idx]
+            z_array = np.array([params_dict['z'][param_idx]])
             print('z SET to', z_val)
             print('z_array SET to', z_array)
         else:
@@ -430,15 +434,15 @@ def main_function():
             print('z FIXED to NaN')
             print('z_array FIXED to default z-grid values')
 
-        if ('A_IA_NLA' in params_lhs.keys()):
-            A_IA_NLA = np.array([params_lhs['A_IA_NLA'][param_idx]])
+        if ('A_IA_NLA' in params_dict.keys()):
+            A_IA_NLA = np.array([params_dict['A_IA_NLA'][param_idx]])
             print('A_IA_NLA SET to', A_IA_NLA)
         else:
             A_IA_NLA = cosmo_pars_fid['A_IA_NLA']
             print('A_IA_NLA FIXED to fiducial value of', A_IA_NLA)
 
-        if ('alpha_IA_NLA' in params_lhs.keys()):
-            alpha_IA_NLA = np.array([params_lhs['alpha_IA_NLA'][param_idx]])
+        if ('alpha_IA_NLA' in params_dict.keys()):
+            alpha_IA_NLA = np.array([params_dict['alpha_IA_NLA'][param_idx]])
             print('alpha_IA_NLA SET to', alpha_IA_NLA)
         else:
             alpha_IA_NLA = cosmo_pars_fid['alpha_IA_NLA']
@@ -489,11 +493,14 @@ def main_function():
             continue
 
         if (sigma8_or_A_s == 'sigma8'):
-            print('A_s COMPUTED to be', cclass.get_current_derived_parameters(['A_s'])['A_s'])
+            A_s = cclass.get_current_derived_parameters(['A_s'])['A_s']
+            print('A_s COMPUTED to be', A_s)
         elif (sigma8_or_A_s == 'A_s'):
-            print('sigma8 COMPUTED to be', cclass.sigma8())
+            sigma8 = cclass.sigma8()
+            print('sigma8 COMPUTED to be', sigma8)
 
-        print('S8 COMPUTED to be', cclass.S8())
+        S8 = cclass.S8()
+        print('S8 COMPUTED to be', S8)
 
         print('\nThe classy.CLASS object is made!')
 
@@ -501,6 +508,9 @@ def main_function():
 
         class_end = time.time()
         print('The computation of classy.CLASS and CosmoClass objects took %ss\n'%(class_end - class_start))
+
+        cosmo_params_output_arr = np.array([Omega_b, Omega_m, h, A_s, n_s, w0, wa, c_min, eta_0, Mv, z_val, sigma8, S8])
+        np.savetxt(cosmo_parameters_output_path+'cosmo_params'+filename_extension, cosmo_params_output_arr.T, header='Omega_b, Omega_m, h, A_s, n_s, w0, wa, c_min, eta_0, Mv, z_val, sigma8, S8')
 
         #################################################################################################################################
         #################################################################################################################################
@@ -1507,12 +1517,13 @@ def main_function():
 
         #################################################################################################################################
         #################################################################################################################################
-        # STEP 4: Delete class object and helper cosmology object
+        # STEP 4: Delete classy.CLASS object and helper cosmology object
         #################################################################################################################################
         #################################################################################################################################
 
         del CosmoClassObject
         cclass.struct_cleanup()  
+        print('\nDeleted CosmoClassObject and cleaned up classy.CLASS object')
         
         #################################################################################################################################
         #################################################################################################################################
@@ -1521,6 +1532,7 @@ def main_function():
         pool.close()
         pool.join()
         pool_opened = False
+        print('\nPool closed')
 
     end_program = time.time()
     print('\nTime taken for execution of the whole script (seconds):', end_program - start_program) 
