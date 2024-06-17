@@ -131,15 +131,15 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         num_2pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 2)
         num_i3pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 3)
 
-        print('Number of 2pt shear x shear correlations (for plus or minus or kappa) =', num_2pt_sss_correlations)
-        print('Number of i3pt shear x shear correlations (for plus or minus or kappa) =', num_i3pt_sss_correlations)
+        print('Number of 2pt shear x shear correlations (for plus or minus or kappa) =', num_2pt_sss_correlations, flush=True)
+        print('Number of i3pt shear x shear correlations (for plus or minus or kappa) =', num_i3pt_sss_correlations, flush=True)
 
     ## pre-compute or load the bin-averaged values
 
     if (os.path.exists(angular_bins_path+'xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy') == False or
         os.path.exists(angular_bins_path+'iZp_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values.npy') == False):
 
-        print('Computing bin-averaged values of Legendre polynomials for xi and iZ')
+        print('Computing bin-averaged values of Legendre polynomials for xi and iZ', flush=True)
 
         ell = np.arange(0, constants._l_max_-1)
 
@@ -175,7 +175,7 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
         np.save(angular_bins_path+'iZt_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', iZt_bin_averaged_values)
         np.save(angular_bins_path+'iZ_W'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bin_averaged_values', iZ_bin_averaged_values)
 
-    print('Loading pe-computed bin-averaged values of Legendre polynomials for xi and iZ')
+    print('Loading pe-computed bin-averaged values of Legendre polynomials for xi and iZ', flush=True)
 
     xip_theta_bin_averaged_values = np.load(angular_bins_path+'xip_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
     xim_theta_bin_averaged_values = np.load(angular_bins_path+'xim_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bin_averaged_values.npy')
@@ -279,7 +279,7 @@ if (compute_iB_spectra_and_correlations == 'yes'):
         os.mkdir(iZ_correlations_path)
 
 if (compute_A2pt == 'yes' or compute_A2pt_bin_averaged == 'yes'):
-    print('Computing the area pre-factors for iZ')
+    print('Computing the area pre-factors for iZ', flush=True)
 
     A2pt_path = input.A2pt_path
     if (os.path.isdir(A2pt_path) == False):
@@ -309,7 +309,7 @@ if (compute_A2pt == 'yes' or compute_A2pt_bin_averaged == 'yes'):
     else:
         np.savetxt(A2pt_path+'A2pt_iZ_W'+str(theta_T_arcmins)+'_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'.dat', dat.T)
     
-    print(f'Computing the area prefactors for iZ took {(time.time()-area_compute_time):.2f}s')
+    print(f'Computing the area prefactors for iZ took {(time.time()-area_compute_time):.2f}s', flush=True)
 
 if (compute_H_chi_D == 'yes'):
 
@@ -332,7 +332,7 @@ def main_function():
 
         filename_extension = '_param_idx_' + str(param_idx) + '.dat'
 
-        print('\n##############################')
+        print('\n##############################', flush=True)
 
         #################################################################################################################################
         #################################################################################################################################
@@ -343,110 +343,110 @@ def main_function():
         cosmo_pars_fid = input.cosmo_pars_fid
         params_dict = input.params_dict
 
-        print('\nSetting up parameters for node index: '+str(param_idx)+'\n')
+        print('\nSetting up parameters for node index: '+str(param_idx)+'\n', flush=True)
 
         if ('Omega_b' in params_dict.keys()):
             Omega_b = params_dict['Omega_b'][param_idx]
-            print('Omega_b SET to', Omega_b)
+            print('Omega_b SET to', Omega_b, flush=True)
         else:
             Omega_b = cosmo_pars_fid['Omega_b']
-            print('Omega_b FIXED to fiducial value of', Omega_b)
+            print('Omega_b FIXED to fiducial value of', Omega_b, flush=True)
         
         if ('Omega_m' in params_dict.keys()):
             Omega_m = params_dict['Omega_m'][param_idx]
-            print('Omega_m SET to', Omega_m)
+            print('Omega_m SET to', Omega_m, flush=True)
         else:
             Omega_m = cosmo_pars_fid['Omega_m'] 
-            print('Omega_m FIXED to fiducial value of', Omega_m)
+            print('Omega_m FIXED to fiducial value of', Omega_m, flush=True)
 
         if ('h' in params_dict.keys()):
             h = params_dict['h'][param_idx]
-            print('h SET to', h)
+            print('h SET to', h, flush=True)
         else:
             h = cosmo_pars_fid['h']
-            print('h FIXED to fiducial value of', h)
+            print('h FIXED to fiducial value of', h, flush=True)
 
         if ('A_s' in params_dict.keys()):
             A_s = params_dict['A_s'][param_idx]
             sigma8_or_A_s = 'A_s'
-            print('A_s SET to', A_s)
+            print('A_s SET to', A_s, flush=True)
         elif ('sigma8' in params_dict.keys()):
             sigma8 = params_dict['sigma8'][param_idx]
             sigma8_or_A_s = 'sigma8'
-            print('sigma8 SET to', sigma8)
+            print('sigma8 SET to', sigma8, flush=True)
         else:
             if ('A_s' in cosmo_pars_fid.keys()):
                 A_s = cosmo_pars_fid['A_s']
                 sigma8_or_A_s = 'A_s'
-                print('A_s FIXED to fiducial value of', A_s)
+                print('A_s FIXED to fiducial value of', A_s, flush=True)
             elif ('sigma8' in cosmo_pars_fid.keys()):
                 sigma8 = cosmo_pars_fid['sigma8']
                 sigma8_or_A_s = 'sigma8'
-                print('sigma8 FIXED to fiducial value of', sigma8)
+                print('sigma8 FIXED to fiducial value of', sigma8, flush=True)
 
         if ('n_s' in params_dict.keys()):
             n_s = params_dict['n_s'][param_idx]
-            print('n_s SET to', n_s)
+            print('n_s SET to', n_s, flush=True)
         else:
             n_s = cosmo_pars_fid['n_s']
-            print('n_s FIXED to fiducial value of', n_s)
+            print('n_s FIXED to fiducial value of', n_s, flush=True)
 
         if ('w0' in params_dict.keys()):
             w0 = params_dict['w0'][param_idx]
-            print('w0 SET to', w0)
+            print('w0 SET to', w0, flush=True)
         else:
             w0 = cosmo_pars_fid['w0']
-            print('w0 FIXED to fiducial value of', w0)
+            print('w0 FIXED to fiducial value of', w0, flush=True)
 
         if ('wa' in params_dict.keys()):
             wa = params_dict['wa'][param_idx]
-            print('wa SET to', wa)
+            print('wa SET to', wa, flush=True)
         else:
             wa = cosmo_pars_fid['wa']
-            print('wa FIXED to fiducial value of', wa)
+            print('wa FIXED to fiducial value of', wa, flush=True)
 
         if ('c_min' in params_dict.keys()):
             c_min = params_dict['c_min'][param_idx]
             eta_0 = eta_0_val(c_min)
-            print('c_min SET to', c_min)
-            print('eta_0 SET to', eta_0)
+            print('c_min SET to', c_min, flush=True)
+            print('eta_0 SET to', eta_0, flush=True)
         else:
             c_min = cosmo_pars_fid['c_min']
             eta_0 = cosmo_pars_fid['eta_0']
-            print('c_min FIXED to fiducial value of', c_min)
-            print('eta_0 FIXED to fiducial value of', eta_0)
+            print('c_min FIXED to fiducial value of', c_min, flush=True)
+            print('eta_0 FIXED to fiducial value of', eta_0, flush=True)
 
         if ('Mv' in params_dict.keys()):
             Mv = params_dict['Mv'][param_idx]
-            print('Mv SET to', Mv)
+            print('Mv SET to', Mv, flush=True)
         else:
             Mv = cosmo_pars_fid['Mv']
-            print('Mv FIXED to fiducial value of', Mv)
+            print('Mv FIXED to fiducial value of', Mv, flush=True)
 
         if ('z' in params_dict.keys()):
             z_val = params_dict['z'][param_idx]
             z_array = np.array([params_dict['z'][param_idx]])
-            print('z SET to', z_val)
-            print('z_array SET to', z_array)
+            print('z SET to', z_val, flush=True)
+            print('z_array SET to', z_array, flush=True)
         else:
             z_val = float('NaN')
             z_array = input.z_array
-            print('z FIXED to NaN')
-            print('z_array FIXED to default z-grid values')
+            print('z FIXED to NaN', flush=True)
+            print('z_array FIXED to default z-grid values', flush=True)
 
         if ('A_IA_NLA' in params_dict.keys()):
             A_IA_NLA = np.array([params_dict['A_IA_NLA'][param_idx]])
-            print('A_IA_NLA SET to', A_IA_NLA)
+            print('A_IA_NLA SET to', A_IA_NLA, flush=True)
         else:
             A_IA_NLA = cosmo_pars_fid['A_IA_NLA']
-            print('A_IA_NLA FIXED to fiducial value of', A_IA_NLA)
+            print('A_IA_NLA FIXED to fiducial value of', A_IA_NLA, flush=True)
 
         if ('alpha_IA_NLA' in params_dict.keys()):
             alpha_IA_NLA = np.array([params_dict['alpha_IA_NLA'][param_idx]])
-            print('alpha_IA_NLA SET to', alpha_IA_NLA)
+            print('alpha_IA_NLA SET to', alpha_IA_NLA, flush=True)
         else:
             alpha_IA_NLA = cosmo_pars_fid['alpha_IA_NLA']
-            print('alpha_IA_NLA FIXED to fiducial value of', alpha_IA_NLA)
+            print('alpha_IA_NLA FIXED to fiducial value of', alpha_IA_NLA, flush=True)
 
         class_settings  = {
                     'h':h,
@@ -470,7 +470,7 @@ def main_function():
 
             m1, m2, m3 = get_masses(Mv, input.NEUTRINO_HIERARCHY)
             
-            print('Neutrino masses --> m1, m2, m3 in [eV] =', m1, m2, m3)
+            print('Neutrino masses --> m1, m2, m3 in [eV] =', m1, m2, m3, flush=True)
 
             class_settings['N_ur'] = 0.00441
             class_settings['N_ncdm'] = 3
@@ -489,25 +489,25 @@ def main_function():
             cclass.set(class_settings)
             cclass.compute()
         except:
-            print('!!! Encountered classy error in node index #'+str(param_idx)+' . Skipping it !!!')
+            print('!!! Encountered classy error in node index #'+str(param_idx)+' . Skipping it !!!', flush=True)
             continue
 
         if (sigma8_or_A_s == 'sigma8'):
             A_s = cclass.get_current_derived_parameters(['A_s'])['A_s']
-            print('A_s COMPUTED to be', A_s)
+            print('A_s COMPUTED to be', A_s, flush=True)
         elif (sigma8_or_A_s == 'A_s'):
             sigma8 = cclass.sigma8()
-            print('sigma8 COMPUTED to be', sigma8)
+            print('sigma8 COMPUTED to be', sigma8, flush=True)
 
         S8 = cclass.S8()
-        print('S8 COMPUTED to be', S8)
+        print('S8 COMPUTED to be', S8, flush=True)
 
-        print('\nThe classy.CLASS object is made!')
+        print('\nThe classy.CLASS object is made!', flush=True)
 
         CosmoClassObject = CosmoClass(cclass)
 
         class_end = time.time()
-        print('The computation of classy.CLASS and CosmoClass objects took %ss\n'%(class_end - class_start))
+        print('The computation of classy.CLASS and CosmoClass objects took %ss\n'%(class_end - class_start), flush=True)
 
         cosmo_params_output_arr = np.array([Omega_b, Omega_m, h, A_s, sigma8, S8, n_s, w0, wa, c_min, eta_0, Mv, z_val, A_IA_NLA, alpha_IA_NLA])
         np.savetxt(cosmo_parameters_output_path+'cosmo_params'+filename_extension, cosmo_params_output_arr.T, header='Omega_b, Omega_m, h, A_s, sigma8, S8, n_s, w0, wa, c_min, eta_0, Mv, z_val, A_IA_NLA, alpha_IA_NLA')
@@ -520,14 +520,14 @@ def main_function():
         
         if (compute_H_chi_D == 'yes'):
             if (z_val == float('NaN')):
-                print('Specify the redshift z at which to compute H(z), chi(z) and D(z) values!')
+                print('Specify the redshift z at which to compute H(z), chi(z) and D(z) values!', flush=True)
             else:
                 H_chi_D_vals = np.array([CosmoClassObject.H_z(z_val), CosmoClassObject.chi_z(z_val), CosmoClassObject.D_plus_z(z_val)])
                 np.savetxt(H_chi_D_path+'H_chi_D'+filename_extension, H_chi_D_vals.T)
 
         if (compute_P_grid == 'yes'):
 
-            print('Starting computation of P(l,z) grid')
+            print('Starting computation of P(l,z) grid', flush=True)
             start_grid = time.time()
 
             # Power spectrum
@@ -539,7 +539,7 @@ def main_function():
 
             P_l_z_paramlist = list(itertools.product(P_l_z_param_0_array, P_l_z_param_1_array, P_l_z_param_2_array, P_l_z_param_3_array))
 
-            print('Computing P(l,z) grid')
+            print('Computing P(l,z) grid', flush=True)
 
             results_P_l_z = pool.map(P_l_z, P_l_z_paramlist)
             P_l_z_grid = np.array(results_P_l_z)
@@ -555,11 +555,11 @@ def main_function():
             #np.savetxt(P_l_z_grid_path+'P_eps_eps_l_z_grid'+filename_extension, P_eps_eps_l_z_grid)
 
             end_grid = time.time()
-            print('Computing the P(l,z) grid took %ss'%(end_grid - start_grid))
+            print('Computing the P(l,z) grid took %ss'%(end_grid - start_grid), flush=True)
 
         if (compute_iB_grid == 'yes'):
 
-            print('Starting computation of iB(l,z) grid')
+            print('Starting computation of iB(l,z) grid', flush=True)
             start_grid = time.time()
 
             # Integrated bispectra
@@ -578,7 +578,7 @@ def main_function():
 
                 # iB_app : < shear aperture mass inside theta_U compensated * position-dependent shear-shear plus 2PCF inside theta_T tophat >
 
-                print('Computing iB_app(l,z) grid')
+                print('Computing iB_app(l,z) grid', flush=True)
 
                 try:
                     results_iB_app_l_z = pool.map(iB_app_l_z_integration, iB_l_z_paramlist)
@@ -594,7 +594,7 @@ def main_function():
 
                 # iB_amm : < shear aperture mass inside theta_U compensated * position-dependent shear-shear minus 2PCF inside theta_T tophat >
 
-                print('Computing iB_amm(l,z) grid')
+                print('Computing iB_amm(l,z) grid', flush=True)
 
                 try:
                     results_iB_amm_l_z = pool.map(iB_amm_l_z_integration, iB_l_z_paramlist)
@@ -610,7 +610,7 @@ def main_function():
 
                 # iB_att : < shear aperture mass inside theta_U compensated * position-dependent tangential-shear 2PCF inside theta_T tophat >
 
-                print('Computing iB_att(l,z) grid')
+                print('Computing iB_att(l,z) grid', flush=True)
 
                 try:
                     results_iB_att_l_z = pool.map(iB_att_l_z_integration, iB_l_z_paramlist)
@@ -639,7 +639,7 @@ def main_function():
 
                 # iB_agg : < shear aperture mass inside theta_U compensated * position-dependent galaxy clustering 2PCF inside theta_T tophat >
 
-                print('Computing iB_agg(l,z) grid')
+                print('Computing iB_agg(l,z) grid', flush=True)
 
                 try:
                     results_iB_agg_l_z = pool.map(iB_agg_l_z_integration, iB_l_z_paramlist)
@@ -673,7 +673,7 @@ def main_function():
 
                 # iB_gpp : < mean galaxy density inside theta_T tophat * position-dependent shear-shear plus 2PCF inside theta_T tophat >
 
-                print('Computing iB_gpp(l,z) grid')
+                print('Computing iB_gpp(l,z) grid', flush=True)
 
                 try:
                     results_iB_gpp_l_z = pool.map(iB_gpp_l_z_integration, iB_l_z_paramlist)
@@ -702,7 +702,7 @@ def main_function():
 
                 # iB_gmm : < mean galaxy density inside theta_T tophat * position-dependent shear-shear minus 2PCF inside theta_T tophat >
 
-                print('Computing iB_gmm(l,z) grid')
+                print('Computing iB_gmm(l,z) grid', flush=True)
 
                 try:
                     results_iB_gmm_l_z = pool.map(iB_gmm_l_z_integration, iB_l_z_paramlist)
@@ -731,7 +731,7 @@ def main_function():
 
                 # iB_gtt : < mean galaxy density inside theta_T tophat * position-dependent tangential-shear 2PCF inside theta_T tophat >
 
-                print('Computing iB_gtt(l,z) grid')
+                print('Computing iB_gtt(l,z) grid', flush=True)
 
                 try:
                     results_iB_gtt_l_z = pool.map(iB_gtt_l_z_integration, iB_l_z_paramlist)
@@ -765,7 +765,7 @@ def main_function():
 
                 # iB_ggg : < mean galaxy density inside theta_T tophat * position-dependent galaxy clustering 2PCF inside theta_T tophat >
 
-                print('Computing iB_ggg(l,z) grid')
+                print('Computing iB_ggg(l,z) grid', flush=True)
 
                 try:
                     results_iB_ggg_l_z = pool.map(iB_ggg_l_z_integration, iB_l_z_paramlist)
@@ -804,7 +804,7 @@ def main_function():
 
                 # iB_akk : < mean convergence inside theta_T tophat * position-dependent convergence 2PCF inside theta_T tophat >
 
-                print('Computing iB_akk(l,z) grid')
+                print('Computing iB_akk(l,z) grid', flush=True)
 
                 try:
                     results_iB_akk_l_z = pool.map(iB_akk_l_z_integration, iB_l_z_paramlist)
@@ -820,7 +820,7 @@ def main_function():
 
                 # iB_agk : < mean convergence inside theta_T tophat * position-dependent galaxy-convergence 2PCF inside theta_T tophat >
 
-                print('Computing iB_agk(l,z) grid')
+                print('Computing iB_agk(l,z) grid', flush=True)
 
                 try:
                     results_iB_agk_l_z = pool.map(iB_agk_l_z_integration, iB_l_z_paramlist)
@@ -849,7 +849,7 @@ def main_function():
 
                 # iB_gkk : < mean galaxy density inside theta_T tophat * position-dependent convergence 2PCF inside theta_T tophat >
 
-                print('Computing iB_gkk(l,z) grid')
+                print('Computing iB_gkk(l,z) grid', flush=True)
 
                 try:
                     results_iB_gkk_l_z = pool.map(iB_gkk_l_z_integration, iB_l_z_paramlist)
@@ -878,7 +878,7 @@ def main_function():
 
                 # iB_ggk : < mean galaxy density inside theta_T tophat * position-dependent galaxy-convergence 2PCF inside theta_T tophat >
 
-                print('Computing iB_ggk(l,z) grid')
+                print('Computing iB_ggk(l,z) grid', flush=True)
 
                 try:
                     results_iB_ggk_l_z = pool.map(iB_ggk_l_z_integration, iB_l_z_paramlist)
@@ -909,7 +909,7 @@ def main_function():
                 np.savetxt(iB_l_z_grid_path+'iB_ggk_eps_epsdelta_l_z_grid'+filename_extension, iB_ggk_eps_epsdelta_l_z_grid)
 
             end_grid = time.time()
-            print('Computing the iB(l,z) grids took %ss'%(end_grid - start_grid))
+            print('Computing the iB(l,z) grids took %ss'%(end_grid - start_grid), flush=True)
 
         #################################################################################################################################
         #################################################################################################################################
@@ -919,7 +919,7 @@ def main_function():
 
         if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correlations == 'yes'):
 
-            print('Starting computation of P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations')
+            print('Starting computation of P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations', flush=True)
             start_spectra_and_correlations = time.time()
 
             filename_extension_grid = filename_extension
@@ -1023,7 +1023,7 @@ def main_function():
                         # for Dirac comb
                         n_s_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[0])
                         n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[1])
-                        print(str(SOURCE_BIN_NAME)+' '+str(np.sum(n_s_z_BIN_vals_tab)))
+                        print(str(SOURCE_BIN_NAME)+' '+str(np.sum(n_s_z_BIN_vals_tab)), flush=True)
 
                     else:
                         n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
@@ -1074,7 +1074,7 @@ def main_function():
                             M_h_min = 10**13.3424226808 / CosmoClassObject.h
                         M_h_max = 10**15.5 / CosmoClassObject.h
                         N_halos = N_h(z_h_min, z_h_max, M_h_min, M_h_max, CosmoClassObject.rho0_m, CosmoClassObject.sigma_R_z, CosmoClassObject.sigma_prime_R_z, CosmoClassObject.chi_z, CosmoClassObject.H_z)
-                        print('Number of halos = ', N_halos)
+                        print('Number of halos = ', N_halos, flush=True)
                     else:
                         n_l_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[0])
                         n_l_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[1])
@@ -1107,7 +1107,7 @@ def main_function():
 
             if (compute_P_spectra_and_correlations == 'yes'):
 
-                print('Computing P(l) spectra and xi(alpha) correlations')
+                print('Computing P(l) spectra and xi(alpha) correlations', flush=True)
 
                 corr_idx = 0
                 for a in range(len(SOURCE_BIN_NAME_LIST)):
@@ -1216,7 +1216,7 @@ def main_function():
 
             if (compute_iB_spectra_and_correlations == 'yes'):     
 
-                print('Computing iB(l) spectra and iZ(alpha) correlations')
+                print('Computing iB(l) spectra and iZ(alpha) correlations', flush=True)
 
                 corr_idx = 0
                 for a in range(len(SOURCE_BIN_NAME_LIST)):
@@ -1513,7 +1513,7 @@ def main_function():
                             corr_idx += 1 
 
             end_spectra_and_correlations = time.time()
-            print('Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations)) 
+            print('Computing P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations), flush=True) 
 
         #################################################################################################################################
         #################################################################################################################################
@@ -1523,7 +1523,7 @@ def main_function():
 
         del CosmoClassObject
         cclass.struct_cleanup()  
-        print('\nDeleted CosmoClassObject and cleaned up classy.CLASS object')
+        print('\nDeleted CosmoClassObject and cleaned up classy.CLASS object', flush=True)
         
         #################################################################################################################################
         #################################################################################################################################
@@ -1532,10 +1532,10 @@ def main_function():
         pool.close()
         pool.join()
         pool_opened = False
-        print('\nPool closed')
+        print('\nPool closed', flush=True)
 
     end_program = time.time()
-    print('\nTime taken for execution of the whole script (seconds):', end_program - start_program) 
+    print('\nTime taken for execution of the whole script (seconds):', end_program - start_program, flush=True) 
 
 #####################
 
@@ -1543,7 +1543,9 @@ def main_function():
 
 if platform.system() == "Darwin":  # macOS
     if __name__ == '__main__':
+        print('Running on macOS system', flush=True)
         main_function()
     
 else: 
+    print('Running on non-macOS system', flush=True)
     main_function()
