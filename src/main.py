@@ -509,8 +509,8 @@ def main_function():
         class_end = time.time()
         print('The computation of classy.CLASS and CosmoClass objects took %ss\n'%(class_end - class_start))
 
-        cosmo_params_output_arr = np.array([Omega_b, Omega_m, h, A_s, n_s, w0, wa, c_min, eta_0, Mv, z_val, sigma8, S8])
-        np.savetxt(cosmo_parameters_output_path+'cosmo_params'+filename_extension, cosmo_params_output_arr.T, header='Omega_b, Omega_m, h, A_s, n_s, w0, wa, c_min, eta_0, Mv, z_val, sigma8, S8')
+        cosmo_params_output_arr = np.array([Omega_b, Omega_m, h, A_s, sigma8, S8, n_s, w0, wa, c_min, eta_0, Mv, z_val, A_IA_NLA, alpha_IA_NLA])
+        np.savetxt(cosmo_parameters_output_path+'cosmo_params'+filename_extension, cosmo_params_output_arr.T, header='Omega_b, Omega_m, h, A_s, sigma8, S8, n_s, w0, wa, c_min, eta_0, Mv, z_val, A_IA_NLA, alpha_IA_NLA')
 
         #################################################################################################################################
         #################################################################################################################################
