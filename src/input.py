@@ -59,7 +59,7 @@ HS_filename = ''
 
 if (HS_filename != ''):
     params_dict = pd.read_csv('../data/cosmo_parameters/'+HS_filename+'.csv')
-    cosmo_parameters_name = cosmo_fid_name + HS_filename
+    cosmo_parameters_name = cosmo_fid_name + '_' + HS_filename
 else:
     params_dict = {}
     #params_dict = {'z': np.array([0.02])}
