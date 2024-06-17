@@ -55,13 +55,24 @@ class CosmoClass:
         self.P3D_k_z_nl = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_nl_grid_points)
 
         ### tabulate power spectrum tilt
+
+        '''
+        # old way with class function
         n_eff_lin_k_grid_points = np.zeros(self.k_grid_points_ascending.size)
         for i in range(self.k_grid_points_ascending.size):
             n_eff_lin_k_grid_points[i] = cclass.pk_tilt(self.k_grid_points_ascending[i], 0.0) # pk_tilt of class gives the logarithmic derivative wrt linear Pk
-
+        
         self.n_eff_lin_k = interpolate.interp1d(self.k_grid_points_ascending, n_eff_lin_k_grid_points, kind='cubic', fill_value=0.0)
         self.n_eff_lin_k_smoothed = interpolate.UnivariateSpline(self.k_grid_points_ascending, n_eff_lin_k_grid_points)
         self.n_eff_lin_k_smoothed.set_smoothing_factor(1.8)
+        '''
+
+        # new way with numpy gradient and no smoothing
+        n_eff_lin_k_grid_points = np.gradient(np.log(P3D_k_z_lin_grid_points[:, 0]), np.log(self.k_grid_points_ascending)) # can be computed at any redshift
+
+        self.n_eff_lin_k = interpolate.interp1d(self.k_grid_points_ascending, n_eff_lin_k_grid_points, kind='cubic', fill_value=0.0)
+        self.n_eff_lin_k_smoothed = interpolate.UnivariateSpline(self.k_grid_points_ascending, n_eff_lin_k_grid_points)
+        self.n_eff_lin_k_smoothed.set_smoothing_factor(0.0)
 
         ### tabulate non-linear scale from linear power spectrum 
         k_nl_z_grid_points = np.zeros(self.z_grid_points_ascending.size)
