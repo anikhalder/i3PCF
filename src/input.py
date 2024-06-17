@@ -54,8 +54,8 @@ NEUTRINO_HIERARCHY = 'DEGENERATE' # can be set to 'DEGNERATE', 'NORMAL', 'INVERT
 ### Set the parameters which you want to be different from fiducial cosmology
 
 # Hypercube Sampling filename
-HS_filename = '' 
-#HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
+#HS_filename = '' 
+HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
 
 if (HS_filename != ''):
     params_dict = pd.read_csv('../data/cosmo_parameters/'+HS_filename+'.csv')
@@ -70,9 +70,9 @@ else:
 
 P3D_type = 'nl' # lin, nl
 compute_P_grid = 'yes' # yes, no
-compute_P_spectra_and_correlations = 'yes' # yes, no
+compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
-compute_iB_grid = 'no' # yes, no
+compute_iB_grid = 'yes' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_A2pt = 'no' # yes, no
 compute_A2pt_bin_averaged = 'no' # yes, no

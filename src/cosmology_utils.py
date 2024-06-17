@@ -72,7 +72,7 @@ class CosmoClass:
         self.n_eff_lin_k = interpolate.interp1d(self.k_grid_points_ascending, n_eff_lin_k_grid_points, kind='cubic', fill_value=0.0)
 
         k_BAO_min = 0.01
-        k_BAO_max = 0.6
+        k_BAO_max = 1.0
         k_BAO_mask = (self.k_grid_points_ascending > k_BAO_min) & (self.k_grid_points_ascending < k_BAO_max)
 
         # Identify maxima of the BAO region
