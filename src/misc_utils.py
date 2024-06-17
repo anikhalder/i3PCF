@@ -53,3 +53,7 @@ def num_correlations(n, r):
 
     # nCr with replacement
     return int(factorial(n+r-1)/factorial(n-1)/factorial(r)) # Note: tgamma(x+1) = factorial(x)
+
+def eta_0_val(c_min):
+    # Helper function for baryonic feedback from Mead at al. 2015
+    return 1.03-0.11*c_min
