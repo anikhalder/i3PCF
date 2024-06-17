@@ -81,6 +81,11 @@ class CosmoClass:
         # Identify minima by inverting the data
         min_BAO_peaks, _ = find_peaks(-n_eff_lin_k_grid_points[k_BAO_mask])
 
+        if len(max_BAO_peaks) > len(min_BAO_peaks):
+            max_BAO_peaks = max_BAO_peaks[:len(min_BAO_peaks)]
+        elif len(min_BAO_peaks) > len(max_BAO_peaks):
+            min_BAO_peaks = min_BAO_peaks[:len(max_BAO_peaks)]
+
         k_grid_points_ascending_BAO = (self.k_grid_points_ascending[k_BAO_mask][min_BAO_peaks] + self.k_grid_points_ascending[k_BAO_mask][max_BAO_peaks])/2
         n_eff_lin_k_grid_points_BAO = (n_eff_lin_k_grid_points[k_BAO_mask][min_BAO_peaks] + n_eff_lin_k_grid_points[k_BAO_mask][max_BAO_peaks])/2
 
