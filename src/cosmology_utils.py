@@ -87,8 +87,8 @@ class CosmoClass:
         k_grid_points_ascending_BAO_smoothed = np.concatenate((self.k_grid_points_ascending[self.k_grid_points_ascending <= k_BAO_min], k_grid_points_ascending_BAO, self.k_grid_points_ascending[self.k_grid_points_ascending >= k_BAO_max]))
         n_eff_lin_k_grid_points_BAO_smoothed = np.concatenate((n_eff_lin_k_grid_points[self.k_grid_points_ascending <= k_BAO_min], n_eff_lin_k_grid_points_BAO, n_eff_lin_k_grid_points[self.k_grid_points_ascending >= k_BAO_max]))
 
-        n_eff_lin_k_smoothed = interpolate.UnivariateSpline(k_grid_points_ascending_BAO_smoothed, n_eff_lin_k_grid_points_BAO_smoothed)
-        n_eff_lin_k_smoothed.set_smoothing_factor(0.002)
+        self.n_eff_lin_k_smoothed = interpolate.UnivariateSpline(k_grid_points_ascending_BAO_smoothed, n_eff_lin_k_grid_points_BAO_smoothed)
+        self.n_eff_lin_k_smoothed.set_smoothing_factor(0.002)
 
         ### tabulate non-linear scale from linear power spectrum 
         k_nl_z_grid_points = np.zeros(self.z_grid_points_ascending.size)
