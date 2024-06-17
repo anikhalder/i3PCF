@@ -322,13 +322,13 @@ def main_function():
         pool_opened = True
         # Multiprocess the nested loop over l and z such that more worker processors can be used simultaneously to evaluate multiple points on the (l,z) grid
         pool = mp.Pool(processes=mp.cpu_count()-2)
-        print('Opened a pool of', mp.cpu_count()-2, 'worker processors')
+        print('\nOpened a pool of', mp.cpu_count()-2, 'worker processors')
 
     for param_idx in range(start_idx, stop_idx):
 
         filename_extension = '_param_idx_' + str(param_idx) + '.dat'
 
-        print('\n##############################:\n')
+        print('\n##############################')
 
         #################################################################################################################################
         #################################################################################################################################
@@ -339,7 +339,7 @@ def main_function():
         cosmo_pars_fid = input.cosmo_pars_fid
         params_lhs = input.params_lhs
 
-        print('\nSetting up parameters for node idx '+str(param_idx)+':\n')
+        print('\nSetting up parameters for node index: '+str(param_idx)+'\n')
 
         if ('Omega_b' in params_lhs.keys()):
             Omega_b = params_lhs['Omega_b'][param_idx]
