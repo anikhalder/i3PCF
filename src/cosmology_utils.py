@@ -3,7 +3,7 @@ import numpy as np
 from scipy import interpolate
 from bispectrum import *
 from scipy.optimize import fsolve
-#from input import P3D_set_k_gt_k_nl_to_zero
+from scipy.signal import find_peaks
 #import itertools
 #import multiprocessing as mp
 import constants
@@ -54,10 +54,10 @@ class CosmoClass:
         self.P3D_k_z_lin = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_lin_grid_points)
         self.P3D_k_z_nl = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_nl_grid_points)
 
-        ### tabulate power spectrum tilt
+        ### tabulate linear power spectrum tilt
 
         '''
-        # old way with class function
+        # with cclass.pk_tilt function
         n_eff_lin_k_grid_points = np.zeros(self.k_grid_points_ascending.size)
         for i in range(self.k_grid_points_ascending.size):
             n_eff_lin_k_grid_points[i] = cclass.pk_tilt(self.k_grid_points_ascending[i], 0.0) # pk_tilt of class gives the logarithmic derivative wrt linear Pk
@@ -67,12 +67,28 @@ class CosmoClass:
         self.n_eff_lin_k_smoothed.set_smoothing_factor(1.8)
         '''
 
-        # new way with numpy gradient and no smoothing
-        n_eff_lin_k_grid_points = np.gradient(np.log(P3D_k_z_lin_grid_points[:, 0]), np.log(self.k_grid_points_ascending)) # can be computed at any redshift
-
+        # with numpy gradient
+        n_eff_lin_k_grid_points = np.gradient(np.log(P3D_k_z_lin_grid_points[:, 0]), np.log(self.k_grid_points_ascending)) # can be computed at any redshift (as this is for linear Pk)
         self.n_eff_lin_k = interpolate.interp1d(self.k_grid_points_ascending, n_eff_lin_k_grid_points, kind='cubic', fill_value=0.0)
-        self.n_eff_lin_k_smoothed = interpolate.UnivariateSpline(self.k_grid_points_ascending, n_eff_lin_k_grid_points)
-        self.n_eff_lin_k_smoothed.set_smoothing_factor(0.0)
+
+        k_BAO_min = 0.01
+        k_BAO_max = 0.6
+        k_BAO_mask = (self.k_grid_points_ascending > k_BAO_min) & (self.k_grid_points_ascending < k_BAO_max)
+
+        # Identify maxima of the BAO region
+        max_BAO_peaks, _ = find_peaks( n_eff_lin_k_grid_points[k_BAO_mask])
+
+        # Identify minima by inverting the data
+        min_BAO_peaks, _ = find_peaks(-n_eff_lin_k_grid_points[k_BAO_mask])
+
+        k_grid_points_ascending_BAO = (self.k_grid_points_ascending[k_BAO_mask][min_BAO_peaks] + self.k_grid_points_ascending[k_BAO_mask][max_BAO_peaks])/2
+        n_eff_lin_k_grid_points_BAO = (n_eff_lin_k_grid_points[k_BAO_mask][min_BAO_peaks] + n_eff_lin_k_grid_points[k_BAO_mask][max_BAO_peaks])/2
+
+        k_grid_points_ascending_BAO_smoothed = np.concatenate((self.k_grid_points_ascending[self.k_grid_points_ascending <= k_BAO_min], k_grid_points_ascending_BAO, self.k_grid_points_ascending[self.k_grid_points_ascending >= k_BAO_max]))
+        n_eff_lin_k_grid_points_BAO_smoothed = np.concatenate((n_eff_lin_k_grid_points[self.k_grid_points_ascending <= k_BAO_min], n_eff_lin_k_grid_points_BAO, n_eff_lin_k_grid_points[self.k_grid_points_ascending >= k_BAO_max]))
+
+        n_eff_lin_k_smoothed = interpolate.UnivariateSpline(k_grid_points_ascending_BAO_smoothed, n_eff_lin_k_grid_points_BAO_smoothed)
+        n_eff_lin_k_smoothed.set_smoothing_factor(0.002)
 
         ### tabulate non-linear scale from linear power spectrum 
         k_nl_z_grid_points = np.zeros(self.z_grid_points_ascending.size)
@@ -80,21 +96,6 @@ class CosmoClass:
             k_nl_z_grid_points[j] = self.compute_k_nl_z_pk_lin(self.z_grid_points_ascending[j])
 
         self.k_nl_z_pk_lin = interpolate.interp1d(self.z_grid_points_ascending, k_nl_z_grid_points, kind='cubic', fill_value=0.0)
-
-        '''
-        # k > k_NL set to zero
-
-        if (P3D_set_k_gt_k_nl_to_zero == True):
-            for i in range(self.k_grid_points_ascending.size):
-                for j in range(self.z_grid_points_ascending.size):
-                    k_nl_z = self.k_nl_z_pk_lin(self.z_grid_points_ascending[j])
-                    if (self.k_grid_points_ascending[i] > k_nl_z ):
-                        P3D_k_z_lin_grid_points[i][j] = 0
-                        P3D_k_z_nl_grid_points[i][j] = 0
-
-            self.P3D_k_z_lin = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_lin_grid_points)
-            self.P3D_k_z_nl = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, P3D_k_z_nl_grid_points)
-        '''
 
         ### tabulate quantities for various biscpectrum recipes (e.g. GM, response functions etc, nonlinear Pk tilt etc.) in k,z grid (parallel)
         self.RF_G_1_table_data_loaded = False
@@ -140,7 +141,6 @@ class CosmoClass:
         self.RF_G_1_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, RF_G_1_k_z_grid_points)
         self.RF_G_K_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, RF_G_K_k_z_grid_points)
         self.n_eff_nl_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, n_eff_nl_k_z_grid_points)
-
 
         '''
         ############################################################################################################
