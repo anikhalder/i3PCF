@@ -32,7 +32,7 @@ z_array = np.array([0.006387739907950163,
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
-cosmo_fid_name = 'COSMOGRIDV1_fiducial_no_neutrinos' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'DESC_fiducial'
+cosmo_fid_name = 'COSMOGRIDV1_fiducial_no_neutrinos' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'COSMOGRIDV1_fiducial_no_neutrinos', 'DESC_fiducial'
 
 ### T17 fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA': 0.0, 'alpha_IA': 0.0} 
@@ -62,7 +62,7 @@ if (HS_filename != ''):
     cosmo_parameters_name = cosmo_fid_name + '_' + HS_filename
 else:
     params_dict = {}
-    #params_dict = {'z': np.array([0.02])}
+    #params_dict = {'z': np.array([0.01])}
     cosmo_parameters_name = cosmo_fid_name
 
 ########################################################
@@ -78,7 +78,6 @@ compute_A2pt = 'no' # yes, no
 compute_A2pt_bin_averaged = 'no' # yes, no
 compute_H_chi_D = 'no'
 
-P3D_set_k_gt_k_nl_to_zero = False
 use_Dirac_comb = False
 
 nside = None # Set to None to ignore
@@ -131,9 +130,6 @@ max_sep_tc = binedges[-1]
 
 #SOURCE_BIN_NAME_LIST = ['zs1', 'zs2']
 #SOURCE_BIN_VALUES = [0.5739, 1.0334]
-
-#SOURCE_BIN_NAME_LIST = ['SBIN4']
-#SOURCE_BIN_VALUES = ['']
 
 SOURCE_BIN_NAME_LIST = ['BIN1', 'BIN2', 'BIN3', 'BIN4']
 SOURCE_BIN_VALUES = ['', '', '', '']
