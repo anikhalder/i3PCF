@@ -62,6 +62,7 @@ cd class_public/python
 
 ```
 Error compiling Cython file:
+------------------------------------------------------------
 ...
         return d.items()
     else:
@@ -70,7 +71,7 @@ Error compiling Cython file:
 ctypedef np.float_t DTYPE_t
 ctypedef np.int_t DTYPE_i
          ^
-
+------------------------------------------------------------
 classy.pyx:35:9: 'int_t' is not a type identifier
 ```
 
