@@ -12,9 +12,10 @@ This repository hosts code for computing theoretical predictions for the integra
 
 ## Installation
 
-For a clean installation, first create a new environment (e.g. name i3PCF) with conda 
+For a clean installation, first deactivate your current environment and then create a new environment (e.g. name i3PCF) with conda 
 
 ```
+conda deactivate
 conda create -n i3PCF python=3
 ```
 
@@ -24,7 +25,7 @@ Once created, activate the environment
 conda activate i3PCF
 ```
 
-We need the following dependencies for running of the i3PCF code:
+We need the following dependencies for running the i3PCF code:
 
 - [**numpy**](https://pypi.org/project/numpy/) 
 - [**scipy**](https://pypi.org/project/scipy/) 
