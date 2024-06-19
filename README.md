@@ -46,7 +46,7 @@ This should install all the necessary files for running the code!
 
 **Manual installation of classy**
 
-In case the classy installation does not work (possibly due to a classy ctypedef int error) or you need to use some advanced features implemented in classy (see *Advanced uses* below), we will need to perform a manual installation of classy. In order to do this, first install all the other dependencies along with the [**Cython**](https://pypi.org/project/cython/) package:
+In case the classy installation does not work (possibly due to a ctypedef int error) or you need to use some advanced features implemented in classy (see *Advanced uses* below), we will need to perform a manual installation of classy. In order to do this, first install all the other dependencies along with the [**Cython**](https://pypi.org/project/cython/) package:
 
 ```
 pip install numpy scipy matplotlib pandas vegas treecorr healpy Cython
