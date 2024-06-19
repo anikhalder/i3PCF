@@ -44,7 +44,7 @@ pip install numpy scipy matplotlib pandas vegas treecorr healpy classy
 
 This should install all the necessary files for running the code!
 
-*Note*: in case the classy installation does not work (possibly due to a classy ctypedef int error) or you need to do some advanced uses of classy (see *For advanced uses* below), first install the other dependencies along with the [**Cython**](https://pypi.org/project/cython/) package:
+*Note*: in case the classy installation does not work (possibly due to a classy ctypedef int error) or you need to do some advanced uses of classy (see *Advanced uses* below), first install the other dependencies along with the [**Cython**](https://pypi.org/project/cython/) package:
 
 ```
 pip install numpy scipy matplotlib pandas vegas treecorr healpy Cython
@@ -58,12 +58,9 @@ git clone https://github.com/lesgourg/class_public.git
 cd class_public/python
 ```
 
-1. Now, if you faced the following error while installing classy:
+1. *classy ctypedef int error*: If you faced the following error while installing classy:
 
----
-
-*classy ctypedef int error*
-
+'''
 Error compiling Cython file:
 ...
         return d.items()
@@ -75,17 +72,14 @@ ctypedef np.int_t DTYPE_i
          ^
 
 classy.pyx:35:9: 'int_t' is not a type identifier
-
----
+'''
 
 Then edit the classy.pyx file inside the class_public/python/ folder and change that following line to:
 
----
-
+'''
 #ctypedef np.int_t DTYPE_i
 ctypedef np.int64_t DTYPE_i
-
----
+'''
 
 Then, execute the following commands:
 
@@ -96,7 +90,7 @@ make -j
 
 This should successfully install classy without the ctypedef error.
 
-2. Or, if you need to do some *advanced uses* with classy, the following tweak to classy.pyx needs to be performed:
+2. *Advanced uses*: Or, if you need to do some *advanced uses* with classy, the following tweak to classy.pyx needs to be performed:
 
 Similar to what needed to be done for fixing the *classy ctypedef int error* issue, we will need to recompile class after editing the python/classy.pyx file by adding the following functions
 
