@@ -44,6 +44,8 @@ pip install numpy scipy matplotlib pandas vegas treecorr healpy classy
 
 This should install all the necessary files for running the code!
 
+**Manual installation of classy**
+
 *Note*: in case the classy installation does not work (possibly due to a classy ctypedef int error) or you need to do some advanced uses of classy (see *Advanced uses* below), first install the other dependencies along with the [**Cython**](https://pypi.org/project/cython/) package:
 
 ```
@@ -75,14 +77,14 @@ ctypedef np.int_t DTYPE_i
 classy.pyx:35:9: 'int_t' is not a type identifier
 ```
 
-Then edit the classy.pyx file inside the class_public/python/ folder and change that following line to:
+Then edit the classy.pyx file inside the class_public/python/ folder and change the following line, where the error occurred, to:
 
 ```
 #ctypedef np.int_t DTYPE_i
 ctypedef np.int64_t DTYPE_i
 ```
 
-Then, execute the following commands:
+Then, compile and install the classy python package by executing the following commands:
 
 ```
 cd ..
