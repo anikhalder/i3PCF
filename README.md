@@ -42,9 +42,58 @@ All of these can be installed with pip:
 pip install numpy scipy matplotlib pandas vegas treecorr healpy classy
 ```
 
+This should install all the necessary files for running the code!
+
+*Note*: in case the classy installation does not work (possibly due to a cython issue) or you need to do some advanced uses of classy (see *For advanced uses* below), first install the other packages along with the package [**Cython**](https://pypi.org/project/cython/) 
+
+```
+pip install numpy scipy matplotlib pandas vegas treecorr healpy Cython
+```
+
+Then go to your home directory and create a folder (if it doesn't exist e.g. call it software) where you can download repositories, and clone the class_public github repository manually
+
+```
+cd ~/software
+git clone https://github.com/lesgourg/class_public.git
+cd class_public/python
+```
+*For classy ctypedef int error*: if you faced this error while installing classy_ 
+
+---
+Error compiling Cython file:
+------------------------------------------------------------
+...
+        return d.items()
+    else:
+        return d.viewitems()
+
+ctypedef np.float_t DTYPE_t
+ctypedef np.int_t DTYPE_i
+         ^
+------------------------------------------------------------
+
+classy.pyx:35:9: 'int_t' is not a type identifier
+---
+
+Then edit the classy.pyx file inside the class_public/python/ folder and change that following line to:
+
+---
+#ctypedef np.int_t DTYPE_i
+ctypedef np.int64_t DTYPE_i
+---
+
+Then, execute the following commands:
+
+```
+cd ..
+make -j
+```
+
+This should successfully install classy without the ctypedef error.
+
 *For advanced uses* -- the following tweak to classy needs to be performed:
 
-Reinstall (or recompile) class after editing the python/classy.pyx file by adding the following functions
+Similar to what needed to be done for fixing the *classy ctypedef int error* issue, we will need to recompile class after editing the python/classy.pyx file by adding the following functions
 
  - sigma_squared_prime
  - sigma_prime
