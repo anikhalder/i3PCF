@@ -60,7 +60,7 @@ cd class_public/python
 
 1. *classy ctypedef int error*: If you faced the following error while installing classy:
 
-'''
+```
 Error compiling Cython file:
 ...
         return d.items()
@@ -72,14 +72,14 @@ ctypedef np.int_t DTYPE_i
          ^
 
 classy.pyx:35:9: 'int_t' is not a type identifier
-'''
+```
 
 Then edit the classy.pyx file inside the class_public/python/ folder and change that following line to:
 
-'''
+```
 #ctypedef np.int_t DTYPE_i
 ctypedef np.int64_t DTYPE_i
-'''
+```
 
 Then, execute the following commands:
 
