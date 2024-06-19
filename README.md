@@ -12,7 +12,7 @@ This repository hosts code for computing theoretical predictions for the integra
 
 ## Installation
 
-For a clean installation, first deactivate your current environment and then create a new environment (e.g. name i3PCF) with conda 
+For a clean installation, first deactivate your current environment and then create a new environment (e.g. i3PCF) with conda 
 
 ```
 conda deactivate
@@ -46,13 +46,13 @@ This should install all the necessary files for running the code!
 
 **Manual installation of classy**
 
-In case the classy installation does not work (possibly due to a classy ctypedef int error) or you need to do some advanced features implemented in classy (see *Advanced uses* below), we will need to perform a manual installation of classy. In order to do this, first install all the other dependencies along with the [**Cython**](https://pypi.org/project/cython/) package:
+In case the classy installation does not work (possibly due to a classy ctypedef int error) or you need to use some advanced features implemented in classy (see *Advanced uses* below), we will need to perform a manual installation of classy. In order to do this, first install all the other dependencies along with the [**Cython**](https://pypi.org/project/cython/) package:
 
 ```
 pip install numpy scipy matplotlib pandas vegas treecorr healpy Cython
 ```
 
-Then go to your home directory and create a folder (if it doesn't exist e.g. call it software) where you can download repositories from github. There, clone the class_public github repository manually
+Then go to your home directory and create a folder (if it doesn't exist, call it e.g. software) where you can download repositories from github. There, clone the class_public github repository manually
 
 ```
 cd ~/software
@@ -93,7 +93,7 @@ make -j
 
 This should successfully install classy without the ctypedef error.
 
-2. *Advanced uses*: Or, if you need to do some *advanced uses* with classy, the following tweak to classy.pyx needs to be performed:
+2. *Advanced uses*: Or, if you need to access advanced features (such as the functions below) that you have manually implemented in classy, the following tweak to classy.pyx needs to be made:
 
 Similar to what needed to be done for fixing the *classy ctypedef int error* issue, we will need to recompile class after editing the python/classy.pyx file by adding the following functions
 
@@ -112,7 +112,7 @@ Similar to what needed to be done for fixing the *classy ctypedef int error* iss
 python main.py 0 1
 ```
 
-where the 0 and 1 are needed to tell the code which cosmologies to execute e.g. if you have an array with multiple cosmologies (from Latin-hypercube sampling), then 0 and 1 says start at the 0th index of the array and stop until you reach the 1st index.
+where the 0 and 1 are needed to tell the code which cosmologies to execute e.g. if you have an array with multiple cosmologies (e.g. from hypercube sampling), then 0 and 1 says start at the 0th index of the array and stop until you reach the 1st index.
  
 ## Schematic workflow
 
