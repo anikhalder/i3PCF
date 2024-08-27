@@ -7,6 +7,7 @@ l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 88).as
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 113).astype(int)) # e.g. 100 integer l values when _l_max_ = 15000
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 247).astype(int)) # e.g. 200 integer l values when _l_max_ = 15000
 
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
 z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 47)) # 50 z values
@@ -54,11 +55,13 @@ NEUTRINO_HIERARCHY = 'DEGENERATE' # can be set to 'DEGNERATE', 'NORMAL', 'INVERT
 ### Set the parameters which you want to be different from fiducial cosmology
 
 # Hypercube Sampling filename
-#HS_filename = '' 
-HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
+HS_filename = '' 
+#HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
+#HS_filename = 'i3PCF_sobol_pretraining_no_IA_1e4_nodes'
 
 if (HS_filename != ''):
-    params_dict = pd.read_csv('../data/cosmo_parameters/'+HS_filename+'.csv')
+    params_dict = pd.read_csv('../data/cosmo_parameters/'+HS_filename+'.csv') # for csv files
+    #params_dict = dict(np.load('../data/cosmo_parameters/'+HS_filename+'.npz')) # for npz files
     cosmo_parameters_name = cosmo_fid_name + '_' + HS_filename
 else:
     params_dict = {}
