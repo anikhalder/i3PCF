@@ -295,18 +295,16 @@ if (compute_A2pt == 'yes' or compute_A2pt_bin_averaged == 'yes'):
     binedges = np.radians(np.geomspace(min_sep_tc,max_sep_tc,nbins_tc+1)/60)
     bincenters = np.sqrt(binedges[1:]*binedges[:-1])
 
-    if (compute_A2pt_bin_averaged == 'yes'):
-        A2pt = iZ_A2pt_bin_averaged(binedges, theta_T)
-    else:
-        A2pt = np.zeros([nbins_tc])
-        for i, alpha in enumerate(bincenters):
-            A2pt[i] = iZ_A2pt(alpha, theta_T)
+    A2pt = np.zeros([nbins_tc])
+    for i, alpha in enumerate(bincenters):
+        A2pt[i] = iZ_A2pt(alpha, theta_T)
     
-    dat = np.array([bincenters, binedges[:-1], binedges[1:], A2pt])
-
     if (compute_A2pt_bin_averaged == 'yes'): 
+        A2pt_bin_averaged = iZ_A2pt_bin_averaged(binedges, theta_T)
+        dat = np.array([bincenters, binedges[:-1], binedges[1:], A2pt, A2pt_bin_averaged])
         np.savetxt(A2pt_path+'A2pt_bin_averaged_iZ_W'+str(theta_T_arcmins)+'_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'.dat', dat.T)
     else:
+        dat = np.array([bincenters, binedges[:-1], binedges[1:], A2pt])
         np.savetxt(A2pt_path+'A2pt_iZ_W'+str(theta_T_arcmins)+'_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'.dat', dat.T)
     
     print(f'Computing the area prefactors for iZ took {(time.time()-area_compute_time):.2f}s', flush=True)

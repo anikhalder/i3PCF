@@ -75,7 +75,7 @@ B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'yes' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_A2pt = 'no' # yes, no
-compute_A2pt_bin_averaged = 'no' # yes, no
+compute_A2pt_bin_averaged = 'no' # yes, no (if set to 'yes', then A2pt will also automatically be computed even if compute_A2pt is set to 'no')
 compute_H_chi_D = 'no'
 
 use_Dirac_comb = False
@@ -196,10 +196,7 @@ if (compute_iB_spectra_and_correlations == 'yes'):
         iB_spectra_path = '../output/spectra/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_spectra_l'+str(l_array.size)+'_'+spectra_and_correlation_type+'/'
         iZ_correlations_path = '../output/correlations/iZ_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_correlations_alpha_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_'+spectra_and_correlation_type+'/'
 
-if (compute_A2pt == 'yes'):
-    A2pt_path = '../output/A2pt/'
-
-if (compute_A2pt == 'yes'):
+if (compute_A2pt == 'yes' or compute_A2pt_bin_averaged == 'yes'):
     A2pt_path = '../output/A2pt/'
 
 if (compute_H_chi_D == 'yes'):
