@@ -1027,9 +1027,6 @@ def main_function():
 
                     else:
                         n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
-                        max_z_nofz = np.where(n_s_z_BIN_z_tab >= 2.0)[0][0]
-                        n_s_z_BIN_z_tab = n_s_z_BIN_z_tab[:max_z_nofz]
-                        n_s_z_BIN_vals_tab = n_s_z_BIN_vals_tab[:max_z_nofz]
                         n_s_z_BIN_vals_tab /= np.trapz(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
                         n_s_z_BIN = interpolate.interp1d(n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
                 
