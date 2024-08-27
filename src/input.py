@@ -77,7 +77,7 @@ compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_iB_grid = 'yes' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
-compute_A2pt = 'no' # yes, no
+compute_A2pt = 'yes' # yes, no
 compute_A2pt_bin_averaged = 'no' # yes, no (if set to 'yes', then A2pt will also automatically be computed even if compute_A2pt is set to 'no')
 compute_H_chi_D = 'no'
 
@@ -109,6 +109,7 @@ iZ_correlation_name_list = ['app', 'amm']
 ### radius of the compensated and tophat filters
 theta_U_arcmins = 90
 theta_T_arcmins = 90
+print('theta_U_arcmins, theta_T_arcmins:', theta_U_arcmins, theta_T_arcmins)
 
 ### Minimum, maximum separations for the correlation computations and the number of log bins
 

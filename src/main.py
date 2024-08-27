@@ -1,5 +1,5 @@
 ### example call to execute script
-# python main.py 0 1
+# python main.py 90 90 0 1
 
 import time
 start_program = time.time()
@@ -36,10 +36,9 @@ except:
 #################################################################################################################################
 #################################################################################################################################
 
+### arguments for the script call
 start_idx = int(sys.argv[1])
 stop_idx = int(sys.argv[2])
-
-### arguments for the script call
 
 nside = input.nside # If not None, pixel window function will be considered for C_ells
 
@@ -90,13 +89,6 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     alpha_min_arcmins_xi = kk_xi.left_edges
     alpha_max_arcmins_xi = kk_xi.right_edges
     
-    #binedges = np.geomspace(10,250,16)
-    #binedges = binedges[np.where(binedges<=175)]
-    #rnom = np.sqrt(binedges[1:]*binedges[:-1])
-    #alpha_arcmins_xi = rnom
-    #alpha_min_arcmins_xi = binedges[:-1]
-    #alpha_max_arcmins_xi = binedges[1:]
-
     np.savetxt(angular_bins_path+'alpha_xi_angles_cen_arcmins_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bins.tab', alpha_arcmins_xi.T)
     np.savetxt(angular_bins_path+'alpha_xi_angles_min_arcmins_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bins.tab', alpha_min_arcmins_xi.T)
     np.savetxt(angular_bins_path+'alpha_xi_angles_max_arcmins_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_bins.tab', alpha_max_arcmins_xi.T)
@@ -314,6 +306,8 @@ if (compute_H_chi_D == 'yes'):
     H_chi_D_path = input.H_chi_D_path
     if (os.path.isdir(H_chi_D_path) == False):
         os.mkdir(H_chi_D_path)
+
+sys.exit()
 
 #####################
 
