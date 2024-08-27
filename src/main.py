@@ -307,8 +307,6 @@ if (compute_H_chi_D == 'yes'):
     if (os.path.isdir(H_chi_D_path) == False):
         os.mkdir(H_chi_D_path)
 
-sys.exit()
-
 #####################
 
 def main_function():
