@@ -1,5 +1,5 @@
 ### example call to execute script
-# python main.py 90 90 0 1
+# python main.py 0 1
 
 import time
 start_program = time.time()

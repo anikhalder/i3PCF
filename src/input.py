@@ -109,7 +109,7 @@ iZ_correlation_name_list = ['app', 'amm']
 ### radius of the compensated and tophat filters
 theta_U_arcmins = 90
 theta_T_arcmins = 90
-print('theta_U_arcmins, theta_T_arcmins:', theta_U_arcmins, theta_T_arcmins)
+print('U [arcmins], T [arcmins]:', theta_U_arcmins, theta_T_arcmins)
 
 ### Minimum, maximum separations for the correlation computations and the number of log bins
 
