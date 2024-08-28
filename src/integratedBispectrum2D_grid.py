@@ -5,6 +5,10 @@ from window_utils import W2D_TH_FS, W2D_U_FS
 from cosmology_utils import T17_shell_correction
 import constants
 
+########################
+#### Power spectrum ####
+########################
+
 # Function to compute the P(l, z) at a given (l, z) grid point 
 def P_l_z(params):
     l = params[0]
@@ -29,7 +33,6 @@ def P_eps_eps_l_z(params):
     l = params[0]
     z = params[1]
     CosmoClassObject = params[2]
-    P3D_type = params[3]
 
     k = l/CosmoClassObject.chi_z(z)
 
@@ -43,8 +46,40 @@ def P_eps_eps_l_z(params):
 
     return P_eps_eps_l_z_vals
 
-#### Integrated bispectrum w.r.t wave-vectors using vegas ####
-#### build a class for the integrand in batch integration mode #### 
+####################
+#### Bispectrum ####
+####################
+
+# Function to compute the B(l1, l2, l3, z) at a given (l1, l2, l3, z) grid point 
+def B_l1_l2_l3_z(params):
+    l1 = params[0]
+    l2 = params[1]
+    l3 = params[2]
+    z = params[3]
+    CosmoClassObject = params[4]
+    B3D_type = params[5]
+
+    DA_inv = 1./CosmoClassObject.chi_z(z)
+
+    k1 = l1*DA_inv
+    k2 = l2*DA_inv
+    k3 = l3*DA_inv
+    
+    if (B3D_type == 'lin'):
+        B_l1_l2_l3_z_vals = CosmoClassObject.B3D_k1_k2_k3_z(k1, k2, k3, z, False)
+    elif (B3D_type == 'nl'):
+        B_l1_l2_l3_z_vals = CosmoClassObject.B3D_k1_k2_k3_z(k1, k2, k3, z, True)
+
+    if (constants._apply_T17_corrections_ == True):
+        B_l1_l2_l3_z_vals = B_l1_l2_l3_z_vals*T17_shell_correction(k1/CosmoClassObject.h)*T17_shell_correction(k2/CosmoClassObject.h)*T17_shell_correction(k3/CosmoClassObject.h)
+
+    return B_l1_l2_l3_z_vals
+
+###############################
+#### Integrated bispectrum ####
+###############################
+
+#### build a class for the integrated bispectrum integrand for vegas batch integration mode #### 
 class diB_l_z_batch(vegas.BatchIntegrand):
     def __init__(self, l, z, iB_type, theta_U, theta_T, CosmoClassObject, B3D_type):
         self.l = l
@@ -129,7 +164,7 @@ def iB_app_l_z_integration(params):
     integ(diB_app_l_z, nitn=5, neval=3e4) # warm-up the MC grid importance sampling for initial adapting of the grid
     iB_app_l_z = integ(diB_app_l_z, nitn=5, neval=7e5).mean
 
-    # default settings used previously for 100 ell values
+    # settings used previously for 100 ell values
     #integ(diB_app_l_z, nitn=5, neval=2e4) # warm-up the MC grid importance sampling for initial adapting of the grid
     #iB_app_l_z = integ(diB_app_l_z, nitn=5, neval=6e5).mean
 
