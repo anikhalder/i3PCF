@@ -12,6 +12,10 @@ z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 47)) # 50 z values
 
+# for lensing convergence bispectrum
+l_B_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 20).astype(int)) # e.g. 20 integer l values when _l_max_ = 15000
+z_B_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
+
 '''
 #The following z_array are the mean redshifts of the COSMOGRIDV1 fiducial particle shells.
 z_array = np.array([0.006387739907950163,
@@ -75,6 +79,7 @@ P3D_type = 'nl' # lin, nl
 compute_P_grid = 'yes' # yes, no
 compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
+compute_B_grid = 'yes' # yes, no
 compute_iB_grid = 'yes' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_A2pt = 'no' # yes, no
@@ -175,11 +180,8 @@ cosmo_parameters_output_path = '../output/cosmo_parameters_output/' + cosmo_para
 
 ### paths to save/load grids, spectra and correlations
 P_l_z_grid_path = '../output/grids/P_'+P3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'
-
-if (B3D_type == 'lin'):
-    iB_l_z_grid_path = '../output/grids/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'
-elif (B3D_type == 'nl'):
-    iB_l_z_grid_path = '../output/grids/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'
+B_l1_l2_l3_z_grid_path = '../output/grids/B_'+B3D_type+'_grids_la'+str(l_B_array.size)+'_lb'+str(l_B_array.size)+'_lc'+str(l_B_array.size)+'_z'+str(z_B_array.size)+'_'+grid_type+'/'
+iB_l_z_grid_path = '../output/grids/iB_U'+str(theta_U_arcmins)+'W'+str(theta_T_arcmins)+'W'+str(theta_T_arcmins)+'_'+B3D_type+'_grids_l'+str(l_array.size)+'_z'+str(z_array.size)+'_'+grid_type+'/'
 
 if (compute_P_spectra_and_correlations == 'yes'):
 

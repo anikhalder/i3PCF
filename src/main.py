@@ -46,6 +46,7 @@ P3D_type = input.P3D_type
 compute_P_grid = input.compute_P_grid
 compute_P_spectra_and_correlations = input.compute_P_spectra_and_correlations
 B3D_type = input.B3D_type
+compute_B_grid = input.compute_B_grid
 compute_iB_grid = input.compute_iB_grid
 compute_iB_spectra_and_correlations = input.compute_iB_spectra_and_correlations
 compute_A2pt = input.compute_A2pt
@@ -61,6 +62,9 @@ iZ_correlation_name_list = input.iZ_correlation_name_list
 # (l,z) grid settings
 l_array = input.l_array
 z_array = input.z_array
+
+l_B_array = input.l_B_array
+z_B_array = input.z_B_array
 
 #### Window functions ####
 
@@ -233,6 +237,7 @@ if (os.path.isdir(cosmo_parameters_output_path) == False):
     
 P_l_z_grid_path = input.P_l_z_grid_path
 iB_l_z_grid_path = input.iB_l_z_grid_path
+B_l1_l2_l3_z_grid_path = input.B_l1_l2_l3_z_grid_path
 
 if (compute_P_grid == 'yes'):
     if (os.path.isdir(P_l_z_grid_path) == False):
@@ -240,6 +245,13 @@ if (compute_P_grid == 'yes'):
 
     np.savetxt(P_l_z_grid_path+'l_array.tab', l_array.T)
     np.savetxt(P_l_z_grid_path+'z_array.tab', z_array.T)
+
+if (compute_B_grid == 'yes'):
+    if (os.path.isdir(B_l1_l2_l3_z_grid_path) == False):
+        os.mkdir(B_l1_l2_l3_z_grid_path)
+
+    np.savetxt(B_l1_l2_l3_z_grid_path+'l_B_array.tab', l_B_array.T)
+    np.savetxt(B_l1_l2_l3_z_grid_path+'z_B_array.tab', z_B_array.T)
 
 if (compute_iB_grid == 'yes'):
     if (os.path.isdir(iB_l_z_grid_path) == False):
@@ -504,7 +516,7 @@ def main_function():
 
         #################################################################################################################################
         #################################################################################################################################
-        # STEP 2: Create (l,z) grids for P_3D(l,z) and/or iB_3D(l,z) (also for H_chi_D values)
+        # STEP 2: Create (l,z) grids for P_3D(l,z), B_3D(l1,l2,l3,z) and/or iB_3D(l,z) (also for H_chi_D values)
         #################################################################################################################################
         #################################################################################################################################
         
@@ -546,6 +558,43 @@ def main_function():
 
             end_grid = time.time()
             print('Computing the P(l,z) grid took %ss'%(end_grid - start_grid), flush=True)
+
+        if (compute_B_grid == 'yes'):
+
+            print('Starting computation of B(l1,l2,l3,z) grid', flush=True)
+            start_grid = time.time()
+
+            # Bispectrum
+
+            B_l1_l2_l3_z_param_0_array = l_B_array
+            B_l1_l2_l3_z_param_1_array = l_B_array
+            B_l1_l2_l3_z_param_2_array = l_B_array
+            B_l1_l2_l3_z_param_3_array = z_array
+            B_l1_l2_l3_z_param_4_array = [CosmoClassObject]
+            B_l1_l2_l3_z_param_5_array = [B3D_type]
+
+            B_l1_l2_3_z_paramlist = list(itertools.product(B_l1_l2_l3_z_param_0_array, B_l1_l2_l3_z_param_1_array, B_l1_l2_l3_z_param_2_array,
+                                                           B_l1_l2_l3_z_param_3_array, B_l1_l2_l3_z_param_4_array, B_l1_l2_l3_z_param_5_array))
+
+            print('Computing B(l1,l2,l3,z) grid', flush=True)
+
+            results_B_l1_l2_l3_z = pool.map(B_l1_l2_l3_z, B_l1_l2_3_z_paramlist)
+            B_l1_l2_l3_z_grid_flattened = np.array(results_B_l1_l2_l3_z)
+
+            B_l1_l2_l3_z_grid = np.zeros((l_B_array.size, l_B_array.size, l_B_array.size, z_B_array.size))
+            flattened_idx = 0
+
+            for l1_idx in range(l_B_array.size):
+                for l2_idx in range(l_B_array.size):
+                    for l3_idx in range(l_B_array.size):
+                        for z_idx in range(z_B_array.size):
+                            B_l1_l2_l3_z_grid[l1_idx,l2_idx,l3_idx,z_idx] = B_l1_l2_l3_z_grid_flattened[flattened_idx]
+                            flattened_idx += 1
+
+            np.save(B_l1_l2_l3_z_grid_path+'B_l1_l2_l3_z_grid'+filename_extension, B_l1_l2_l3_z_grid) # save in .npy format
+
+            end_grid = time.time()
+            print('Computing the B(l1,l2,l3,z) grid took %ss'%(end_grid - start_grid), flush=True)
 
         if (compute_iB_grid == 'yes'):
 
