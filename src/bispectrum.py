@@ -129,3 +129,57 @@ def B_S2PP(k_a, k_b, k_c, Pk_a, Pk_b, Pk_c):
     # quantities like Pk_a etc. should already have been computed at the given redshift
 
     return S2(k_a,k_b,k_c)*Pk_a*Pk_b + S2(k_a,k_c,k_b)*Pk_a*Pk_c + S2(k_b,k_c,k_a)*Pk_b*Pk_c
+
+######################################################################################
+
+# primordial non-Gaussianity
+
+# Local type
+def B_primordial_local(fNL_local, Mk_a, Mk_b, Mk_c, Pk_a, Pk_b, Pk_c):
+    # Evaluate the primordial local non-Gaussianity bispectrum at a given redshift --> quantities like Mk_a, Pk_a etc. should already have been computed at the given redshift
+
+    Pk_a_phi = Pk_a / Mk_a**2
+    Pk_b_phi = Pk_b / Mk_b**2
+    Pk_c_phi = Pk_c / Mk_c**2
+
+    B_phi_primordial_local = 2*fNL_local*(Pk_a_phi*Pk_b_phi + Pk_b_phi*Pk_c_phi + Pk_c_phi*Pk_a_phi)
+
+    return B_phi_primordial_local*Mk_a*Mk_b*Mk_c
+
+# Equilateral type
+def B_primordial_equilateral(fNL_equilateral, Mk_a, Mk_b, Mk_c, Pk_a, Pk_b, Pk_c):
+    # Evaluate the primordial equilateral non-Gaussianity bispectrum at a given redshift --> quantities like Mk_a, Pk_a etc. should already have been computed at the given redshift
+
+    Pk_a_phi = Pk_a / Mk_a**2
+    Pk_b_phi = Pk_b / Mk_b**2
+    Pk_c_phi = Pk_c / Mk_c**2
+
+    B_phi_primordial_equilateral = 6*fNL_equilateral*(- (Pk_a_phi*Pk_b_phi + Pk_b_phi*Pk_c_phi + Pk_c_phi*Pk_a_phi)
+                                                      - 2*(Pk_a_phi*Pk_b_phi*Pk_c_phi)**2/3
+                                                      + (Pk_a_phi**1/3*Pk_b_phi**2/3*Pk_c_phi +
+                                                         Pk_a_phi**1/3*Pk_c_phi**2/3*Pk_b_phi +
+                                                         Pk_b_phi**1/3*Pk_a_phi**2/3*Pk_c_phi +
+                                                         Pk_b_phi**1/3*Pk_c_phi**2/3*Pk_a_phi +
+                                                         Pk_c_phi**1/3*Pk_a_phi**2/3*Pk_b_phi +
+                                                         Pk_c_phi**1/3*Pk_b_phi**2/3*Pk_a_phi) )
+
+    return B_phi_primordial_equilateral*Mk_a*Mk_b*Mk_c
+
+# Orthogonal type
+def B_primordial_orthogonal(fNL_orthogonal, Mk_a, Mk_b, Mk_c, Pk_a, Pk_b, Pk_c):
+    # Evaluate the primordial orthogonal non-Gaussianity bispectrum at a given redshift --> quantities like Mk_a, Pk_a etc. should already have been computed at the given redshift
+
+    Pk_a_phi = Pk_a / Mk_a**2
+    Pk_b_phi = Pk_b / Mk_b**2
+    Pk_c_phi = Pk_c / Mk_c**2
+
+    B_phi_primordial_orthogonal = 6*fNL_orthogonal*(- 3*(Pk_a_phi*Pk_b_phi + Pk_b_phi*Pk_c_phi + Pk_c_phi*Pk_a_phi)
+                                                    - 8*(Pk_a_phi*Pk_b_phi*Pk_c_phi)**2/3
+                                                    + 3*(Pk_a_phi**1/3*Pk_b_phi**2/3*Pk_c_phi +
+                                                         Pk_a_phi**1/3*Pk_c_phi**2/3*Pk_b_phi +
+                                                         Pk_b_phi**1/3*Pk_a_phi**2/3*Pk_c_phi +
+                                                         Pk_b_phi**1/3*Pk_c_phi**2/3*Pk_a_phi +
+                                                         Pk_c_phi**1/3*Pk_a_phi**2/3*Pk_b_phi +
+                                                         Pk_c_phi**1/3*Pk_b_phi**2/3*Pk_a_phi) )
+
+    return B_phi_primordial_orthogonal*Mk_a*Mk_b*Mk_c
