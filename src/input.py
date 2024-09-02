@@ -80,6 +80,7 @@ compute_P_grid = 'yes' # yes, no
 compute_P_spectra_and_correlations = 'no' # yes, no
 B3D_type = 'nl' # lin, nl
 compute_B_grid = 'yes' # yes, no
+compute_B_spectra = 'no' # yes, no
 compute_iB_grid = 'yes' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_A2pt = 'no' # yes, no
@@ -189,7 +190,11 @@ if (compute_P_spectra_and_correlations == 'yes'):
 
     P_spectra_path = '../output/spectra/P_'+P3D_type+'_spectra_l'+str(l_array.size)+'_'+spectra_and_correlation_type+'/'
     xi_correlations_path = '../output/correlations/xi_'+P3D_type+'_correlations_alpha_'+str(int(min_sep_tc_xi))+'_'+str(int(max_sep_tc_xi))+'_'+str(nbins_tc_xi)+'_'+spectra_and_correlation_type+'/'
-    
+
+if (compute_B_spectra == 'yes'):
+
+    B_spectra_path = '../output/spectra/B_'+P3D_type+'_spectra_la'+str(l_B_array.size)+'_lb'+str(l_B_array.size)+'_lc'+str(l_B_array.size)+'_'+spectra_and_correlation_type+'/'
+
 if (compute_iB_spectra_and_correlations == 'yes'):
 
     angular_bins_path = '../output/angular_bins/'

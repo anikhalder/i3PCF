@@ -47,6 +47,7 @@ compute_P_grid = input.compute_P_grid
 compute_P_spectra_and_correlations = input.compute_P_spectra_and_correlations
 B3D_type = input.B3D_type
 compute_B_grid = input.compute_B_grid
+compute_B_spectra = input.compute_B_spectra
 compute_iB_grid = input.compute_iB_grid
 compute_iB_spectra_and_correlations = input.compute_iB_spectra_and_correlations
 compute_A2pt = input.compute_A2pt
@@ -271,6 +272,13 @@ if (compute_P_spectra_and_correlations == 'yes'):
 
     if (os.path.isdir(xi_correlations_path) == False):
         os.mkdir(xi_correlations_path)
+
+if (compute_B_spectra == 'yes'):
+
+    B_spectra_path = input.B_spectra_path
+
+    if (os.path.isdir(B_spectra_path) == False):
+        os.mkdir(B_spectra_path)
 
 if (compute_iB_spectra_and_correlations == 'yes'):
 
@@ -569,7 +577,7 @@ def main_function():
             B_l1_l2_l3_z_param_0_array = l_B_array
             B_l1_l2_l3_z_param_1_array = l_B_array
             B_l1_l2_l3_z_param_2_array = l_B_array
-            B_l1_l2_l3_z_param_3_array = z_array
+            B_l1_l2_l3_z_param_3_array = z_B_array
             B_l1_l2_l3_z_param_4_array = [CosmoClassObject]
             B_l1_l2_l3_z_param_5_array = [B3D_type]
 
@@ -956,6 +964,137 @@ def main_function():
         #################################################################################################################################
         #################################################################################################################################
 
+        if (compute_B_spectra == 'yes'):
+
+            print('Starting computation of B(l1,l2,l3) spectra', flush=True)
+            start_spectra_and_correlations = time.time()
+
+            if (compute_B_spectra == 'yes' and compute_B_grid == 'no'):
+                
+                B_l1_l2_l3_z_grid = np.load(B_l1_l2_l3_z_grid_path+'B_l1_l2_l3_z_grid'+filename_extension+'.npy') # load .npy format
+
+            #####################
+            # setup LOS projection kernels
+
+            H_0 = CosmoClassObject.H_z(0)
+            Omega0_m = CosmoClassObject.Omega0_m
+
+            z_array_los = np.linspace(0.01, constants._z_max_, constants._N_los_)
+            chi_inv_z_array_los = 1./CosmoClassObject.chi_z(z_array_los)
+            H_inv_z_array_los = 1./CosmoClassObject.H_z(z_array_los)
+
+            # ----------
+            # source bins
+
+            qs_z_array_los = np.zeros([len(SOURCE_BIN_NAME_LIST), z_array_los.size])
+
+            for SOURCE_BIN_idx in range(len(SOURCE_BIN_NAME_LIST)):
+                SOURCE_BIN_NAME = SOURCE_BIN_NAME_LIST[SOURCE_BIN_idx]
+
+                if ('zs' in SOURCE_BIN_NAME):
+                    z_source = SOURCE_BIN_VALUES[SOURCE_BIN_idx]
+                elif ('BIN' in SOURCE_BIN_NAME):
+                    if (input.use_Dirac_comb == True):
+                        # for Dirac comb
+                        n_s_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[0])
+                        n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[1])
+                        print(str(SOURCE_BIN_NAME)+' '+str(np.sum(n_s_z_BIN_vals_tab)), flush=True)
+
+                    else:
+                        n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
+                        n_s_z_BIN_vals_tab /= np.trapz(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
+                        n_s_z_BIN = interpolate.interp1d(n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
+                
+                for j in range(z_array_los.size):
+                    if ('zs' in SOURCE_BIN_NAME):
+                        qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_fixed(z_array_los[j], z_source, CosmoClassObject.chi_z, H_0, Omega0_m)
+                    elif ('BIN' in SOURCE_BIN_NAME):
+
+                        if (input.use_Dirac_comb == True):
+                            # for Dirac comb
+                            weights_sum = np.sum(n_s_z_BIN_vals_tab)
+                            for zs_plane_idx in range(n_s_z_BIN_z_tab.size):
+                                qs_z_array_los[SOURCE_BIN_idx,j] += n_s_z_BIN_vals_tab[zs_plane_idx]*q_k_zs_fixed(z_array_los[j], n_s_z_BIN_z_tab[zs_plane_idx], CosmoClassObject.chi_z, H_0, Omega0_m)
+
+                            qs_z_array_los[SOURCE_BIN_idx,j] /= weights_sum
+                    
+                        else:
+                            #qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN)
+                            qs_z_array_los[SOURCE_BIN_idx,j] = q_k_zs_distribution_systematics(z_array_los[j], n_s_z_BIN_z_tab[-1], CosmoClassObject.chi_z, H_0, Omega0_m, n_s_z_BIN, CosmoClassObject.H_z, CosmoClassObject.D_plus_z, A_IA_NLA, alpha_IA_NLA, SOURCE_BIN_delta_photoz_values[SOURCE_BIN_idx], SOURCE_BIN_m_values[SOURCE_BIN_idx])
+
+            #####################
+            # compute spectra
+
+            print('Computing B(l1,l2,l3) spectra', flush=True)
+
+            corr_idx = 0
+            for a in range(len(SOURCE_BIN_NAME_LIST)):
+                for b in range(a, len(SOURCE_BIN_NAME_LIST)):
+                    for c in range(b, len(SOURCE_BIN_NAME_LIST)):
+                        assert(corr_idx != num_i3pt_sss_correlations)
+
+                        q1_z_array_los = np.zeros(z_array_los.size)
+                        q2_z_array_los = np.zeros(z_array_los.size)
+                        q3_z_array_los = np.zeros(z_array_los.size)
+
+                        q1_bin_name = SOURCE_BIN_NAME_LIST[a]
+                        q2_bin_name = SOURCE_BIN_NAME_LIST[b]
+                        q3_bin_name = SOURCE_BIN_NAME_LIST[c]
+
+                        q1_z_array_los = qs_z_array_los[a]
+                        q2_z_array_los = qs_z_array_los[b]
+                        q3_z_array_los = qs_z_array_los[c]
+
+                        B_z_weight_array_los = H_inv_z_array_los * chi_inv_z_array_los**4 * q1_z_array_los * q2_z_array_los * q3_z_array_los # bispectrum LOS weighting
+
+                        B_l1_l2_l3_z_grid_los = np.zeros([l_B_array.size, l_B_array.size, l_B_array.size, z_array_los.size])
+
+                        for l1_idx in range(l_B_array.size):
+                            for l2_idx in range(l_B_array.size):
+                                for l3_idx in range(l_B_array.size):
+                                    B_1_l1_l2_l3_z_func = interpolate.interp1d(z_B_array, B_l1_l2_l3_z_grid[l1_idx,l2_idx,l3_idx], fill_value=(0,0), bounds_error=False)
+                                    B_l1_l2_l3_z_grid_los[l1_idx,l2_idx,l3_idx] = B_1_l1_l2_l3_z_func(z_array_los)
+                                                
+                        B_l1_l2_l3 = np.zeros([l_B_array.size, l_B_array.size, l_B_array.size])
+
+                        B_1_l1_l2_l3_z_integrand_grid = B_l1_l2_l3_z_grid_los * B_z_weight_array_los
+                        B_l1_l2_l3 = np.trapz(B_1_l1_l2_l3_z_integrand_grid, x=z_array_los, axis=-1)
+
+                        np.save(B_spectra_path+'B_l1_l2_l3_'+q1_bin_name+'_'+q2_bin_name+'_'+q3_bin_name+filename_extension, B_l1_l2_l3)
+
+                        # TODO: Still to implement B(ell_1, ell_2, ell_3) 
+                        '''
+                        ell, iB_1_ell = C_ell_spherical_sky(l_array, iB_l[0])
+                        ell, iB_2_ell = C_ell_spherical_sky(l_array, iB_l[1])
+                        ell, iB_3_ell = C_ell_spherical_sky(l_array, iB_l[2])
+                        ell, iB_4_ell = C_ell_spherical_sky(l_array, iB_l[3])
+                        ell, iB_5_ell = C_ell_spherical_sky(l_array, iB_l[4])
+
+                        #if nside is given, consider the pixel window function's effect on the C_ells
+                        if nside is not None and healpy_installed:
+                            
+                            pixwin = hp.pixwin(nside, lmax=np.max(ell))
+                            pixwin_ell = np.arange(len(pixwin))                                         # pixwin creates window function for ell=0 to 3*nside-1
+                            pixwin = pixwin[np.intersect1d(ell, pixwin_ell, return_indices=True)[2]]    # match pixwin function to correct ells
+                            pixwin = np.append(pixwin, np.zeros(len(ell) - len(pixwin)))                # Add zeros to match length
+                            
+                            # Add correction to C_ell
+                            iB_1_ell = iB_1_ell * pixwin**2             
+                            iB_2_ell = iB_2_ell * pixwin**2
+                            iB_3_ell = iB_3_ell * pixwin**2
+                            iB_4_ell = iB_4_ell * pixwin**2
+                            iB_5_ell = iB_5_ell * pixwin**2
+                            
+
+                        iB_4_ell = iB_4_ell - np.mean(iB_4_ell[ell > 1000]) # for the shot noise terms
+                        iB_5_ell = iB_5_ell - np.mean(iB_5_ell[ell > 1000]) # for the shot noise terms
+                        '''
+                           
+                        corr_idx += 1
+
+            end_spectra_and_correlations = time.time()
+            print('Computing B(l1,l2,l3) spectra took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations), flush=True) 
+
         if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correlations == 'yes'):
 
             print('Starting computation of P(l) and/or iB(l) spectra and xi(alpha) and/or iZ(alpha) correlations', flush=True)
@@ -966,15 +1105,15 @@ def main_function():
                 filename_extension_grid = '.dat'
 
             #####################
-
             # Load pre-computed grids
+
             if (compute_P_spectra_and_correlations == 'yes' and compute_P_grid == 'no'):
                 
                 P_l_z_grid = np.loadtxt(P_l_z_grid_path+'P_l_z_grid'+filename_extension_grid)
                 
                 # scale-dependent stochasticity
                 #P_eps_eps_l_z_grid = np.loadtxt(P_l_z_grid_path+'P_eps_eps_l_z_grid'+filename_extension_grid)
-
+                
             if (compute_iB_spectra_and_correlations == 'yes' and compute_iB_grid == 'no'):
                 # For galaxy x shear (UWW) integrated bispectra grids
 
@@ -1139,7 +1278,7 @@ def main_function():
                         ql_1_over_n_bar_z_array_los[j] = val
                     
             #####################
-            # compute correlations
+            # compute spectra and correlations
 
             if (compute_P_spectra_and_correlations == 'yes'):
 
