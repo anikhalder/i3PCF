@@ -17,6 +17,8 @@ class CosmoClass:
         self.h = cclass.h()
         self.Omega0_m = cclass.Omega0_m()
         self.f_sq = constants._f_sq_
+        self.f_NL = constants._f_NL_
+        self.f_NL_type = constants._f_NL_type_
 
         self.k_min = k_min_max[0]
         self.k_max = k_min_max[1]
@@ -28,6 +30,7 @@ class CosmoClass:
         self.z_chi = interpolate.interp1d(cclass.get_background()['comov. dist.'], cclass.get_background()['z'], kind='cubic', fill_value=0.0)
         self.H_z = interpolate.interp1d(cclass.get_background()['z'], cclass.get_background()['H [1/Mpc]'], kind='cubic', fill_value=0.0)
         self.D_plus_z = interpolate.interp1d(cclass.get_background()['z'], cclass.get_background()['gr.fac. D'], kind='cubic', fill_value=0.0) # normalised to 1 at z=0
+        self.T_k = interpolate.interp1d(cclass.get_transfer()['k (h/Mpc)']*self.h, cclass.get_transfer()['d_tot']/cclass.get_transfer()['d_tot'][0], kind='cubic', fill_value=0.0) # normalised to 1 on large scales
         
         self.rho_crit_z = interpolate.interp1d(cclass.get_background()['z'], cclass.get_background()['(.)rho_crit']*constants._rho_class_to_SI_units_* constants._kg_m3_to_M_sun_Mpc3_units_ , kind='cubic', fill_value=0.0) # in [M_sun/Mpc^3]
         self.rho0_m = self.Omega0_m * self.rho_crit_z(0.) # in [M_sun/Mpc^3]
@@ -120,6 +123,7 @@ class CosmoClass:
         RF_G_1_k_z_grid_points   = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
         RF_G_K_k_z_grid_points   = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
         n_eff_nl_k_z_grid_points = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size))
+        M_k_z_grid_points = np.zeros((self.k_grid_points_ascending.size, self.z_grid_points_ascending.size)) # poisson factor
 
         for j in range(self.z_grid_points_ascending.size):
 
@@ -139,6 +143,7 @@ class CosmoClass:
                 B3D_c_GM_k_z_grid_points[i][j] = c_GM(n_eff, q)
                 RF_G_1_k_z_grid_points[i][j] = self.compute_RF_G_1_k_z(k, z)
                 RF_G_K_k_z_grid_points[i][j] = self.compute_RF_G_K_k_z(k, z)
+                M_k_z_grid_points[i][j] = self.compute_M_k_z(k, z)
 
         self.B3D_a_GM_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, B3D_a_GM_k_z_grid_points)
         self.B3D_b_GM_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, B3D_b_GM_k_z_grid_points)
@@ -146,6 +151,7 @@ class CosmoClass:
         self.RF_G_1_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, RF_G_1_k_z_grid_points)
         self.RF_G_K_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, RF_G_K_k_z_grid_points)
         self.n_eff_nl_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, n_eff_nl_k_z_grid_points)
+        self.M_k_z = interpolate.RectBivariateSpline(self.k_grid_points_ascending, self.z_grid_points_ascending, M_k_z_grid_points)
 
         '''
         ############################################################################################################
@@ -317,7 +323,199 @@ class CosmoClass:
 
         valid_vals = np.zeros(k1_arr_valid.size) # create a zeros 1D array for storing the computation of the B3D on the valid ki values
 
-        if (B3D_type!="B_GMRF"):
+        # for matter bispectrum
+        if (B3D_type=="B_tree" or B3D_type=="B_GM" or B3D_type=="B_GMRF"):
+
+            if (B3D_type=="B_tree" or B3D_type=="B_GM"):
+
+                k1_arr_valid_unsorted_index_order = np.argsort(k1_arr_valid) # unsorted array indices of valid k1's before they are sorted in ascending order
+                k1_arr_valid_ascending = k1_arr_valid[k1_arr_valid_unsorted_index_order] # valid k1's sorted in ascending order
+
+                k2_arr_valid_unsorted_index_order = np.argsort(k2_arr_valid) 
+                k2_arr_valid_ascending = k2_arr_valid[k2_arr_valid_unsorted_index_order] 
+
+                k3_arr_valid_unsorted_index_order = np.argsort(k3_arr_valid)
+                k3_arr_valid_ascending = k3_arr_valid[k3_arr_valid_unsorted_index_order]
+            
+                Pk1_arr_valid = np.zeros(k1_arr_valid.size)
+                Pk2_arr_valid = np.zeros(k2_arr_valid.size)
+                Pk3_arr_valid = np.zeros(k3_arr_valid.size)
+
+                if (B3D_type=="B_tree"):
+                    Pk1_arr_valid[k1_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k1_arr_valid_ascending, z, grid=True)[:,0]
+                    Pk2_arr_valid[k2_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k2_arr_valid_ascending, z, grid=True)[:,0]
+                    Pk3_arr_valid[k3_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k3_arr_valid_ascending, z, grid=True)[:,0]
+                    
+                    valid_vals = B_tree(k1_arr_valid, k2_arr_valid, k3_arr_valid, 
+                                        Pk1_arr_valid, Pk2_arr_valid, Pk3_arr_valid)
+                    
+                elif (B3D_type=="B_GM"):
+                    Pk1_arr_valid[k1_arr_valid_unsorted_index_order] = self.P3D_k_z_nl(k1_arr_valid_ascending, z, grid=True)[:,0]
+                    Pk2_arr_valid[k2_arr_valid_unsorted_index_order] = self.P3D_k_z_nl(k2_arr_valid_ascending, z, grid=True)[:,0]
+                    Pk3_arr_valid[k3_arr_valid_unsorted_index_order] = self.P3D_k_z_nl(k3_arr_valid_ascending, z, grid=True)[:,0]
+
+                    a1_arr_valid = np.zeros(k1_arr_valid.size)
+                    a2_arr_valid = np.zeros(k2_arr_valid.size)
+                    a3_arr_valid = np.zeros(k3_arr_valid.size)
+
+                    a1_arr_valid[k1_arr_valid_unsorted_index_order] = self.B3D_a_GM_k_z(k1_arr_valid_ascending, z, grid=True)[:,0]
+                    a2_arr_valid[k2_arr_valid_unsorted_index_order] = self.B3D_a_GM_k_z(k2_arr_valid_ascending, z, grid=True)[:,0]
+                    a3_arr_valid[k3_arr_valid_unsorted_index_order] = self.B3D_a_GM_k_z(k3_arr_valid_ascending, z, grid=True)[:,0]
+
+                    b1_arr_valid = np.zeros(k1_arr_valid.size)
+                    b2_arr_valid = np.zeros(k2_arr_valid.size)
+                    b3_arr_valid = np.zeros(k3_arr_valid.size)
+
+                    b1_arr_valid[k1_arr_valid_unsorted_index_order] = self.B3D_b_GM_k_z(k1_arr_valid_ascending, z, grid=True)[:,0]
+                    b2_arr_valid[k2_arr_valid_unsorted_index_order] = self.B3D_b_GM_k_z(k2_arr_valid_ascending, z, grid=True)[:,0]
+                    b3_arr_valid[k3_arr_valid_unsorted_index_order] = self.B3D_b_GM_k_z(k3_arr_valid_ascending, z, grid=True)[:,0]
+
+                    c1_arr_valid = np.zeros(k1_arr_valid.size)
+                    c2_arr_valid = np.zeros(k2_arr_valid.size)
+                    c3_arr_valid = np.zeros(k3_arr_valid.size)
+
+                    c1_arr_valid[k1_arr_valid_unsorted_index_order] = self.B3D_c_GM_k_z(k1_arr_valid_ascending, z, grid=True)[:,0]
+                    c2_arr_valid[k2_arr_valid_unsorted_index_order] = self.B3D_c_GM_k_z(k2_arr_valid_ascending, z, grid=True)[:,0]
+                    c3_arr_valid[k3_arr_valid_unsorted_index_order] = self.B3D_c_GM_k_z(k3_arr_valid_ascending, z, grid=True)[:,0]
+
+                    valid_vals = B_GM(k1_arr_valid, k2_arr_valid, k3_arr_valid,
+                                    Pk1_arr_valid, Pk2_arr_valid, Pk3_arr_valid,
+                                    a1_arr_valid, a2_arr_valid, a3_arr_valid,
+                                    b1_arr_valid, b2_arr_valid, b3_arr_valid, 
+                                    c1_arr_valid, c2_arr_valid, c3_arr_valid)
+
+            elif (B3D_type=="B_GMRF"):     
+
+                sq_mask = (k2_arr_valid / k1_arr_valid > self.f_sq)
+
+                # for the squeezed configurations
+
+                k1_arr_valid_sq = k1_arr_valid[sq_mask] # valid k1's in squeezed triangles i.e. ks
+                k2_arr_valid_sq = k2_arr_valid[sq_mask] # valid k2's in squeezed triangles i.e. km
+                k3_arr_valid_sq = k3_arr_valid[sq_mask] # valid k3's in squeezed triangles i.e. kh 
+
+                k1_arr_valid_sq_unsorted_index_order = np.argsort(k1_arr_valid_sq) # unsorted array indices of valid k1's in squeezed triangles before they are sorted in ascending order
+                k1_arr_valid_sq_ascending = k1_arr_valid_sq[k1_arr_valid_sq_unsorted_index_order] # valid k1's in squeezed triangles sorted in ascending order
+                
+                #k2_arr_valid_sq_unsorted_index_order = np.argsort(k2_arr_valid_sq)
+                #k2_arr_valid_sq_ascending = k2_arr_valid_sq[k2_arr_valid_sq_unsorted_index_order]
+
+                k3_arr_valid_sq_unsorted_index_order = np.argsort(k3_arr_valid_sq)
+                k3_arr_valid_sq_ascending = k3_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order]
+
+                Pk1_arr_valid_sq = np.zeros(k1_arr_valid_sq.size)
+                #Pk2_arr_valid_sq = np.zeros(k2_arr_valid_sq.size)
+                Pk3_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
+
+                Pk1_arr_valid_sq[k1_arr_valid_sq_unsorted_index_order] = self.P3D_k_z_nl(k1_arr_valid_sq_ascending, z, grid=True)[:,0]
+                #Pk2_arr_valid_sq[k2_arr_valid_sq_unsorted_index_order] = self.P3D_k_z_nl(k2_arr_valid_sq_ascending, z, grid=True)[:,0]
+                Pk3_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.P3D_k_z_nl(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
+
+                n_h_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
+                G_1_h_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
+                G_K_h_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
+
+                n_h_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.n_eff_nl_k_z(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
+                G_1_h_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.RF_G_1_k_z(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
+                G_K_h_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.RF_G_K_k_z(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
+
+                valid_vals[sq_mask] = B_RF(k1_arr_valid_sq, k2_arr_valid_sq, k3_arr_valid_sq, 
+                                        Pk1_arr_valid_sq, Pk3_arr_valid_sq, 
+                                        n_h_arr_valid_sq, G_1_h_arr_valid_sq, G_K_h_arr_valid_sq)
+
+                # for the non-squeezed configurations 
+
+                k1_arr_valid_nonsq = k1_arr_valid[~sq_mask] # valid k1's in non-squeezed triangles
+                k2_arr_valid_nonsq = k2_arr_valid[~sq_mask] 
+                k3_arr_valid_nonsq = k3_arr_valid[~sq_mask] 
+
+                k1_arr_valid_nonsq_unsorted_index_order = np.argsort(k1_arr_valid_nonsq) # unsorted array indices of valid k1's in non-squeezed triangles before they are sorted in ascending order
+                k1_arr_valid_nonsq_ascending = k1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] # valid k1's in non-squeezed triangles sorted in ascending order
+                
+                k2_arr_valid_nonsq_unsorted_index_order = np.argsort(k2_arr_valid_nonsq)
+                k2_arr_valid_nonsq_ascending = k2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order]
+
+                k3_arr_valid_nonsq_unsorted_index_order = np.argsort(k3_arr_valid_nonsq)
+                k3_arr_valid_nonsq_ascending = k3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order]
+
+                Pk1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
+                Pk2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
+                Pk3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
+
+                Pk1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.P3D_k_z_nl(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                Pk2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.P3D_k_z_nl(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                Pk3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.P3D_k_z_nl(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+
+                a1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
+                a2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
+                a3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
+
+                a1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.B3D_a_GM_k_z(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                a2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.B3D_a_GM_k_z(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                a3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.B3D_a_GM_k_z(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+
+                b1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
+                b2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
+                b3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
+
+                b1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.B3D_b_GM_k_z(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                b2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.B3D_b_GM_k_z(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                b3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.B3D_b_GM_k_z(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+
+                c1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
+                c2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
+                c3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
+
+                c1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.B3D_c_GM_k_z(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                c2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.B3D_c_GM_k_z(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+                c3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.B3D_c_GM_k_z(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
+
+                valid_vals[~sq_mask] = B_GM(k1_arr_valid_nonsq, k2_arr_valid_nonsq, k3_arr_valid_nonsq, 
+                                            Pk1_arr_valid_nonsq, Pk2_arr_valid_nonsq, Pk3_arr_valid_nonsq,
+                                            a1_arr_valid_nonsq, a2_arr_valid_nonsq, a3_arr_valid_nonsq,
+                                            b1_arr_valid_nonsq, b2_arr_valid_nonsq, b3_arr_valid_nonsq, 
+                                            c1_arr_valid_nonsq, c2_arr_valid_nonsq, c3_arr_valid_nonsq)
+
+            #if (constants._apply_T17_corrections_ == True):
+            #    vals = vals*T17_shell_correction(k1_arr/self.h)*T17_shell_correction(k2_arr/self.h)*T17_shell_correction(k3_arr/self.h)
+
+            # primordial non-Gaussianity to matter-bispectrum
+            if (self.f_NL != 0):
+                
+                k1_arr_valid_unsorted_index_order = np.argsort(k1_arr_valid) # unsorted array indices of valid k1's before they are sorted in ascending order
+                k1_arr_valid_ascending = k1_arr_valid[k1_arr_valid_unsorted_index_order] # valid k1's sorted in ascending order
+
+                k2_arr_valid_unsorted_index_order = np.argsort(k2_arr_valid) 
+                k2_arr_valid_ascending = k2_arr_valid[k2_arr_valid_unsorted_index_order] 
+
+                k3_arr_valid_unsorted_index_order = np.argsort(k3_arr_valid)
+                k3_arr_valid_ascending = k3_arr_valid[k3_arr_valid_unsorted_index_order]
+            
+                Pk1_arr_valid = np.zeros(k1_arr_valid.size)
+                Pk2_arr_valid = np.zeros(k2_arr_valid.size)
+                Pk3_arr_valid = np.zeros(k3_arr_valid.size)
+
+                Pk1_arr_valid[k1_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k1_arr_valid_ascending, z, grid=True)[:,0]
+                Pk2_arr_valid[k2_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k2_arr_valid_ascending, z, grid=True)[:,0]
+                Pk3_arr_valid[k3_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k3_arr_valid_ascending, z, grid=True)[:,0]
+
+                Mk1_arr_valid = np.zeros(k1_arr_valid.size)
+                Mk2_arr_valid = np.zeros(k2_arr_valid.size)
+                Mk3_arr_valid = np.zeros(k3_arr_valid.size)
+
+                Mk1_arr_valid[k1_arr_valid_unsorted_index_order] = self.M_k_z(k1_arr_valid_ascending, z, grid=True)[:,0]
+                Mk2_arr_valid[k2_arr_valid_unsorted_index_order] = self.M_k_z(k2_arr_valid_ascending, z, grid=True)[:,0]
+                Mk3_arr_valid[k3_arr_valid_unsorted_index_order] = self.M_k_z(k3_arr_valid_ascending, z, grid=True)[:,0]
+
+                if (self.f_NL_type=="local"):
+                    valid_vals += B_primordial_local(self.f_NL, Mk1_arr_valid, Mk2_arr_valid, Mk3_arr_valid, Pk1_arr_valid, Pk2_arr_valid, Pk3_arr_valid)
+                elif (self.f_NL_type=="equilateral"):
+                    valid_vals += B_primordial_equilateral(self.f_NL, Mk1_arr_valid, Mk2_arr_valid, Mk3_arr_valid, Pk1_arr_valid, Pk2_arr_valid, Pk3_arr_valid)
+                elif (self.f_NL_type=="orthogonal"):
+                    valid_vals += B_primordial_orthogonal(self.f_NL, Mk1_arr_valid, Mk2_arr_valid, Mk3_arr_valid, Pk1_arr_valid, Pk2_arr_valid, Pk3_arr_valid)
+                
+        # for galaxy-matter bispectrum
+        else:
 
             k1_arr_valid_unsorted_index_order = np.argsort(k1_arr_valid) # unsorted array indices of valid k1's before they are sorted in ascending order
             k1_arr_valid_ascending = k1_arr_valid[k1_arr_valid_unsorted_index_order] # valid k1's sorted in ascending order
@@ -332,50 +530,7 @@ class CosmoClass:
             Pk2_arr_valid = np.zeros(k2_arr_valid.size)
             Pk3_arr_valid = np.zeros(k3_arr_valid.size)
 
-            if (B3D_type=="B_tree"):
-                Pk1_arr_valid[k1_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k1_arr_valid_ascending, z, grid=True)[:,0]
-                Pk2_arr_valid[k2_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k2_arr_valid_ascending, z, grid=True)[:,0]
-                Pk3_arr_valid[k3_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k3_arr_valid_ascending, z, grid=True)[:,0]
-                
-                valid_vals = B_tree(k1_arr_valid, k2_arr_valid, k3_arr_valid, 
-                                    Pk1_arr_valid, Pk2_arr_valid, Pk3_arr_valid)
-
-            elif (B3D_type=="B_GM"):
-                Pk1_arr_valid[k1_arr_valid_unsorted_index_order] = self.P3D_k_z_nl(k1_arr_valid_ascending, z, grid=True)[:,0]
-                Pk2_arr_valid[k2_arr_valid_unsorted_index_order] = self.P3D_k_z_nl(k2_arr_valid_ascending, z, grid=True)[:,0]
-                Pk3_arr_valid[k3_arr_valid_unsorted_index_order] = self.P3D_k_z_nl(k3_arr_valid_ascending, z, grid=True)[:,0]
-
-                a1_arr_valid = np.zeros(k1_arr_valid.size)
-                a2_arr_valid = np.zeros(k2_arr_valid.size)
-                a3_arr_valid = np.zeros(k3_arr_valid.size)
-
-                a1_arr_valid[k1_arr_valid_unsorted_index_order] = self.B3D_a_GM_k_z(k1_arr_valid_ascending, z, grid=True)[:,0]
-                a2_arr_valid[k2_arr_valid_unsorted_index_order] = self.B3D_a_GM_k_z(k2_arr_valid_ascending, z, grid=True)[:,0]
-                a3_arr_valid[k3_arr_valid_unsorted_index_order] = self.B3D_a_GM_k_z(k3_arr_valid_ascending, z, grid=True)[:,0]
-
-                b1_arr_valid = np.zeros(k1_arr_valid.size)
-                b2_arr_valid = np.zeros(k2_arr_valid.size)
-                b3_arr_valid = np.zeros(k3_arr_valid.size)
-
-                b1_arr_valid[k1_arr_valid_unsorted_index_order] = self.B3D_b_GM_k_z(k1_arr_valid_ascending, z, grid=True)[:,0]
-                b2_arr_valid[k2_arr_valid_unsorted_index_order] = self.B3D_b_GM_k_z(k2_arr_valid_ascending, z, grid=True)[:,0]
-                b3_arr_valid[k3_arr_valid_unsorted_index_order] = self.B3D_b_GM_k_z(k3_arr_valid_ascending, z, grid=True)[:,0]
-
-                c1_arr_valid = np.zeros(k1_arr_valid.size)
-                c2_arr_valid = np.zeros(k2_arr_valid.size)
-                c3_arr_valid = np.zeros(k3_arr_valid.size)
-
-                c1_arr_valid[k1_arr_valid_unsorted_index_order] = self.B3D_c_GM_k_z(k1_arr_valid_ascending, z, grid=True)[:,0]
-                c2_arr_valid[k2_arr_valid_unsorted_index_order] = self.B3D_c_GM_k_z(k2_arr_valid_ascending, z, grid=True)[:,0]
-                c3_arr_valid[k3_arr_valid_unsorted_index_order] = self.B3D_c_GM_k_z(k3_arr_valid_ascending, z, grid=True)[:,0]
-
-                valid_vals = B_GM(k1_arr_valid, k2_arr_valid, k3_arr_valid,
-                                  Pk1_arr_valid, Pk2_arr_valid, Pk3_arr_valid,
-                                  a1_arr_valid, a2_arr_valid, a3_arr_valid,
-                                  b1_arr_valid, b2_arr_valid, b3_arr_valid, 
-                                  c1_arr_valid, c2_arr_valid, c3_arr_valid)
-
-            elif (B3D_type=="B_gmm_b2_lin" or B3D_type=="B_mgm_b2_lin" or B3D_type=="B_mmg_b2_lin"):
+            if (B3D_type=="B_gmm_b2_lin" or B3D_type=="B_mgm_b2_lin" or B3D_type=="B_mmg_b2_lin"):
                 if (B3D_type=="B_gmm_b2_lin"):
                     Pk2_arr_valid[k2_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k2_arr_valid_ascending, z, grid=True)[:,0]
                     Pk3_arr_valid[k3_arr_valid_unsorted_index_order] = self.P3D_k_z_lin(k3_arr_valid_ascending, z, grid=True)[:,0]
@@ -540,98 +695,6 @@ class CosmoClass:
             elif (B3D_type=="B_ggg_eps_eps_eps"):
                 valid_vals = 1
 
-        elif (B3D_type=="B_GMRF"):     
-
-            sq_mask = (k2_arr_valid / k1_arr_valid > self.f_sq)
-
-            # for the squeezed configurations
-
-            k1_arr_valid_sq = k1_arr_valid[sq_mask] # valid k1's in squeezed triangles i.e. ks
-            k2_arr_valid_sq = k2_arr_valid[sq_mask] # valid k2's in squeezed triangles i.e. km
-            k3_arr_valid_sq = k3_arr_valid[sq_mask] # valid k3's in squeezed triangles i.e. kh 
-
-            k1_arr_valid_sq_unsorted_index_order = np.argsort(k1_arr_valid_sq) # unsorted array indices of valid k1's in squeezed triangles before they are sorted in ascending order
-            k1_arr_valid_sq_ascending = k1_arr_valid_sq[k1_arr_valid_sq_unsorted_index_order] # valid k1's in squeezed triangles sorted in ascending order
-            
-            #k2_arr_valid_sq_unsorted_index_order = np.argsort(k2_arr_valid_sq)
-            #k2_arr_valid_sq_ascending = k2_arr_valid_sq[k2_arr_valid_sq_unsorted_index_order]
-
-            k3_arr_valid_sq_unsorted_index_order = np.argsort(k3_arr_valid_sq)
-            k3_arr_valid_sq_ascending = k3_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order]
-
-            Pk1_arr_valid_sq = np.zeros(k1_arr_valid_sq.size)
-            #Pk2_arr_valid_sq = np.zeros(k2_arr_valid_sq.size)
-            Pk3_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
-
-            Pk1_arr_valid_sq[k1_arr_valid_sq_unsorted_index_order] = self.P3D_k_z_nl(k1_arr_valid_sq_ascending, z, grid=True)[:,0]
-            #Pk2_arr_valid_sq[k2_arr_valid_sq_unsorted_index_order] = self.P3D_k_z_nl(k2_arr_valid_sq_ascending, z, grid=True)[:,0]
-            Pk3_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.P3D_k_z_nl(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
-
-            n_h_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
-            G_1_h_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
-            G_K_h_arr_valid_sq = np.zeros(k3_arr_valid_sq.size)
-
-            n_h_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.n_eff_nl_k_z(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
-            G_1_h_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.RF_G_1_k_z(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
-            G_K_h_arr_valid_sq[k3_arr_valid_sq_unsorted_index_order] = self.RF_G_K_k_z(k3_arr_valid_sq_ascending, z, grid=True)[:,0]
-
-            valid_vals[sq_mask] = B_RF(k1_arr_valid_sq, k2_arr_valid_sq, k3_arr_valid_sq, 
-                                       Pk1_arr_valid_sq, Pk3_arr_valid_sq, 
-                                       n_h_arr_valid_sq, G_1_h_arr_valid_sq, G_K_h_arr_valid_sq)
-
-            # for the non-squeezed configurations 
-
-            k1_arr_valid_nonsq = k1_arr_valid[~sq_mask] # valid k1's in non-squeezed triangles
-            k2_arr_valid_nonsq = k2_arr_valid[~sq_mask] 
-            k3_arr_valid_nonsq = k3_arr_valid[~sq_mask] 
-
-            k1_arr_valid_nonsq_unsorted_index_order = np.argsort(k1_arr_valid_nonsq) # unsorted array indices of valid k1's in non-squeezed triangles before they are sorted in ascending order
-            k1_arr_valid_nonsq_ascending = k1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] # valid k1's in non-squeezed triangles sorted in ascending order
-            
-            k2_arr_valid_nonsq_unsorted_index_order = np.argsort(k2_arr_valid_nonsq)
-            k2_arr_valid_nonsq_ascending = k2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order]
-
-            k3_arr_valid_nonsq_unsorted_index_order = np.argsort(k3_arr_valid_nonsq)
-            k3_arr_valid_nonsq_ascending = k3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order]
-
-            Pk1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
-            Pk2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
-            Pk3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
-
-            Pk1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.P3D_k_z_nl(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            Pk2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.P3D_k_z_nl(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            Pk3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.P3D_k_z_nl(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-
-            a1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
-            a2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
-            a3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
-
-            a1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.B3D_a_GM_k_z(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            a2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.B3D_a_GM_k_z(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            a3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.B3D_a_GM_k_z(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-
-            b1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
-            b2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
-            b3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
-
-            b1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.B3D_b_GM_k_z(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            b2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.B3D_b_GM_k_z(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            b3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.B3D_b_GM_k_z(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-
-            c1_arr_valid_nonsq = np.zeros(k1_arr_valid_nonsq.size)
-            c2_arr_valid_nonsq = np.zeros(k2_arr_valid_nonsq.size)
-            c3_arr_valid_nonsq = np.zeros(k3_arr_valid_nonsq.size)
-
-            c1_arr_valid_nonsq[k1_arr_valid_nonsq_unsorted_index_order] = self.B3D_c_GM_k_z(k1_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            c2_arr_valid_nonsq[k2_arr_valid_nonsq_unsorted_index_order] = self.B3D_c_GM_k_z(k2_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-            c3_arr_valid_nonsq[k3_arr_valid_nonsq_unsorted_index_order] = self.B3D_c_GM_k_z(k3_arr_valid_nonsq_ascending, z, grid=True)[:,0]
-
-            valid_vals[~sq_mask] = B_GM(k1_arr_valid_nonsq, k2_arr_valid_nonsq, k3_arr_valid_nonsq, 
-                                        Pk1_arr_valid_nonsq, Pk2_arr_valid_nonsq, Pk3_arr_valid_nonsq,
-                                        a1_arr_valid_nonsq, a2_arr_valid_nonsq, a3_arr_valid_nonsq,
-                                        b1_arr_valid_nonsq, b2_arr_valid_nonsq, b3_arr_valid_nonsq, 
-                                        c1_arr_valid_nonsq, c2_arr_valid_nonsq, c3_arr_valid_nonsq)
-
         vals[k_arr_valid_mask] = valid_vals
 
         #if (constants._apply_T17_corrections_ == True):
@@ -694,6 +757,9 @@ class CosmoClass:
             return B_K + (self.RF_G_K_k_z_table(k_max, z)-B_K)*np.sqrt(k_max/k)
         else:
             return self.RF_G_K_k_z_table(k, z)
+        
+    def compute_M_k_z(self, k, z):
+        return 2*k**2/(3*self.Omega0_m*self.H_z(0)**2)*self.T_k(k)*self.D_z(z)
 
 def T17_shell_correction(k_h_over_Mpc):
     # finite lens-shell-thickness effect in T17

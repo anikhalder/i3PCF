@@ -467,7 +467,7 @@ def main_function():
                     'fluid_equation_of_state':'CLP',
                     'w0_fld':w0,
                     'wa_fld':wa,
-                    'output':'mPk',
+                    'output':'dTk,mPk',
                     'P_k_max_1/Mpc':constants._k_max_pk_,
                     'z_max_pk':constants._z_max_pk_,
                     'non linear':'hmcode',
@@ -1062,7 +1062,7 @@ def main_function():
 
                         np.save(B_spectra_path+'B_l1_l2_l3_'+q1_bin_name+'_'+q2_bin_name+'_'+q3_bin_name+filename_extension, B_l1_l2_l3)
 
-                        # TODO: Still to implement B(ell_1, ell_2, ell_3) 
+                        # TODO: Still to implement B(ell_1, ell_2, ell_3) with Kitching correction and interpolation
                         '''
                         ell, iB_1_ell = C_ell_spherical_sky(l_array, iB_l[0])
                         ell, iB_2_ell = C_ell_spherical_sky(l_array, iB_l[1])

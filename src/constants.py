@@ -26,6 +26,10 @@ _R_max_ = 50.0 # [Mpc]
 ### GMRF _f_sq_ value
 _f_sq_ = 7
 
+### f_NL value
+_f_NL_ = 0.0
+_f_NL_type_ = 'local' # 'local' or 'equilateral' or 'orthogonal'
+
 ### l_max for 2D spectra (set it to an integer value)
 _l_max_ = 15000
 
