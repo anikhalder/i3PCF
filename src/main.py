@@ -332,7 +332,7 @@ if (compute_H_chi_D == 'yes'):
 def main_function():
 
     pool_opened = False
-    if (compute_P_grid == 'yes' or compute_iB_grid == 'yes'):
+    if (compute_P_grid == 'yes' or compute_B_grid == 'yes' or compute_iB_grid == 'yes'):
         pool_opened = True
         # Open pool of workers to evaluate multiple points on the (l,z) grid simultaneously
         pool = mp.Pool(processes=mp.cpu_count()-2)
