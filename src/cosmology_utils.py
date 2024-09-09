@@ -481,7 +481,7 @@ class CosmoClass:
 
             # primordial non-Gaussianity to matter-bispectrum
             if (self.f_NL != 0):
-                
+
                 k1_arr_valid_unsorted_index_order = np.argsort(k1_arr_valid) # unsorted array indices of valid k1's before they are sorted in ascending order
                 k1_arr_valid_ascending = k1_arr_valid[k1_arr_valid_unsorted_index_order] # valid k1's sorted in ascending order
 
@@ -759,7 +759,7 @@ class CosmoClass:
             return self.RF_G_K_k_z_table(k, z)
         
     def compute_M_k_z(self, k, z):
-        return 2*k**2/(3*self.Omega0_m*self.H_z(0)**2)*self.T_k(k)*self.D_z(z)
+        return 2*k**2/(3*self.Omega0_m*self.H_z(0)**2)*self.T_k(k)*self.D_plus_z(z)
 
 def T17_shell_correction(k_h_over_Mpc):
     # finite lens-shell-thickness effect in T17
