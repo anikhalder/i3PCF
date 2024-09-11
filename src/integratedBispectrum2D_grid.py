@@ -66,9 +66,9 @@ def B_l1_l2_l3_z(params):
     k3 = np.array([l3*DA_inv])
     
     if (B3D_type == 'lin'):
-        B_l1_l2_l3_z_vals = CosmoClassObject.B3D_k1_k2_k3_z(k1, k2, k3, z, False)
+        B_l1_l2_l3_z_vals = CosmoClassObject.B3D_k1_k2_k3_z(k1, k2, k3, z, 'B_tree')
     elif (B3D_type == 'nl'):
-        B_l1_l2_l3_z_vals = CosmoClassObject.B3D_k1_k2_k3_z(k1, k2, k3, z, True)
+        B_l1_l2_l3_z_vals = CosmoClassObject.B3D_k1_k2_k3_z(k1, k2, k3, z, 'B_GM')
 
     if (constants._apply_T17_corrections_ == True):
         B_l1_l2_l3_z_vals = B_l1_l2_l3_z_vals*T17_shell_correction(k1/CosmoClassObject.h)*T17_shell_correction(k2/CosmoClassObject.h)*T17_shell_correction(k3/CosmoClassObject.h)
