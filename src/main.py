@@ -1098,7 +1098,7 @@ def main_function():
                         corr_idx += 1
 
             end_spectra_and_correlations = time.time()
-            print('Computing B(l1,l2,l3) spectra took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations), flush=True) 
+            print('Computing the B(l1,l2,l3) spectra took %ss'%(end_spectra_and_correlations - start_spectra_and_correlations), flush=True) 
 
         if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correlations == 'yes'):
 

@@ -135,15 +135,18 @@ nbins_tc = len(binedges)-1
 max_sep_tc = binedges[-1]
 
 ### SOURCE bin name and values
+#SOURCE_BIN_NAME_LIST = ['zs9', 'zs10', 'zs16']
+#SOURCE_BIN_VALUES = [0.5078, 0.5739, 1.0334]
+#SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0]
+#SOURCE_BIN_m_values = [0, 0, 0]
+
 #SOURCE_BIN_NAME_LIST = ['BIN12', 'BIN34']
 #SOURCE_BIN_VALUES = ['', '']
-
-#SOURCE_BIN_NAME_LIST = ['zs1', 'zs2']
-#SOURCE_BIN_VALUES = [0.5739, 1.0334]
+#SOURCE_BIN_delta_photoz_values = [0.0, 0.0]
+#SOURCE_BIN_m_values = [0, 0]
 
 SOURCE_BIN_NAME_LIST = ['BIN1', 'BIN2', 'BIN3', 'BIN4']
 SOURCE_BIN_VALUES = ['', '', '', '']
-
 SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0, 0.0]
 SOURCE_BIN_m_values = [0, 0, 0, 0]
 
