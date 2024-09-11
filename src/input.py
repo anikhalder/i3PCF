@@ -37,10 +37,10 @@ z_array = np.array([0.006387739907950163,
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
-cosmo_fid_name = 'COSMOGRIDV1_fiducial_no_neutrinos' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'COSMOGRIDV1_fiducial_no_neutrinos', 'DESC_fiducial'
+cosmo_fid_name = 'T17_fiducial' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'COSMOGRIDV1_fiducial_no_neutrinos', 'DESC_fiducial'
 
 ### T17 fiducial cosmology
-#cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0} 
+cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0} 
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0} 
 
 ### COSMOGRIDV1 fiducial cosmology
@@ -48,7 +48,7 @@ cosmo_fid_name = 'COSMOGRIDV1_fiducial_no_neutrinos' # e.g. 'T17_fiducial', 'COS
 #cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 3.069798834826492e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### COSMOGRIDV1 fiducial cosmology with no neutrinos i.e. Mv = 0.0
-cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 #cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 2.9509837678758487e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### DESC SkySim5000/HACC fiducial cosmology
@@ -75,13 +75,13 @@ else:
 ########################################################
 ########################################################
 
-P3D_type = 'nl' # lin, nl
-compute_P_grid = 'yes' # yes, no
+P3D_type = 'lin' # lin, nl
+compute_P_grid = 'no' # yes, no
 compute_P_spectra_and_correlations = 'no' # yes, no
-B3D_type = 'nl' # lin, nl
+B3D_type = 'lin' # lin, nl
 compute_B_grid = 'yes' # yes, no
-compute_B_spectra = 'no' # yes, no
-compute_iB_grid = 'yes' # yes, no
+compute_B_spectra = 'yes' # yes, no
+compute_iB_grid = 'no' # yes, no
 compute_iB_spectra_and_correlations = 'no' # yes, no
 compute_A2pt = 'no' # yes, no
 compute_A2pt_bin_averaged = 'no' # yes, no (if set to 'yes', then A2pt will also automatically be computed even if compute_A2pt is set to 'no')
@@ -92,8 +92,11 @@ use_Dirac_comb = False
 nside = None # Set to None to ignore
 
 # can also append other distinguishing suffixes e.g. 'shear_x_shear_SkySim5000'
-grid_type = 'shear_x_shear' + '_' + cosmo_parameters_name
-spectra_and_correlation_type = 'shear_x_shear_DESY3' + '_' + cosmo_parameters_name
+#grid_type = 'shear_x_shear' + '_' + cosmo_parameters_name
+#spectra_and_correlation_type = 'shear_x_shear_DESY3' + '_' + cosmo_parameters_name
+
+grid_type = 'kappa_x_kappa' + '_' + cosmo_parameters_name
+spectra_and_correlation_type = 'kappa_x_kappa_T17_source_planes' + '_' + cosmo_parameters_name
 
 ### correlation name list
 # Naming convention aperture : a : shear aperture mass ; g : galaxy mean number density in tophat filter
@@ -135,20 +138,20 @@ nbins_tc = len(binedges)-1
 max_sep_tc = binedges[-1]
 
 ### SOURCE bin name and values
-#SOURCE_BIN_NAME_LIST = ['zs9', 'zs10', 'zs16']
-#SOURCE_BIN_VALUES = [0.5078, 0.5739, 1.0334]
-#SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0]
-#SOURCE_BIN_m_values = [0, 0, 0]
+SOURCE_BIN_NAME_LIST = ['zs9', 'zs10', 'zs16']
+SOURCE_BIN_VALUES = [0.5078, 0.5739, 1.0334]
+SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0]
+SOURCE_BIN_m_values = [0, 0, 0]
 
 #SOURCE_BIN_NAME_LIST = ['BIN12', 'BIN34']
 #SOURCE_BIN_VALUES = ['', '']
 #SOURCE_BIN_delta_photoz_values = [0.0, 0.0]
 #SOURCE_BIN_m_values = [0, 0]
 
-SOURCE_BIN_NAME_LIST = ['BIN1', 'BIN2', 'BIN3', 'BIN4']
-SOURCE_BIN_VALUES = ['', '', '', '']
-SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0, 0.0]
-SOURCE_BIN_m_values = [0, 0, 0, 0]
+#SOURCE_BIN_NAME_LIST = ['BIN1', 'BIN2', 'BIN3', 'BIN4']
+#SOURCE_BIN_VALUES = ['', '', '', '']
+#SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0, 0.0]
+#SOURCE_BIN_m_values = [0, 0, 0, 0]
 
 ### LENS bin name and type (only used when computing correlations with halos x lensing)
 halo_type_user = '' # 'all_halos'
@@ -196,7 +199,7 @@ if (compute_P_spectra_and_correlations == 'yes'):
 
 if (compute_B_spectra == 'yes'):
 
-    B_spectra_path = '../output/spectra/B_'+P3D_type+'_spectra_la'+str(l_B_array.size)+'_lb'+str(l_B_array.size)+'_lc'+str(l_B_array.size)+'_'+spectra_and_correlation_type+'/'
+    B_spectra_path = '../output/spectra/B_'+B3D_type+'_spectra_la'+str(l_B_array.size)+'_lb'+str(l_B_array.size)+'_lc'+str(l_B_array.size)+'_'+spectra_and_correlation_type+'/'
 
 if (compute_iB_spectra_and_correlations == 'yes'):
 
