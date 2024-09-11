@@ -61,9 +61,9 @@ def B_l1_l2_l3_z(params):
 
     DA_inv = 1./CosmoClassObject.chi_z(z)
 
-    k1 = l1*DA_inv
-    k2 = l2*DA_inv
-    k3 = l3*DA_inv
+    k1 = np.array([l1*DA_inv])
+    k2 = np.array([l2*DA_inv])
+    k3 = np.array([l3*DA_inv])
     
     if (B3D_type == 'lin'):
         B_l1_l2_l3_z_vals = CosmoClassObject.B3D_k1_k2_k3_z(k1, k2, k3, z, False)

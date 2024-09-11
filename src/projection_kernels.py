@@ -64,7 +64,7 @@ def q_k_zs_distribution(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func):
     zs_array = np.arange(z, zs_max, 0.01)
     chi_zs_array = chi_z_func(zs_array)
     W_k_zs_distribution_z_array = n_s_z_func(zs_array) * (chi_zs_array - chi_z) / chi_zs_array
-    W_k_zs_distribution_z = np.trapz(W_k_zs_distribution_z_array, x=zs_array)
+    W_k_zs_distribution_z = np.trapezoid(W_k_zs_distribution_z_array, x=zs_array)
    
     return 3./2. * H_0 * H_0 * Omega0_m * (1.+z) * chi_z * W_k_zs_distribution_z
 
@@ -87,7 +87,7 @@ def q_k_zs_distribution_systematics(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_
     zs_array = np.arange(z, zs_max, 0.01)
     chi_zs_array = chi_z_func(zs_array)
     W_k_zs_distribution_z_array = n_s_z_func(zs_array + delta_photoz) * (chi_zs_array - chi_z) / chi_zs_array
-    W_k_zs_distribution_z = np.trapz(W_k_zs_distribution_z_array, x=zs_array)
+    W_k_zs_distribution_z = np.trapezoid(W_k_zs_distribution_z_array, x=zs_array)
    
     q_k_z = 3./2. * H_0 * H_0 * Omega0_m * (1.+z) * chi_z * W_k_zs_distribution_z
 

@@ -77,6 +77,30 @@ theta_T = np.radians(theta_T_arcmins/60.0) # this is the size of the tophat aper
 
 #####################
 
+if (compute_P_spectra_and_correlations == 'yes' or compute_B_spectra == 'yes' or compute_iB_spectra_and_correlations == 'yes'):
+
+    spectra_and_correlation_type = input.spectra_and_correlation_type
+
+    if ('halo' in spectra_and_correlation_type or 'galaxy' in spectra_and_correlation_type):
+    
+        LENS_BIN_NAME = input.LENS_BIN_NAME
+        halo_type = input.halo_type_user
+
+    if ('kappa' in spectra_and_correlation_type or 'shear' in spectra_and_correlation_type):
+
+        SOURCE_BIN_NAME_LIST = input.SOURCE_BIN_NAME_LIST
+        SOURCE_BIN_VALUES = input.SOURCE_BIN_VALUES
+        
+        SOURCE_BIN_delta_photoz_values = input.SOURCE_BIN_delta_photoz_values
+        SOURCE_BIN_m_values = input.SOURCE_BIN_m_values
+
+        num_2pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 2)
+        num_i3pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 3)
+
+        print('Number of 2pt shear x shear correlations (for plus or minus or kappa) =', num_2pt_sss_correlations, flush=True)
+        print('Number of i3pt shear x shear correlations (for plus or minus or kappa) =', num_i3pt_sss_correlations, flush=True)
+
+# compute and load information relevant for angular bin operations
 if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correlations == 'yes'):
     
     spectra_and_correlation_type = input.spectra_and_correlation_type
@@ -111,25 +135,6 @@ if (compute_P_spectra_and_correlations == 'yes' or compute_iB_spectra_and_correl
     np.savetxt(angular_bins_path+'alpha_iZ_W'+str(theta_T_arcmins)+'_angles_cen_arcmins_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bins.tab', alpha_arcmins.T)
     np.savetxt(angular_bins_path+'alpha_iZ_W'+str(theta_T_arcmins)+'_angles_min_arcmins_'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bins.tab', alpha_min_arcmins.T)
     np.savetxt(angular_bins_path+'alpha_iZ_W'+str(theta_T_arcmins)+'_angles_max_arcmins_'+str(theta_T_arcmins)+'_'+str(int(min_sep_tc))+'_'+str(int(max_sep_tc))+'_'+str(nbins_tc)+'_bins.tab', alpha_max_arcmins.T)
-
-    if ('halo' in spectra_and_correlation_type or 'galaxy' in spectra_and_correlation_type):
-    
-        LENS_BIN_NAME = input.LENS_BIN_NAME
-        halo_type = input.halo_type_user
-
-    if ('kappa' in spectra_and_correlation_type or 'shear' in spectra_and_correlation_type):
-
-        SOURCE_BIN_NAME_LIST = input.SOURCE_BIN_NAME_LIST
-        SOURCE_BIN_VALUES = input.SOURCE_BIN_VALUES
-        
-        SOURCE_BIN_delta_photoz_values = input.SOURCE_BIN_delta_photoz_values
-        SOURCE_BIN_m_values = input.SOURCE_BIN_m_values
-
-        num_2pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 2)
-        num_i3pt_sss_correlations = num_correlations(len(SOURCE_BIN_NAME_LIST), 3)
-
-        print('Number of 2pt shear x shear correlations (for plus or minus or kappa) =', num_2pt_sss_correlations, flush=True)
-        print('Number of i3pt shear x shear correlations (for plus or minus or kappa) =', num_i3pt_sss_correlations, flush=True)
 
     ## pre-compute or load the bin-averaged values
 
@@ -1002,7 +1007,7 @@ def main_function():
 
                     else:
                         n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
-                        n_s_z_BIN_vals_tab /= np.trapz(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
+                        n_s_z_BIN_vals_tab /= np.trapezoid(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
                         n_s_z_BIN = interpolate.interp1d(n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
                 
                 for j in range(z_array_los.size):
@@ -1058,7 +1063,7 @@ def main_function():
                         B_l1_l2_l3 = np.zeros([l_B_array.size, l_B_array.size, l_B_array.size])
 
                         B_1_l1_l2_l3_z_integrand_grid = B_l1_l2_l3_z_grid_los * B_z_weight_array_los
-                        B_l1_l2_l3 = np.trapz(B_1_l1_l2_l3_z_integrand_grid, x=z_array_los, axis=-1)
+                        B_l1_l2_l3 = np.trapezoid(B_1_l1_l2_l3_z_integrand_grid, x=z_array_los, axis=-1)
 
                         np.save(B_spectra_path+'B_l1_l2_l3_'+q1_bin_name+'_'+q2_bin_name+'_'+q3_bin_name+filename_extension, B_l1_l2_l3)
 
@@ -1205,7 +1210,7 @@ def main_function():
 
                     else:
                         n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
-                        n_s_z_BIN_vals_tab /= np.trapz(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
+                        n_s_z_BIN_vals_tab /= np.trapezoid(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
                         n_s_z_BIN = interpolate.interp1d(n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
                 
                 for j in range(z_array_los.size):
@@ -1330,7 +1335,7 @@ def main_function():
                                 P_l_z_grid_los[i] = P_l_z_func(z_array_los)
 
                             P_l_z_integrand_grid = P_l_z_grid_los * P_z_weight_array_los[0,:]
-                            P_l = np.trapz(P_l_z_integrand_grid, x=z_array_los, axis=1)
+                            P_l = np.trapezoid(P_l_z_integrand_grid, x=z_array_los, axis=1)
 
                             np.savetxt(P_spectra_path+'P_'+xi_correlation_name+'_l_'+q1_bin_name+'_'+q2_bin_name+filename_extension, P_l.T)
 
@@ -1371,7 +1376,7 @@ def main_function():
                                     P_eps_eps_l_z_grid_los[i] = P_eps_eps_l_z_func(z_array_los)
 
                                 P_eps_eps_l_z_integrand_grid = P_eps_eps_l_z_grid_los * P_z_weight_array_los[1,:]
-                                P_eps_eps_l = np.trapz(P_eps_eps_l_z_integrand_grid, x=z_array_los, axis=1)
+                                P_eps_eps_l = np.trapezoid(P_eps_eps_l_z_integrand_grid, x=z_array_los, axis=1)
 
                                 np.savetxt(P_spectra_path+'P_eps_eps_'+xi_correlation_name+'_l_'+q1_bin_name+'_'+q2_bin_name+filename_extension, P_eps_eps_l.T)
 
@@ -1598,19 +1603,19 @@ def main_function():
                                 iB_l = np.zeros([5, l_array.size])
 
                                 iB_1_l_z_integrand_grid = iB_1_l_z_grid_los * iB_z_weight_array_los[0,:]
-                                iB_l[0] = np.trapz(iB_1_l_z_integrand_grid, x=z_array_los, axis=1)
+                                iB_l[0] = np.trapezoid(iB_1_l_z_integrand_grid, x=z_array_los, axis=1)
 
                                 iB_2_l_z_integrand_grid = iB_2_l_z_grid_los * iB_z_weight_array_los[1,:]
-                                iB_l[1] = np.trapz(iB_2_l_z_integrand_grid, x=z_array_los, axis=1)
+                                iB_l[1] = np.trapezoid(iB_2_l_z_integrand_grid, x=z_array_los, axis=1)
 
                                 iB_3_l_z_integrand_grid = iB_3_l_z_grid_los * iB_z_weight_array_los[2,:]
-                                iB_l[2] = np.trapz(iB_3_l_z_integrand_grid, x=z_array_los, axis=1)
+                                iB_l[2] = np.trapezoid(iB_3_l_z_integrand_grid, x=z_array_los, axis=1)
 
                                 iB_4_l_z_integrand_grid = iB_4_l_z_grid_los * iB_z_weight_array_los[3,:]
-                                iB_l[3] = np.trapz(iB_4_l_z_integrand_grid, x=z_array_los, axis=1)
+                                iB_l[3] = np.trapezoid(iB_4_l_z_integrand_grid, x=z_array_los, axis=1)
 
                                 iB_5_l_z_integrand_grid = iB_5_l_z_grid_los * iB_z_weight_array_los[4,:]
-                                iB_l[4] = np.trapz(iB_5_l_z_integrand_grid, x=z_array_los, axis=1)
+                                iB_l[4] = np.trapezoid(iB_5_l_z_integrand_grid, x=z_array_los, axis=1)
 
                                 np.savetxt(iB_spectra_path+'iB_'+iZ_correlation_name+'_l_'+q1_bin_name+'_'+q2_bin_name+'_'+q3_bin_name+filename_extension, iB_l.T)
 
