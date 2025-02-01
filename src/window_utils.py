@@ -3,7 +3,8 @@ from scipy.special import j1
 import vegas
 from scipy.integrate import quad
 
-try from scipy.integrate import trapezoid as trapz
+try: 
+    from scipy.integrate import trapezoid as trapz
 except ImportError:
     from scipy.integrate import trapz
 
