@@ -72,12 +72,12 @@ else:
     npz_name =  '' # Use for loading a specific set of cosmological parameters from a .npz file
     
     if npz_name != '':
+        params_dict = dict(np.loadz("../data/cosmo_parameters/"+npz_name+".npz"))
+        cosmo_parameters_name = cosmo_fid_name + '_' + npz_name
+    else:
         params_dict = {}
         #params_dict = {'z': np.array([0.01])}
         cosmo_parameters_name = cosmo_fid_name
-    else:
-        params_dict = dict(np.loadz("../data/cosmo_parameters/"+npz_name+".npz"))
-        cosmo_parameters_name = cosmo_fid_name + '_' + npz_name
         
 ########################################################
 ########################################################
