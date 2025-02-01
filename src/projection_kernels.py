@@ -46,7 +46,7 @@ def W_k_zs_distribution_integrand(zs, z, chi_z_func, n_s_z_func, delta_photoz=0.
     return n_s_z_func(zs + delta_photoz) * (chi_zs - chi_z) / chi_zs
 
 def q_k_zs_distribution(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func):
-    '''
+    r'''
     equations (10.42) and (10.41) combined of https://edoc.ub.uni-muenchen.de/23401/1/Friedrich_Oliver.pdf
     or equations (6.21) and (6.19) combined of https://arxiv.org/pdf/astro-ph/9912508.pdf
 
@@ -69,7 +69,7 @@ def q_k_zs_distribution(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func):
     return 3./2. * H_0 * H_0 * Omega0_m * (1.+z) * chi_z * W_k_zs_distribution_z
 
 def q_k_zs_distribution_systematics(z, zs_max, chi_z_func, H_0, Omega0_m, n_s_z_func, H_z_func, D_plus_z_func, A_IA_NLA, alpha_IA_NLA, delta_photoz, m):
-    '''
+    r'''
     equations (10.42) and (10.41) combined of https://edoc.ub.uni-muenchen.de/23401/1/Friedrich_Oliver.pdf
     or equations (6.21) and (6.19) combined of https://arxiv.org/pdf/astro-ph/9912508.pdf
 
