@@ -7,8 +7,8 @@ l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 88).as
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 113).astype(int)) # e.g. 100 integer l values when _l_max_ = 15000
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 247).astype(int)) # e.g. 200 integer l values when _l_max_ = 15000
 
-#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
-z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
+z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 47)) # 50 z values
 
@@ -68,16 +68,9 @@ if (HS_filename != ''):
     #params_dict = dict(np.load('../data/cosmo_parameters/'+HS_filename+'.npz')) # for npz files
     cosmo_parameters_name = cosmo_fid_name + '_' + HS_filename
 else:
-    
-    npz_name =  '' # Use for loading a specific set of cosmological parameters from a .npz file
-    
-    if npz_name != '':
-        params_dict = dict(np.loadz("../data/cosmo_parameters/"+npz_name+".npz"))
-        cosmo_parameters_name = cosmo_fid_name + '_' + npz_name
-    else:
-        params_dict = {}
-        #params_dict = {'z': np.array([0.01])}
-        cosmo_parameters_name = cosmo_fid_name
+    params_dict = {}
+    #params_dict = {'z': np.array([0.01])}
+    cosmo_parameters_name = cosmo_fid_name
         
 ########################################################
 ########################################################
@@ -156,9 +149,9 @@ max_sep_tc = binedges[-1]
 #SOURCE_BIN_m_values = [0, 0]
 
 SOURCE_BIN_NAME_LIST = ['BIN1', 'BIN2', 'BIN3', 'BIN4']
-#SOURCE_BIN_VALUES = ['', '', '', '']
-#SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0, 0.0]
-#SOURCE_BIN_m_values = [0, 0, 0, 0]
+SOURCE_BIN_VALUES = ['', '', '', '']
+SOURCE_BIN_delta_photoz_values = [0.0, 0.0, 0.0, 0.0]
+SOURCE_BIN_m_values = [0, 0, 0, 0]
 
 ### LENS bin name and type (only used when computing correlations with halos x lensing)
 halo_type_user = '' # 'all_halos'
