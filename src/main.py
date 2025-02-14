@@ -340,8 +340,8 @@ def main_function():
     if (compute_P_grid == 'yes' or compute_B_grid == 'yes' or compute_iB_grid == 'yes'):
         pool_opened = True
         # Open pool of workers to evaluate multiple points on the (l,z) grid simultaneously
-        pool = mp.Pool(processes=mp.cpu_count()-2)
-        print('\nOpened a pool of', mp.cpu_count()-2, 'worker processors', flush=True)
+        pool = mp.Pool(processes=constants._num_of_prcoesses_)
+        print('\nOpened a pool of', constants._num_of_prcoesses_, 'worker processors', flush=True)
 
     for param_idx in range(start_idx, stop_idx):
 

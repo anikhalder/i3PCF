@@ -7,8 +7,8 @@ l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 88).as
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 113).astype(int)) # e.g. 100 integer l values when _l_max_ = 15000
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 247).astype(int)) # e.g. 200 integer l values when _l_max_ = 15000
 
-z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
-#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
+z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 47)) # 50 z values
 
@@ -37,18 +37,18 @@ z_array = np.array([0.006387739907950163,
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
-cosmo_fid_name = 'COSMOGRIDV1_fiducial' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'COSMOGRIDV1_fiducial_no_neutrinos', 'DESC_fiducial'
+cosmo_fid_name = 'COSMOGRIDV1_fiducial_no_neutrinos' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'COSMOGRIDV1_fiducial_no_neutrinos', 'DESC_fiducial'
 
 ### T17 fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0} 
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'A_s': np.exp(np.log(10**10 * 2.19685e-9))/(10**10), 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0} 
 
 ### COSMOGRIDV1 fiducial cosmology
-cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 #cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 3.069798834826492e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### COSMOGRIDV1 fiducial cosmology with no neutrinos i.e. Mv = 0.0
-#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 #cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 2.9509837678758487e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### DESC SkySim5000/HACC fiducial cosmology
@@ -62,6 +62,8 @@ NEUTRINO_HIERARCHY = 'DEGENERATE' # can be set to 'DEGENERATE', 'NORMAL', 'INVER
 HS_filename = '' 
 #HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
 #HS_filename = 'i3PCF_sobol_pretraining_no_IA_1e4_nodes'
+#HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
+#HS_filename = 'i3PCF_sobol_testing_2.6e5_nodes_part1'
 
 if (HS_filename != ''):
     params_dict = pd.read_csv('../data/cosmo_parameters/'+HS_filename+'.csv') # for csv files
@@ -123,14 +125,14 @@ print('U [arcmins], T [arcmins]:', theta_U_arcmins, theta_T_arcmins)
 ### Minimum, maximum separations for the correlation computations and the number of log bins
 
 # for global 2PCF
-min_sep_tc_xi = 10
+min_sep_tc_xi = 15
 max_sep_tc_xi = 250
-nbins_tc_xi = 15
+nbins_tc_xi = 8
 
 # for local (within filter) 2PCF
-min_sep_tc = 10
+min_sep_tc = 15
 max_sep_tc = 250
-nbins_max = 15
+nbins_max = 8
 
 binedges = np.geomspace(min_sep_tc, max_sep_tc, nbins_max+1)
 binedges = binedges[np.where(binedges <= 2 * theta_T_arcmins - 5)]
