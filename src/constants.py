@@ -1,4 +1,5 @@
 import numpy as np
+import multiprocessing as mp
 
 ### k_min and k_max [1/Mpc]; z_min and z_max settings for power spectrum of the CosmoClass grid
 _k_min_ = 5.e-4 # [1/Mpc]
@@ -51,7 +52,7 @@ _Delta_ = 200.0
 _f_sky_ = 5000/41252.96125
 
 ### number of parallel processors for pool
-_num_of_prcoesses_ = 30
+_num_of_prcoesses_ = mp.cpu_count()-1
 
 # Takahashi et al. (2017) Appendix B eqn (28) fitting formula for finite shell thickness - parameter values
 _apply_T17_corrections_ = False

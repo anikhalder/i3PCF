@@ -8,8 +8,8 @@ l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 88).as
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 247).astype(int)) # e.g. 200 integer l values when _l_max_ = 15000
 #l_array = np.unique(np.logspace(np.log10(2), np.log10(constants._l_max_), 720).astype(int)) # e.g. 500 integer l values when _l_max_ = 15000
 
-z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
-#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
+#z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 17)) # 20 z values
+z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 22)) # 25 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 27)) # 30 z values
 #z_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), np.log10(constants._z_max_), 47)) # 50 z values
 
@@ -38,7 +38,7 @@ z_B_array = np.append(np.array([0.01, 0.03, 0.07]), np.logspace(np.log10(0.1), n
 
 ### This is a config file where we give what the input parameters for the main.py file are
 
-cosmo_fid_name = 'COSMOGRIDV1_fiducial' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'COSMOGRIDV1_fiducial_no_neutrinos', 'DESC_fiducial'
+cosmo_fid_name = 'COSMOGRIDV1_fiducial_no_neutrinos' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fiducial', 'COSMOGRIDV1_fiducial_no_neutrinos', 'DESC_fiducial'
 
 ### T17 fiducial cosmology
 #cosmo_pars_fid = {'Omega_b': 0.046, 'Omega_m': 0.279, 'h': 0.7, 'n_s': 0.97, 'sigma8': 0.82, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0} 
@@ -49,7 +49,7 @@ cosmo_fid_name = 'COSMOGRIDV1_fiducial' # e.g. 'T17_fiducial', 'COSMOGRIDV1_fidu
 #cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 3.069798834826492e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.06, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### COSMOGRIDV1 fiducial cosmology with no neutrinos i.e. Mv = 0.0
-#cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
+cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'sigma8': 0.84, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 #cosmo_pars_fid = {'Omega_b': 0.0493, 'Omega_m': 0.26, 'h': 0.673, 'n_s': 0.9649, 'A_s': 2.9509837678758487e-09, 'w0': -1.0, 'wa': 0.0, 'c_min': 3.13, 'eta_0': 0.603, 'Mv': 0.0, 'A_IA_NLA': 0.0, 'alpha_IA_NLA': 0.0}
 
 ### COSMOGRIDV1 fiducial cosmology for dark matter only simulations
@@ -69,6 +69,8 @@ HS_filename = ''
 #HS_filename = 'gridtest' 
 #HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
 #HS_filename = 'i3PCF_sobol_pretraining_no_IA_1e4_nodes'
+#HS_filename = 'i3PCF_sobol_training_2.6e5_nodes_part1'
+#HS_filename = 'i3PCF_sobol_testing_2.6e5_nodes_part1'
 
 if (HS_filename != ''):
     #params_dict = pd.read_csv('../data/cosmo_parameters/'+HS_filename+'.csv') # for csv files
