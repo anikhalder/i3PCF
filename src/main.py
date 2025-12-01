@@ -1001,12 +1001,12 @@ def main_function():
                 elif ('BIN' in SOURCE_BIN_NAME):
                     if (input.use_Dirac_comb == True):
                         # for Dirac comb
-                        n_s_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[0])
-                        n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[1])
+                        n_s_z_BIN_z_tab = np.loadtxt(input.SOURCE_BIN_DIRECTORY+'Dirac_comb/'+input.SOURCE_BIN_PREFIX+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[0])
+                        n_s_z_BIN_vals_tab = np.loadtxt(input.SOURCE_BIN_DIRECTORY+'Dirac_comb/'+input.SOURCE_BIN_PREFIX+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[1])
                         print(str(SOURCE_BIN_NAME)+' '+str(np.sum(n_s_z_BIN_vals_tab)), flush=True)
 
                     else:
-                        n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
+                        n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt(input.SOURCE_BIN_DIRECTORY+input.SOURCE_BIN_PREFIX+SOURCE_BIN_NAME+'.tab').T
                         n_s_z_BIN_vals_tab /= np.trapezoid(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
                         n_s_z_BIN = interpolate.interp1d(n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
                 
@@ -1204,12 +1204,12 @@ def main_function():
                 elif ('BIN' in SOURCE_BIN_NAME):
                     if (input.use_Dirac_comb == True):
                         # for Dirac comb
-                        n_s_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[0])
-                        n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/Dirac_comb/nofz_DESY3_source_'+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[1])
+                        n_s_z_BIN_z_tab = np.loadtxt(input.SOURCE_BIN_DIRECTORY+'Dirac_comb/'+input.SOURCE_BIN_PREFIX+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[0])
+                        n_s_z_BIN_vals_tab = np.loadtxt(input.SOURCE_BIN_DIRECTORY+'Dirac_comb/'+input.SOURCE_BIN_PREFIX+SOURCE_BIN_NAME+'_Dirac_center.tab', usecols=[1])
                         print(str(SOURCE_BIN_NAME)+' '+str(np.sum(n_s_z_BIN_vals_tab)), flush=True)
 
                     else:
-                        n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_source_'+SOURCE_BIN_NAME+'.tab').T
+                        n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab = np.loadtxt(input.SOURCE_BIN_DIRECTORY+input.SOURCE_BIN_PREFIX+SOURCE_BIN_NAME+'.tab').T
                         n_s_z_BIN_vals_tab /= np.trapezoid(n_s_z_BIN_vals_tab, n_s_z_BIN_z_tab)
                         n_s_z_BIN = interpolate.interp1d(n_s_z_BIN_z_tab, n_s_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
                 
@@ -1240,8 +1240,8 @@ def main_function():
                         sample_name = 'redmagic'
                     elif ('maglim' in input.LENS_BIN_FULLNAME_theory):
                         sample_name = 'maglim'
-                    n_l_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_'+sample_name+'_lens_'+LENS_BIN_NAME+'.tab', usecols=[0])
-                    n_l_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_DESY3_'+sample_name+'_lens_'+LENS_BIN_NAME+'.tab', usecols=[1])
+                    n_l_z_BIN_z_tab = np.loadtxt(input.LENS_BIN_DIRECTORY+input.LENS_BIN_PREFIX+sample_name+'_lens_'+LENS_BIN_NAME+'.tab', usecols=[0])
+                    n_l_z_BIN_vals_tab = np.loadtxt(input.LENS_BIN_DIRECTORY+input.LENS_BIN_PREFIX+sample_name+'_lens_'+LENS_BIN_NAME+'.tab', usecols=[1])
                     n_l_z_BIN = interpolate.interp1d(n_l_z_BIN_z_tab, n_l_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
                     
                 elif ('halos' in LENS_BIN_NAME):
@@ -1256,8 +1256,8 @@ def main_function():
                         N_halos = N_h(z_h_min, z_h_max, M_h_min, M_h_max, CosmoClassObject.rho0_m, CosmoClassObject.sigma_R_z, CosmoClassObject.sigma_prime_R_z, CosmoClassObject.chi_z, CosmoClassObject.H_z)
                         print('Number of halos = ', N_halos, flush=True)
                     else:
-                        n_l_z_BIN_z_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[0])
-                        n_l_z_BIN_vals_tab = np.loadtxt('./../data/nofz/DESY3_nofz/nofz_mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[1])
+                        n_l_z_BIN_z_tab = np.loadtxt(input.LENS_BIN_DIRECTORY+input.LENS_BIN_PREFIX+'mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[0])
+                        n_l_z_BIN_vals_tab = np.loadtxt(input.LENS_BIN_DIRECTORY+input.LENS_BIN_PREFIX+'mock_'+halo_type+'_'+LENS_BIN_NAME+'.tab', usecols=[1])
                         n_l_z_BIN = interpolate.interp1d(n_l_z_BIN_z_tab, n_l_z_BIN_vals_tab, fill_value=(0,0), bounds_error=False)
                         filename_extension = '_'+halo_type+'.dat'
 
