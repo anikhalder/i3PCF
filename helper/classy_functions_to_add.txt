@@ -1,4 +1,4 @@
-### Helper functions which need to be added to python/classy.pyx file (in the class_public directory wherever it is installed in the machine)
+### Helper functions which need to be added to python/classy.pyx file (in the class_public directory wherever it is installed in the machine). Written for CLASS v3 (tested with v3.3.4); on CLASS v2 the `self.fo` struct was called `self.nl`.
 
 ############################################################################################################
 
@@ -43,8 +43,8 @@
         if (self.pt.k_max_for_pk < self.ba.h):
             raise CosmoSevereError("In order to get sigma(R,z) you must set 'P_k_max_h/Mpc' to 1 or bigger, in order to have k_max > 1 h/Mpc.")
 
-        if fourier_sigmas_at_z(&self.pr,&self.ba,&self.fo,R,z,self.nl.index_pk_m,out_sigma_prime,&sigma_squared_prime)==_FAILURE_:
-            raise CosmoSevereError(self.nl.error_message)
+        if fourier_sigmas_at_z(&self.pr,&self.ba,&self.fo,R,z,self.fo.index_pk_m,out_sigma_prime,&sigma_squared_prime)==_FAILURE_:
+            raise CosmoSevereError(self.fo.error_message)
 
         return sigma_squared_prime # in [1/Mpc]
 
